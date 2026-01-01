@@ -22,16 +22,16 @@
   <a href="#" data-target="home">🏠 Home</a>
 </nav>
 
-<!-- HEADER -->
+<!-- HEADER FIXIERT -->
 <header>
   <div id="weekday"></div>
   <div id="daytime"></div>
   <div id="date"></div>
   <div id="time"></div>
-  <div id="dailyQuoteBox">Hier erscheint dein Tageszitat</div>
+  <div id="dailyQuoteBox"></div>
 </header>
 
-<!-- MAIN -->
+<!-- MAIN CONTENT -->
 <main>
   <div id="dailyMotivationText">Hol dir deine Tages-Inspiration!</div>
 
@@ -45,13 +45,14 @@
     <button id="eveningBtn">Abend</button>
   </div>
 
-  <div id="personalQuoteDisplay" class="hidden"></div>
+  <div id="personalQuoteDisplay"></div>
 
   <div id="dailyFocusContainer">
     <p>Mein Fokus heute:</p>
     <input type="text" id="dailyFocusInput" placeholder="Schreibe hier deinen Fokus..." maxlength="100">
   </div>
 
+  <!-- NEWS -->
   <section id="newsContainer">
     <h3>Neuigkeiten</h3>
     <div id="newsList"></div>
@@ -62,7 +63,7 @@
 <div id="personalOverlay" class="overlay hidden">
   <div class="overlayContent">
     <h2>Persönlich</h2>
-    <div id="mainPersonalSlide" class="personalSlide hidden">
+    <div id="mainPersonalSlide" class="personalSlide">
       <div id="mainPersonalText"></div>
       <button id="startSlidesBtn">Weiter</button>
     </div>
