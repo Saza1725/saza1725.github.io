@@ -1,0 +1,64 @@
+* { box-sizing: border-box; margin:0; padding:0; }
+body {
+  font-family: 'Georgia', serif;
+  background: url('polar.jpg') center / cover no-repeat fixed;
+  color: #111;
+  line-height: 1.5;
+}
+.hidden { display: none !important; }
+
+#menuButton {
+  position: fixed;
+  top: 15px;
+  right: 20px;
+  font-size: 2.2em;
+  cursor: pointer;
+  z-index: 6000;
+}
+
+#menu {
+  position: fixed;
+  top:0;
+  right:-260px;
+  width:260px;
+  height:100%;
+  background: rgba(255,255,255,0.95);
+  padding-top:60px;
+  transition: right 0.4s ease;
+  z-index:6000;
+}
+#menu a { display:block; padding:18px; text-decoration:none; color:#111; font-weight:bold; }
+#menu a:hover { background: rgba(0,0,0,0.05); }
+
+header {
+  position: fixed; top:0; left:0; width:100%;
+  padding: 120px 20px 20px;
+  background: rgba(0,0,0,0.55);
+  color:#fff; text-align:center; z-index:4000;
+  display:flex; flex-direction:column; gap:5px;
+}
+#dailyQuoteBox { margin-top:10px; padding:10px 20px; background: rgba(255,255,255,0.9); color:#111; border-radius:12px; }
+
+main { padding: 200px 20px 40px; display:flex; flex-direction:column; align-items:center; gap:15px; }
+
+#buttons { display:flex; gap:18px; flex-wrap:wrap; justify-content:center; }
+button { padding:14px 22px; border:none; border-radius:12px; font-weight:700; font-size:1.1em; cursor:pointer; background:#fff; box-shadow:0 4px 12px rgba(0,0,0,0.25); transition: transform 0.2s ease; }
+button:hover { transform: translateY(-2px) scale(1.05); }
+
+.overlay {
+  position: fixed; inset:0; background: rgba(0,0,0,0.35); display:flex; justify-content:center; align-items:flex-start; padding:40px 20px; z-index:7000;
+}
+.overlayContent { background: rgba(255,255,255,0.95); padding:25px; border-radius:18px; max-width:800px; width:100%; overflow-y:auto; }
+
+#personalSlidesContainer .personalSlide { display:none; }
+#personalSlidesContainer .personalSlide.active { display:block; }
+
+#personalQuoteDisplay { padding:12px 18px; background: rgba(255,255,255,0.85); border-radius:16px; font-weight:700; text-align:left; max-width:80%; display:none; }
+
+#dailyFocusContainer { margin-top:20px; padding:14px 18px; background: rgba(0,0,0,0.55); border-radius:16px; max-width:80%; color:#fff; }
+#dailyFocusContainer input { width:100%; padding:10px 14px; border-radius:12px; border:none; font-size:1.1em; }
+
+#folderGrid, #meinezeitGrid, #monthDetail { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:16px; }
+.folderFrame, .myTimeFolder, .archiveEntry { background: rgba(255,255,255,0.95); padding:16px; border-radius:14px; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.25); }
+.myTimeImage { width:260px; height:360px; object-fit:cover; border-radius:12px; margin-top:8px; }
+@media (max-width:700px) { .myTimeImage { width:100%; height:auto; object-fit:contain; } }
