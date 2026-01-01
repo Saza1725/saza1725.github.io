@@ -1,0 +1,35 @@
+{
+  "folders": {
+     "Ich -einfach Ich": [
+      {
+        "title": "Zeit",
+        "text": "Bei mir hat es lange gedauert, ich hatte viele Höhen und Tiefen, \nviele Rückschläge und oft gedacht, wie willst du das schaffen? \nJeder in meinem Umfeld weiß alles besser, tausend Einflüsse von allen Seiten \n und im Endeffekt, haben andere mir die Entscheidung genommen. \nNachdem mir das klar wurde, ich alles änderte, hat man \ngesehen, wie sich alles ändert. Aber was mir geblieben ist, oder was \nich mir selber nun aufgebaut habe, das kann und wird mir keiner mehr nehmen. \nDenn es ist MEIN LEBEN.",
+        "image": "images/Soldat.jpg"
+      }
+    ],
+    "Der Tag": [
+      {
+        "title": "Entscheidung",
+        "text": "Man ist immer der eigene Autor in seiner Geschichte. \nTriffst du eine Entscheidung, dann bleib dabei. \nKeiner sagt das es leicht wird, aber egal welchen \nWeg du gehst, hat jede Richting seine Höhen und Tiefen.",
+        "image": "images/Kloster.jpg"
+      },
+      {
+        "title": "Ruhe",
+        "text": "Das wichtigste ist, das du dich nicht aus der Ruhe bringen lässt. \nAuf Fehler und schnelle Reaktion warten die andern. \nStatt Reaktion, eine bewusste Aktion starten.",
+        "image": "images/Sonne.jpg"
+      }
+    ],
+    "Umfeld": [
+      {
+        "title": "Reflexion",
+        "text": "Sei skeptisch, beobachte und nimm auf. Am ende des Tages \nreflektierst du alles, deine Handlungen, die der andern \nund von deinem Umfeld. Macht dich etwas nicht glücklich, \noder du drehst dich im kreis, lass es los. \nDie welt und DEIN LEBEN geht weiter.",
+        "image": "images/Respekt.jpg"
+      },
+      {
+        "title": "Dein Leben",
+        "text": "Gestalte dein Leben so wie du es willt, machst du es nicht, gibst du \nautomatisch dein Leben aus der Hand und die andern formen und gestalten dein Leben.",
+        "image": "images/yoga.jpg"
+      }
+    ]
+  }
+}
