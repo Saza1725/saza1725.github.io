@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Motivation App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- MENU BUTTON -->
+<div id="menuButton">☰</div>
+
+<!-- SEITENMENÜ -->
+<nav id="menu" class="hidden">
+  <a href="#" data-target="personalOverlay">🙇🏻 Über mich</a>
+  <a href="#" data-target="infoOverlay">ℹ️ Information</a>
+  <a href="#" data-target="meinezeitOverlay">🕒 Meine Zeit</a>
+  <a href="#" data-target="folderOverlay">📁 Zitate</a>
+  <a href="#" data-target="archiveOverlay">🏛️ Vergangene Tage</a>
+  <a href="#" data-target="home">🏠 Home</a>
+</nav>
+
+<!-- HEADER -->
+<header>
+  <div id="weekday"></div>
+  <div id="daytime"></div>
+  <div id="date"></div>
+  <div id="time"></div>
+  <div id="dailyQuoteBox">Hier erscheint dein Tageszitat</div>
+</header>
+
+<!-- MAIN -->
+<main>
+  <div id="dailyMotivationText">Hol dir deine Tages-Inspiration!</div>
+
+  <div id="dailyQuoteActions">
+    <button id="shareQuoteBtn">📤 Teilen</button>
+  </div>
+
+  <div id="buttons">
+    <button id="morningBtn">Morgen</button>
+    <button id="noonBtn">Mittag</button>
+    <button id="eveningBtn">Abend</button>
+  </div>
+
+  <div id="personalQuoteDisplay" class="hidden"></div>
+
+  <div id="dailyFocusContainer">
+    <p>Mein Fokus heute:</p>
+    <input type="text" id="dailyFocusInput" placeholder="Schreibe hier deinen Fokus..." maxlength="100">
+  </div>
+
+  <section id="newsContainer">
+    <h3>Neuigkeiten</h3>
+    <div id="newsList"></div>
+  </section>
+</main>
+
+<!-- PERSONAL OVERLAY -->
+<div id="personalOverlay" class="overlay hidden">
+  <div class="overlayContent">
+    <h2>Persönlich</h2>
+    <div id="mainPersonalSlide" class="personalSlide hidden">
+      <div id="mainPersonalText"></div>
+      <button id="startSlidesBtn">Weiter</button>
+    </div>
+    <div id="personalSlidesContainer"></div>
+    <div id="personalSlidesProgress"></div>
+    <div id="personalSlidesWrapper">
+      <button id="prevSlide">← Zurück</button>
+      <button id="nextSlide">Weiter →</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOLDER OVERLAY -->
+<div id="folderOverlay" class="overlay hidden">
+  <div class="overlayContent">
+    <h2>Zitate-Ordner</h2>
+    <div id="folderGrid"></div>
+  </div>
+</div>
+
+<!-- MEINE ZEIT OVERLAY -->
+<div id="meinezeitOverlay" class="overlay hidden">
+  <div class="overlayContent">
+    <h2>Meine Zeit</h2>
+    <div id="meinezeitGrid"></div>
+  </div>
+</div>
+
+<!-- ARCHIV OVERLAY -->
+<div id="archiveOverlay" class="overlay hidden">
+  <div class="overlayContent">
+    <h2>Archiv</h2>
+    <div id="monthDetail"></div>
+  </div>
+</div>
+
+<!-- INFO OVERLAY -->
+<div id="infoOverlay" class="overlay hidden">
+  <div class="overlayContent" id="infoContent"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
