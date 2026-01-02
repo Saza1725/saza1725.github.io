@@ -98,6 +98,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  document.querySelector('a[data-target="infoOverlay"]').addEventListener("click", e=>{
+    e.preventDefault();
+    closeAllOverlays();
+    menu.style.right="-260px";
+    infoOverlay.style.display="flex";
+    main.style.display="none";
+  });
+
   /* ================= FOLDERS ================= */
   const folderOverlay = document.getElementById("folderOverlay");
   const folderGrid = document.getElementById("folderGrid");
@@ -127,19 +135,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderFolder(name){
     if(!folderData) return;
-    folderGrid.style.display="none";
+    folderGrid.style.display="none"; // Übersicht ausblenden
     const content = folderOverlay.querySelector(".overlayContent");
+
     const folderContent = document.createElement("div");
-    folderContent.className="folderContent";
-    folderContent.innerHTML = `<h3>${name}</h3>` + folderData.folders[name].map(q=>`<p>${q}</p>`).join("");
+    folderContent.className = "folderContent";
+    folderContent.innerHTML = `<h3>${name}</h3>` + folderData.folders[name].map(q => `<p>${q}</p>`).join("");
 
     const backBtn = document.createElement("button");
-    backBtn.innerText="← Zurück";
-    backBtn.className="closeBtn";
-    backBtn.onclick=()=>{
+    backBtn.innerText = "← Zurück";
+    backBtn.className = "closeBtn";
+    backBtn.onclick = () => {
       folderContent.remove();
-      folderGrid.style.display="grid";
+      folderGrid.style.display = "grid"; // Übersicht wieder anzeigen
     };
+
     folderContent.appendChild(backBtn);
     content.appendChild(folderContent);
   }
@@ -218,10 +228,20 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }).catch(()=>{ console.log("Archiv-Daten fehlen"); });
 
+  document.querySelector('a[data-target="archiveOverlay"]').addEventListener("click", e=>{
+    e.preventDefault();
+    closeAllOverlays();
+    menu.style.right="-260px";
+    document.getElementById("archiveOverlay").style.display="flex";
+    main.style.display="none";
+  });
+
   /* ================= MEINE ZEIT ================= */
+  let meinezeitData = null;
   fetch(`${DATA_PATH}meinezeit.json`)
     .then(r=>r.json())
     .then(d=>{
+      meinezeitData=d;
       const overlay=document.getElementById("meinezeitOverlay");
       const content=overlay.querySelector(".overlayContent");
       const grid=document.getElementById("meinezeitGrid");
@@ -230,7 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
         grid.style.display="grid";
         content.querySelectorAll(".folderContent").forEach(el=>el.remove());
         grid.innerHTML="";
-        Object.keys(d.folders).forEach(name=>{
+        Object.keys(meinezeitData.folders).forEach(name=>{
           const div=document.createElement("div");
           div.className="myTimeFolder";
           div.innerText=name;
@@ -246,7 +266,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const folderContent=document.createElement("div");
         folderContent.className="folderContent";
         folderContent.innerHTML=`<h3>${name}</h3>`;
-        d.folders[name].forEach(e=>{
+        meinezeitData.folders[name].forEach(e=>{
           folderContent.innerHTML+=`<h4>${e.title}</h4><p>${e.text}</p>`;
           if(e.image) folderContent.innerHTML+=`<img src="${e.image}" class="myTimeImage">`;
         });
