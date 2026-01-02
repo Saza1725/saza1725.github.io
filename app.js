@@ -4,10 +4,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const menu = document.getElementById("menu");
   const menuButton = document.getElementById("menuButton");
   const main = document.querySelector("main");
-  const overlays = document.querySelectorAll(".overlay");
+
+  function getAllOverlays() {
+    return Array.from(document.querySelectorAll(".overlay"));
+  }
 
   function hideAllOverlays() {
-    overlays.forEach(o => o.style.display = "none");
+    getAllOverlays().forEach(o => o.style.display = "none");
   }
 
   function showMain() {
@@ -21,58 +24,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ================= MENU ================= */
   menuButton.onclick = () => {
-  // 🔥 Alle Overlays schließen
-  overlays.forEach(o => o.style.display = "none");
+    hideAllOverlays();
+    main.style.display = "none"; // Hauptseite NICHT automatisch zeigen
+    menu.style.right = menu.style.right === "0px" ? "-260px" : "0";
+  };
 
-  // Hauptseite NICHT automatisch zeigen
-  main.style.display = "none";
+  document.querySelectorAll("#menu a").forEach(link => {
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      const target = link.dataset.target;
+      menu.style.right = "-260px";
 
-  // Menü togglen
-  menu.style.right = menu.style.right === "0px" ? "-260px" : "0";
-};
+      if (target === "home") return showMain();
 
-
- document.querySelectorAll("#menu a").forEach(link => {
-  link.addEventListener("click", e => {
-    e.preventDefault();
-    const target = link.dataset.target;
-
-    menu.style.right = "-260px";
-
-    if (target === "home") {
-      showMain();
-      return;
-    }
-
-    document.dispatchEvent(
-      new CustomEvent("openSection", { detail: target })
-    );
+      document.dispatchEvent(
+        new CustomEvent("openSection", { detail: target })
+      );
+    });
   });
-});
-
-
-
-  /* ================= INFO ================= */
-  const infoOverlay = document.getElementById("infoOverlay");
-const infoContent = document.getElementById("infoContent");
-
-fetch("Daten/info.json")
-  .then(r => r.json())
-  .then(d => infoContent.innerHTML = d.infoText)
-  .catch(() => infoContent.innerHTML = "<p>Info nicht verfügbar</p>");
-
-document.addEventListener("openSection", e => {
-  if (e.detail !== "infoOverlay") return;
-
-  hideAllOverlays();
-  infoOverlay.style.display = "flex";
-  main.style.display = "none";
-});
-
-infoOverlay.addEventListener("click", e => {
-  if (!infoContent.contains(e.target)) showMain();
-});
-
 
   /* ================= HEADER ================= */
   const weekday = document.getElementById("weekday");
@@ -95,19 +64,16 @@ infoOverlay.addEventListener("click", e => {
 
   /* ================= TAGESZITAT ================= */
   const dailyQuoteBox = document.getElementById("dailyQuoteBox");
-
   fetch("Daten/tageszeit.json")
     .then(r => r.json())
     .then(data => {
       const today = new Date().toISOString().split("T")[0];
       const seed = Number(today.replaceAll("-", ""));
-      dailyQuoteBox.textContent =
-        data.quotes[seed % data.quotes.length];
+      dailyQuoteBox.textContent = data.quotes[seed % data.quotes.length];
     });
 
   /* ================= PERSONAL QUOTES ================= */
   const personalQuoteDisplay = document.getElementById("personalQuoteDisplay");
-
   fetch("Daten/dailyTexts.json")
     .then(r => r.json())
     .then(d => {
@@ -115,8 +81,7 @@ infoOverlay.addEventListener("click", e => {
       const seed = Number(today.replaceAll("-", ""));
 
       function show(type) {
-        personalQuoteDisplay.textContent =
-          d[type][seed % d[type].length];
+        personalQuoteDisplay.textContent = d[type][seed % d[type].length];
         personalQuoteDisplay.style.display = "block";
       }
 
@@ -142,10 +107,8 @@ infoOverlay.addEventListener("click", e => {
   focusInput.value = localStorage.getItem(focusKey) || "";
   focusInput.oninput = () => localStorage.setItem(focusKey, focusInput.value);
 
- /* ================= ZITATE ORDNER (FIX) ================= */
-fetch("Daten/folders.json")
-  .then(r => r.json())
-  .then(d => {
+  /* ================= ZITATE ORDNER ================= */
+  fetch("Daten/folders.json").then(r => r.json()).then(d => {
     const overlay = document.getElementById("folderOverlay");
     const grid = document.getElementById("folderGrid");
     const content = overlay.querySelector(".overlayContent");
@@ -159,9 +122,6 @@ fetch("Daten/folders.json")
       grid.innerHTML = "";
       grid.style.display = "grid";
 
-      overlay.style.display = "flex";
-      main.style.display = "none";
-
       Object.keys(d.folders).forEach(name => {
         const div = document.createElement("div");
         div.className = "folderFrame";
@@ -169,17 +129,19 @@ fetch("Daten/folders.json")
         div.onclick = () => showFolder(name);
         grid.appendChild(div);
       });
+
+      hideAllOverlays();
+      overlay.style.display = "flex";
+      main.style.display = "none";
     }
 
     function showFolder(name) {
-      clearFolderContent();
       grid.style.display = "none";
+      clearFolderContent();
 
       const fc = document.createElement("div");
       fc.className = "folderContent";
-
       fc.innerHTML = `<h3>${name}</h3>`;
-
       d.folders[name].forEach(q => {
         const p = document.createElement("p");
         p.textContent = q;
@@ -190,34 +152,99 @@ fetch("Daten/folders.json")
       backBtn.textContent = "← Zurück";
       backBtn.className = "closeBtn";
       backBtn.onclick = showOverview;
-
       fc.appendChild(backBtn);
       content.appendChild(fc);
     }
 
-   document.addEventListener("openSection", e => {
-  if (e.detail === "folderOverlay") {
-    showOverview();
-  }
-});
-
+    document.addEventListener("openSection", e => {
+      if (e.detail === "folderOverlay") showOverview();
+    });
   });
 
+  /* ================= MEINE ZEIT ================= */
+  fetch("Daten/meinezeit.json").then(r => r.json()).then(d => {
+    const overlay = document.getElementById("meinezeitOverlay");
+    const content = overlay.querySelector(".overlayContent");
+    const grid = document.getElementById("meinezeitGrid");
 
-  document.addEventListener("openSection", e => {
-  if (e.detail === "infoOverlay") {
-    hideAllOverlays();
-    infoOverlay.style.display = "flex";
-    main.style.display = "none";
+    function renderOverview() {
+      grid.innerHTML = "";
+      grid.style.display = "grid";
+      content.querySelectorAll(".folderContent").forEach(el => el.remove());
+
+      Object.keys(d.folders).forEach(name => {
+        const div = document.createElement("div");
+        div.className = "myTimeFolder";
+        div.textContent = name;
+        div.onclick = () => renderFolder(name);
+        grid.appendChild(div);
+      });
+
+      hideAllOverlays();
+      overlay.style.display = "flex";
+      main.style.display = "none";
+    }
+
+    function renderFolder(name) {
+      grid.style.display = "none";
+      const fc = document.createElement("div");
+      fc.className = "folderContent";
+      fc.innerHTML = `<h3>${name}</h3>`;
+
+      d.folders[name].forEach(e => {
+        fc.innerHTML += `<h4>${e.title}</h4><p>${e.text}</p>`;
+        if (e.image) fc.innerHTML += `<img src="${e.image}" class="myTimeImage">`;
+      });
+
+      const backBtn = document.createElement("button");
+      backBtn.textContent = "← Zurück";
+      backBtn.className = "closeBtn";
+      backBtn.onclick = renderOverview;
+      fc.appendChild(backBtn);
+      content.appendChild(fc);
+    }
+
+    document.addEventListener("openSection", e => {
+      if (e.detail === "meinezeitOverlay") renderOverview();
+    });
+  });
+
+  /* ================= ÜBER MICH ================= */
+  let aboutOverlay = document.getElementById("aboutOverlay");
+  let aboutContent;
+
+  if (!aboutOverlay) {
+    aboutOverlay = document.createElement("div");
+    aboutOverlay.id = "aboutOverlay";
+    aboutOverlay.className = "overlay";
+
+    aboutContent = document.createElement("div");
+    aboutContent.id = "aboutContent";
+    aboutContent.className = "overlayContent";
+
+    aboutOverlay.appendChild(aboutContent);
+    document.body.appendChild(aboutOverlay);
   }
 
-});
+  fetch("Daten/about.json")
+    .then(r => r.json())
+    .then(d => { aboutContent.innerHTML = d.aboutText; })
+    .catch(() => { aboutContent.innerHTML = "<p>Über mich-Text nicht verfügbar.</p>"; });
 
+  document.addEventListener("openSection", e => {
+    if (e.detail === "aboutOverlay") {
+      hideAllOverlays();
+      aboutOverlay.style.display = "flex";
+      main.style.display = "none";
+    }
+  });
 
-fetch("Daten/archive.json")
-  .then(r => r.json())
-  .then(d => {
+  aboutOverlay.addEventListener("click", e => {
+    if (!aboutContent.contains(e.target)) showMain();
+  });
 
+  /* ================= VERGANGENE TAGE ================= */
+  fetch("Daten/archive.json").then(r => r.json()).then(d => {
     const overlay = document.getElementById("archiveOverlay");
     const monthDetail = document.getElementById("monthDetail");
 
@@ -236,130 +263,9 @@ fetch("Daten/archive.json")
     }
 
     document.addEventListener("openSection", e => {
-      if (e.detail === "archiveOverlay") {
-        renderArchive();
-      }
+      if (e.detail === "archiveOverlay") renderArchive();
     });
   });
-
-  /* ================= MEINE ZEIT ================= */
-fetch("Daten/meinezeit.json")
-  .then(r => r.json())
-  .then(d => {
-
-    const overlay = document.getElementById("meinezeitOverlay");
-    const content = overlay.querySelector(".overlayContent");
-    const grid = document.getElementById("meinezeitGrid");
-
-    function renderOverview() {
-      grid.innerHTML = "";
-      grid.style.display = "grid";
-      content.querySelectorAll(".folderContent").forEach(e => e.remove());
-
-      Object.keys(d.folders).forEach(name => {
-        const div = document.createElement("div");
-        div.className = "myTimeFolder";
-        div.textContent = name;
-        div.onclick = () => renderFolder(name);
-        grid.appendChild(div);
-      });
-
-      hideAllOverlays();
-      overlay.style.display = "flex";
-      main.style.display = "none";
-    }
-
-    function renderFolder(name) {
-      grid.style.display = "none";
-
-      const fc = document.createElement("div");
-      fc.className = "folderContent";
-      fc.innerHTML = `<h3>${name}</h3>`;
-
-      d.folders[name].forEach(e => {
-        fc.innerHTML += `<h4>${e.title}</h4><p>${e.text}</p>`;
-        if (e.image) {
-          fc.innerHTML += `<img src="${e.image}" class="myTimeImage">`;
-        }
-      });
-
-      const back = document.createElement("button");
-      back.textContent = "← Zurück";
-      back.className = "closeBtn";
-      back.onclick = renderOverview;
-
-      fc.appendChild(back);
-      content.appendChild(fc);
-    }
-
-    document.addEventListener("openSection", e => {
-      if (e.detail === "meinezeitOverlay") {
-        renderOverview();
-      }
-    });
-  });
-  
-// ================= ÜBER MICH =================
-let aboutOverlay = document.getElementById("aboutOverlay");
-let aboutContent;
-
-if (!aboutOverlay) {
-  aboutOverlay = document.createElement("div");
-  aboutOverlay.id = "aboutOverlay";
-  aboutOverlay.className = "overlay";
-
-  aboutContent = document.createElement("div");
-  aboutContent.id = "aboutContent";
-  aboutContent.className = "overlayContent";
-
-  aboutOverlay.appendChild(aboutContent);
-  document.body.appendChild(aboutOverlay);
-}
-
-fetch("Daten/about.json")
-  .then(r => r.json())
-  .then(d => {
-    aboutContent.innerHTML = d.aboutText;
-  })
-  .catch(() => {
-    aboutContent.innerHTML = "<p>Über mich-Text nicht verfügbar.</p>";
-  });
-
-// Menü-Event
-document.addEventListener("openSection", e => {
-  if (e.detail === "aboutOverlay") {
-    hideAllOverlays();
-    aboutOverlay.style.display = "flex";
-    main.style.display = "none";
-  }
-});
-
-// Klick außerhalb schließt Overlay
-aboutOverlay.addEventListener("click", e => {
-  if (!aboutContent.contains(e.target)) showMain();
-});
-
-fetch("Daten/about.json")
-  .then(r => r.json())
-  .then(d => {
-    aboutContent.innerHTML = d.aboutText;
-  })
-  .catch(() => {
-    aboutContent.innerHTML = "<p>Über mich-Text nicht verfügbar.</p>";
-  });
-
-document.addEventListener("openSection", e => {
-  if (e.detail === "aboutOverlay") {
-    hideAllOverlays();
-    aboutOverlay.style.display = "flex";
-    main.style.display = "none";
-  }
-});
-
-aboutOverlay.addEventListener("click", e => {
-  if (!aboutContent.contains(e.target)) showMain();
-});
-
 
   /* ================= NEWS ================= */
   async function loadNews() {
@@ -369,10 +275,10 @@ aboutOverlay.addEventListener("click", e => {
     let items = [];
     try {
       const a = await fetch("Daten/archive.json").then(r => r.json());
-      a.days.forEach(d => items.push({ date:d.date, text:d.quote }));
+      a.days.forEach(d => items.push({ date: d.date, text: d.quote }));
     } catch {}
 
-    items.sort((a,b)=>new Date(b.date)-new Date(a.date));
+    items.sort((a,b) => new Date(b.date)-new Date(a.date));
     list.innerHTML = "";
 
     items.slice(0,3).forEach(i => {
@@ -383,32 +289,5 @@ aboutOverlay.addEventListener("click", e => {
     });
   }
   loadNews();
-
-  document
-  .querySelector('[data-target="meinezeitOverlay"]')
-  ?.addEventListener("click", e => {
-    e.preventDefault();
-    showMain();
-    document.getElementById("meinezeitOverlay").style.display = "flex";
-    main.style.display = "none";
-  });
-
-document
-  .querySelector('[data-target="archiveOverlay"]')
-  ?.addEventListener("click", e => {
-    e.preventDefault();
-    showMain();
-    document.getElementById("archiveOverlay").style.display = "flex";
-    main.style.display = "none";
-  });
-
-document
-  .querySelector('[data-target="aboutOverlay"]')
-  ?.addEventListener("click", e => {
-    e.preventDefault();
-    showMain();
-    document.getElementById("aboutOverlay").style.display = "flex";
-    main.style.display = "none";
-  });
 
 });
