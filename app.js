@@ -246,31 +246,80 @@ document.addEventListener("DOMContentLoaded", () => {
     .catch(() => infoContent.innerHTML = "<p>Info nicht verfügbar</p>");
   createOverlayHandler("infoOverlay");
 
-  /* ================= ÜBER MICH ================= */
-  let aboutOverlay = document.getElementById("aboutOverlay");
-  let aboutContent;
+  /* ================= ÜBER MICH OVERLAY ================= */
+let aboutOverlay = document.getElementById("aboutOverlay");
+let aboutContent;
 
-  if (!aboutOverlay) {
-    aboutOverlay = document.createElement("div");
-    aboutOverlay.id = "aboutOverlay";
-    aboutOverlay.className = "overlay";
+if (!aboutOverlay) {
+  // Overlay erstellen
+  aboutOverlay = document.createElement("div");
+  aboutOverlay.id = "aboutOverlay";
+  aboutOverlay.className = "overlay";
 
-    aboutContent = document.createElement("div");
-    aboutContent.id = "aboutContent";
-    aboutContent.className = "overlayContent";
+  // Inhalt erstellen
+  aboutContent = document.createElement("div");
+  aboutContent.id = "aboutContent";
+  aboutContent.className = "overlayContent";
 
-    aboutOverlay.appendChild(aboutContent);
-    document.body.appendChild(aboutOverlay);
-  } else {
-    aboutContent = aboutOverlay.querySelector(".overlayContent");
-  }
+  // Schließen-Button
+  const closeBtn = document.createElement("button");
+  closeBtn.innerText = "← Zurück";
+  closeBtn.className = "closeBtn";
+  closeBtn.onclick = () => {
+    aboutOverlay.style.display = "none";
+    main.style.display = "flex";
+  };
 
-  fetch("Daten/about.json")
-    .then(r => r.json())
-    .then(d => aboutContent.innerHTML = d.aboutText)
-    .catch(() => aboutContent.innerHTML = "<p>Über mich-Text nicht verfügbar.</p>");
+  aboutContent.appendChild(closeBtn);
+  aboutOverlay.appendChild(aboutContent);
+  document.body.appendChild(aboutOverlay);
+} else {
+  aboutContent = aboutOverlay.querySelector(".overlayContent");
+}
 
-  createOverlayHandler("aboutOverlay");
+// Inhalt laden
+fetch("Daten/about.json")
+  .then(r => r.json())
+  .then(d => {
+    // Text oben im Overlay
+    aboutContent.innerHTML = d.aboutText;
+
+    // Schließen-Button erneut hinzufügen, damit er immer da ist
+    const closeBtn = document.createElement("button");
+    closeBtn.innerText = "← Zurück";
+    closeBtn.className = "closeBtn";
+    closeBtn.onclick = () => {
+      aboutOverlay.style.display = "none";
+      main.style.display = "flex";
+    };
+    aboutContent.appendChild(closeBtn);
+  })
+  .catch(() => {
+    aboutContent.innerHTML = "<p>Über mich-Text nicht verfügbar.</p>";
+    const closeBtn = document.createElement("button");
+    closeBtn.innerText = "← Zurück";
+    closeBtn.className = "closeBtn";
+    closeBtn.onclick = () => {
+      aboutOverlay.style.display = "none";
+      main.style.display = "flex";
+    };
+    aboutContent.appendChild(closeBtn);
+  });
+
+// Menü-Button Integration (sichtbar über Overlay)
+menuButton.onclick = () => {
+  menu.style.right = menu.style.right === "0px" ? "-260px" : "0";
+  // Overlay bleibt sichtbar, Menü ist überlagert
+  aboutOverlay.style.zIndex = "2000"; // Overlay unter Menü
+  menu.style.zIndex = "6000";          // Menü über Overlay
+};
+
+// Funktion zum Öffnen Overlay
+function openAboutOverlay() {
+  aboutOverlay.style.display = "flex";
+  main.style.display = "none";
+}
+
 
   /* ================= NEWS ================= */
   async function loadNews() {
