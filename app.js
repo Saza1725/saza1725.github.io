@@ -298,6 +298,31 @@ fetch("Daten/meinezeit.json")
       }
     });
   });
+  
+/* ================= ÜBER MICH ================= */
+const aboutOverlay = document.getElementById("aboutOverlay");
+const aboutContent = document.getElementById("aboutContent");
+
+fetch("Daten/about.json")
+  .then(r => r.json())
+  .then(d => {
+    aboutContent.innerHTML = d.aboutText;
+  })
+  .catch(() => {
+    aboutContent.innerHTML = "<p>Über mich-Text nicht verfügbar.</p>";
+  });
+
+document.addEventListener("openSection", e => {
+  if (e.detail === "aboutOverlay") {
+    hideAllOverlays();
+    aboutOverlay.style.display = "flex";
+    main.style.display = "none";
+  }
+});
+
+aboutOverlay.addEventListener("click", e => {
+  if (!aboutContent.contains(e.target)) showMain();
+});
 
 
   /* ================= NEWS ================= */
