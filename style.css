@@ -388,7 +388,7 @@ button:hover {
   align-items: flex-start; /* von oben aus */
   overflow-y: auto;
   padding: 40px 20px;
-  z-index: 2000; /* unter Menü, über Hauptcontent */
+  z-index: 20000; /* unter Menü, über Hauptcontent */
 }
 
 #aboutContent {
