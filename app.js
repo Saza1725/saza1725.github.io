@@ -4,9 +4,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const main = document.querySelector("main");
   const overlays = document.querySelectorAll(".overlay");
 
-  // ================== START: Hauptseite sichtbar ==================
-  main.style.display = "flex";
-  overlays.forEach(o => o.style.display = "none");
+ // ================== START: nur Hauptseite sichtbar ==================
+main.style.display = "flex";                 // Hauptbereich anzeigen
+overlays.forEach(o => o.style.display = "none"); // Alle Overlays verstecken
+const personalOverlay = document.getElementById("personalOverlay");
+const mainSlide = document.getElementById("mainPersonalSlide");
+if(personalOverlay) personalOverlay.style.display = "none";
+if(mainSlide) mainSlide.style.display = "none";
+
 
   // ================== MENU BUTTON ==================
   menuButton.onclick = () => {
@@ -233,13 +238,13 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderSlides() {
     if (!personalData) return;
     personalSlidesContainer.innerHTML = "";
-    if (index === -1) {
-      mainPersonalText.innerHTML = `<h2>${personalData.intro.title}</h2><p>${personalData.intro.text.replace(/\n/g, "<br>")}</p>`;
-      mainSlide.style.display = "block";
-      setTimeout(() => mainSlide.classList.add("active"), 50);
-      progress.innerText = "";
-      return;
-    }
+   if(index === -1){
+  mainPersonalText.innerHTML = `<h2>${personalData.intro.title}</h2><p>${personalData.intro.text.replace(/\n/g,"<br>")}</p>`;
+  mainSlide.style.display = "none"; // ← nicht automatisch anzeigen
+  progress.innerText="";
+  return;
+}
+
     mainSlide.style.display = "none";
     mainSlide.classList.remove("active");
     personalData.slides.forEach((slide, i) => {
