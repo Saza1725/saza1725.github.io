@@ -109,14 +109,23 @@ infoOverlay.addEventListener("click", e => {
       const div=document.createElement("div");
       div.className="folderFrame";
       div.innerText=name;
-      div.onclick=()=>{
-        const overlay=document.getElementById("folderOverlay");
-        const content=overlay.querySelector(".overlayContent");
-        main.style.display="none";
-        overlay.style.display="flex";
-        content.innerHTML=`<h3>${name}</h3>`+d.folders[name].map(q=>`<p>${q}</p>`).join("")+`<button id="closeFolderBtn">Schließen</button>`;
-        content.querySelector("#closeFolderBtn").onclick=()=>{overlay.style.display="none";main.style.display="flex";};
-      };
+      div.onclick = () => {
+  const overlay = document.getElementById("folderOverlay");
+  const content = overlay.querySelector(".overlayContent");
+  main.style.display = "none";
+  overlay.style.display = "flex";
+  content.innerHTML = `
+    <h3>${name}</h3>
+    ${d.folders[name].map(q => `<p>${q}</p>`).join("")}
+    <button id="folderBackBtn">← Zurück</button>
+  `;
+  
+  // Button klickbar machen
+  content.querySelector("#folderBackBtn").onclick = () => {
+    overlay.style.display = "none";
+    main.style.display = "flex";
+  };
+
       grid.appendChild(div);
     });
   });
