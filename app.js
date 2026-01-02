@@ -118,8 +118,10 @@ fetch("Daten/folders.json")
       content.querySelectorAll(".folderContent").forEach(el => el.remove());
 
       // Overlay anzeigen
-      overlay.style.display = "flex";
-      main.style.display = "none";
+      const overlay = document.getElementById(target);
+      if (overlay) {
+        overlay.style.display = "flex";
+        main.style.display = "none"; // Hauptseite ausblenden
 
       // Grid mit Ordnern füllen
       Object.keys(d.folders).forEach(name => {
