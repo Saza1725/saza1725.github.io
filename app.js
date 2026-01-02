@@ -21,8 +21,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ================= MENU ================= */
   menuButton.onclick = () => {
-    menu.style.right = menu.style.right === "0px" ? "-260px" : "0";
-  };
+  // 🔥 Alle Overlays schließen
+  overlays.forEach(o => o.style.display = "none");
+
+  // Hauptseite NICHT automatisch zeigen
+  main.style.display = "none";
+
+  // Menü togglen
+  menu.style.right = menu.style.right === "0px" ? "-260px" : "0";
+};
+
 
   document.querySelectorAll("#menu a").forEach(link => {
     link.addEventListener("click", e => {
