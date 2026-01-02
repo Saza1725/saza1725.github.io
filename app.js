@@ -6,9 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const main = document.querySelector("main");
   const overlays = document.querySelectorAll(".overlay");
 
-
-
-
   function hideAllOverlays() {
     overlays.forEach(o => o.style.display = "none");
   }
@@ -24,59 +21,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ================= MENU ================= */
   menuButton.onclick = () => {
-  // 🔥 Alle Overlays schließen
-  overlays.forEach(o => o.style.display = "none");
+    menu.style.right = menu.style.right === "0px" ? "-260px" : "0";
+  };
 
-  // Hauptseite NICHT automatisch zeigen
-  main.style.display = "none";
+  document.querySelectorAll("#menu a").forEach(link => {
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      const target = link.dataset.target;
 
-  // Menü togglen
-  menu.style.right = menu.style.right === "0px" ? "-260px" : "0";
-};
+      menu.style.right = "-260px";
 
+      if (target === "home") {
+        showMain();
+        return;
+      }
 
- document.querySelectorAll("#menu a").forEach(link => {
-  link.addEventListener("click", e => {
-    e.preventDefault();
-    const target = link.dataset.target;
-
-
-    menu.style.right = "-260px";
-
-    if (target === "home") {
-      showMain();
-      return;
-    }
-
-    document.dispatchEvent(
-      new CustomEvent("openSection", { detail: target })
-    );
+      document.dispatchEvent(
+        new CustomEvent("openSection", { detail: target })
+      );
+    });
   });
-});
-
-
-
-  /* ================= INFO ================= */
-  const infoOverlay = document.getElementById("infoOverlay");
-const infoContent = document.getElementById("infoContent");
-
-fetch("Daten/info.json")
-  .then(r => r.json())
-  .then(d => infoContent.innerHTML = d.infoText)
-  .catch(() => infoContent.innerHTML = "<p>Info nicht verfügbar</p>");
-
-document.addEventListener("openSection", e => {
-  if (e.detail !== "infoOverlay") return;
-
-  hideAllOverlays();
-  infoOverlay.style.display = "flex";
-  main.style.display = "none";
-});
-
-infoOverlay.addEventListener("click", e => {
-  if (!infoContent.contains(e.target)) showMain();
-});
-
 
   /* ================= HEADER ================= */
   const weekday = document.getElementById("weekday");
@@ -99,7 +63,6 @@ infoOverlay.addEventListener("click", e => {
 
   /* ================= TAGESZITAT ================= */
   const dailyQuoteBox = document.getElementById("dailyQuoteBox");
-
   fetch("Daten/tageszeit.json")
     .then(r => r.json())
     .then(data => {
@@ -111,7 +74,6 @@ infoOverlay.addEventListener("click", e => {
 
   /* ================= PERSONAL QUOTES ================= */
   const personalQuoteDisplay = document.getElementById("personalQuoteDisplay");
-
   fetch("Daten/dailyTexts.json")
     .then(r => r.json())
     .then(d => {
@@ -119,8 +81,7 @@ infoOverlay.addEventListener("click", e => {
       const seed = Number(today.replaceAll("-", ""));
 
       function show(type) {
-        personalQuoteDisplay.textContent =
-          d[type][seed % d[type].length];
+        personalQuoteDisplay.textContent = d[type][seed % d[type].length];
         personalQuoteDisplay.style.display = "block";
       }
 
@@ -146,257 +107,170 @@ infoOverlay.addEventListener("click", e => {
   focusInput.value = localStorage.getItem(focusKey) || "";
   focusInput.oninput = () => localStorage.setItem(focusKey, focusInput.value);
 
- /* ================= ZITATE ORDNER (FIX) ================= */
-fetch("Daten/folders.json")
-  .then(r => r.json())
-  .then(d => {
-    const overlay = document.getElementById("folderOverlay");
-    const grid = document.getElementById("folderGrid");
-    const content = overlay.querySelector(".overlayContent");
-
-    function clearFolderContent() {
-      content.querySelectorAll(".folderContent").forEach(el => el.remove());
-    }
-
-    function showOverview() {
-      clearFolderContent();
-      grid.innerHTML = "";
-      grid.style.display = "grid";
-
-      overlay.style.display = "flex";
-      main.style.display = "none";
-
-      Object.keys(d.folders).forEach(name => {
-        const div = document.createElement("div");
-        div.className = "folderFrame";
-        div.textContent = name;
-        div.onclick = () => showFolder(name);
-        grid.appendChild(div);
-      });
-
-
-
-
-    }
-
-    function showFolder(name) {
-      clearFolderContent();
-      grid.style.display = "none";
-
-
-      const fc = document.createElement("div");
-      fc.className = "folderContent";
-
-      fc.innerHTML = `<h3>${name}</h3>`;
-
-      d.folders[name].forEach(q => {
-        const p = document.createElement("p");
-        p.textContent = q;
-        fc.appendChild(p);
-      });
-
-      const backBtn = document.createElement("button");
-      backBtn.textContent = "← Zurück";
-      backBtn.className = "closeBtn";
-      backBtn.onclick = showOverview;
-
-      fc.appendChild(backBtn);
-      content.appendChild(fc);
-    }
-
-   document.addEventListener("openSection", e => {
-  if (e.detail === "folderOverlay") {
-    showOverview();
-  }
-});
-
-  });
-
-
-  document.addEventListener("openSection", e => {
-  if (e.detail === "infoOverlay") {
-    hideAllOverlays();
-    infoOverlay.style.display = "flex";
-    main.style.display = "none";
-  }
-
-});
-
-
-fetch("Daten/archive.json")
-  .then(r => r.json())
-  .then(d => {
-
-    const overlay = document.getElementById("archiveOverlay");
-    const monthDetail = document.getElementById("monthDetail");
-
-    function renderArchive() {
-      monthDetail.innerHTML = "";
-      d.days.forEach(entry => {
-        const box = document.createElement("div");
-        box.className = "archiveEntry";
-        box.innerHTML = `<h4>${entry.date}</h4><p>${entry.quote}</p>`;
-        monthDetail.appendChild(box);
-      });
-
-      hideAllOverlays();
-      overlay.style.display = "flex";
-      main.style.display = "none";
-    }
+  /* ================= OVERLAY-FUNKTION ================= */
+  function createOverlayHandler(overlayId, renderFn) {
+    const overlay = document.getElementById(overlayId);
+    if (!overlay) return;
+    overlay.addEventListener("click", e => {
+      if (!overlay.querySelector(".overlayContent").contains(e.target)) showMain();
+    });
 
     document.addEventListener("openSection", e => {
-      if (e.detail === "archiveOverlay") {
-        renderArchive();
+      if (e.detail === overlayId) {
+        hideAllOverlays();
+        if (renderFn) renderFn();
+        overlay.style.display = "flex";
+        main.style.display = "none";
       }
     });
-  });
+  }
+
+  /* ================= ZITATE ================= */
+  fetch("Daten/folders.json")
+    .then(r => r.json())
+    .then(d => {
+      const grid = document.getElementById("folderGrid");
+      const overlay = document.getElementById("folderOverlay");
+      const content = overlay.querySelector(".overlayContent");
+
+      function renderOverview() {
+        grid.innerHTML = "";
+        grid.style.display = "grid";
+        content.querySelectorAll(".folderContent").forEach(e => e.remove());
+
+        Object.keys(d.folders).forEach(name => {
+          const div = document.createElement("div");
+          div.className = "folderFrame";
+          div.textContent = name;
+          div.onclick = () => renderFolder(name);
+          grid.appendChild(div);
+        });
+      }
+
+      function renderFolder(name) {
+        grid.style.display = "none";
+        content.querySelectorAll(".folderContent").forEach(e => e.remove());
+
+        const fc = document.createElement("div");
+        fc.className = "folderContent";
+        fc.innerHTML = `<h3>${name}</h3>`;
+        d.folders[name].forEach(q => {
+          const p = document.createElement("p");
+          p.textContent = q;
+          fc.appendChild(p);
+        });
+
+        const backBtn = document.createElement("button");
+        backBtn.textContent = "← Zurück";
+        backBtn.className = "closeBtn";
+        backBtn.onclick = renderOverview;
+
+        fc.appendChild(backBtn);
+        content.appendChild(fc);
+      }
+
+      createOverlayHandler("folderOverlay", renderOverview);
+    });
 
   /* ================= MEINE ZEIT ================= */
-fetch("Daten/meinezeit.json")
-  .then(r => r.json())
-  .then(d => {
+  fetch("Daten/meinezeit.json")
+    .then(r => r.json())
+    .then(d => {
+      const overlay = document.getElementById("meinezeitOverlay");
+      const content = overlay.querySelector(".overlayContent");
+      const grid = document.getElementById("meinezeitGrid");
 
-    const overlay = document.getElementById("meinezeitOverlay");
-    const content = overlay.querySelector(".overlayContent");
-    const grid = document.getElementById("meinezeitGrid");
+      function renderOverview() {
+        grid.innerHTML = "";
+        grid.style.display = "grid";
+        content.querySelectorAll(".folderContent").forEach(e => e.remove());
 
-    function renderOverview() {
-      grid.innerHTML = "";
-      grid.style.display = "grid";
-      content.querySelectorAll(".folderContent").forEach(e => e.remove());
-
-      Object.keys(d.folders).forEach(name => {
-        const div = document.createElement("div");
-        div.className = "myTimeFolder";
-        div.textContent = name;
-        div.onclick = () => renderFolder(name);
-        grid.appendChild(div);
-      });
-
-      hideAllOverlays();
-      overlay.style.display = "flex";
-      main.style.display = "none";
-    }
-
-    function renderFolder(name) {
-      grid.style.display = "none";
-
-      const fc = document.createElement("div");
-      fc.className = "folderContent";
-      fc.innerHTML = `<h3>${name}</h3>`;
-
-      d.folders[name].forEach(e => {
-        fc.innerHTML += `<h4>${e.title}</h4><p>${e.text}</p>`;
-        if (e.image) {
-          fc.innerHTML += `<img src="${e.image}" class="myTimeImage">`;
-        }
-      });
-
-      const back = document.createElement("button");
-      back.textContent = "← Zurück";
-      back.className = "closeBtn";
-      back.onclick = renderOverview;
-
-      fc.appendChild(back);
-      content.appendChild(fc);
-    }
-
-    document.addEventListener("openSection", e => {
-      if (e.detail === "meinezeitOverlay") {
-        renderOverview();
+        Object.keys(d.folders).forEach(name => {
+          const div = document.createElement("div");
+          div.className = "myTimeFolder";
+          div.textContent = name;
+          div.onclick = () => renderFolder(name);
+          grid.appendChild(div);
+        });
       }
+
+      function renderFolder(name) {
+        grid.style.display = "none";
+        content.querySelectorAll(".folderContent").forEach(e => e.remove());
+
+        const fc = document.createElement("div");
+        fc.className = "folderContent";
+        fc.innerHTML = `<h3>${name}</h3>`;
+        d.folders[name].forEach(e => {
+          fc.innerHTML += `<h4>${e.title}</h4><p>${e.text}</p>`;
+          if (e.image) fc.innerHTML += `<img src="${e.image}" class="myTimeImage">`;
+        });
+
+        const backBtn = document.createElement("button");
+        backBtn.textContent = "← Zurück";
+        backBtn.className = "closeBtn";
+        backBtn.onclick = renderOverview;
+
+        fc.appendChild(backBtn);
+        content.appendChild(fc);
+      }
+
+      createOverlayHandler("meinezeitOverlay", renderOverview);
     });
-  });
-  
-// ================= ÜBER MICH =================
-let aboutOverlay = document.getElementById("aboutOverlay");
-let aboutContent;
 
-if (!aboutOverlay) {
-  aboutOverlay = document.createElement("div");
-  aboutOverlay.id = "aboutOverlay";
-  aboutOverlay.className = "overlay";
+  /* ================= ARCHIVE ================= */
+  fetch("Daten/archive.json")
+    .then(r => r.json())
+    .then(d => {
+      const overlay = document.getElementById("archiveOverlay");
+      const monthDetail = document.getElementById("monthDetail");
 
-  aboutContent = document.createElement("div");
-  aboutContent.id = "aboutContent";
-  aboutContent.className = "overlayContent";
+      function renderArchive() {
+        monthDetail.innerHTML = "";
+        d.days.forEach(entry => {
+          const box = document.createElement("div");
+          box.className = "archiveEntry";
+          box.innerHTML = `<h4>${entry.date}</h4><p>${entry.quote}</p>`;
+          monthDetail.appendChild(box);
+        });
+      }
 
-  aboutOverlay.appendChild(aboutContent);
-  document.body.appendChild(aboutOverlay);
-}
+      createOverlayHandler("archiveOverlay", renderArchive);
+    });
 
-fetch("Daten/about.json")
-  .then(r => r.json())
-  .then(d => {
-    aboutContent.innerHTML = d.aboutText;
-  })
-  .catch(() => {
-    aboutContent.innerHTML = "<p>Über mich-Text nicht verfügbar.</p>";
-  });
+  /* ================= INFO ================= */
+  const infoContent = document.getElementById("infoContent");
+  fetch("Daten/info.json")
+    .then(r => r.json())
+    .then(d => infoContent.innerHTML = d.infoText)
+    .catch(() => infoContent.innerHTML = "<p>Info nicht verfügbar</p>");
+  createOverlayHandler("infoOverlay");
 
-// Menü-Event
-document.addEventListener("openSection", e => {
-  if (e.detail === "aboutOverlay") {
-    hideAllOverlays();
-    aboutOverlay.style.display = "flex";
-    main.style.display = "none";
+  /* ================= ÜBER MICH ================= */
+  let aboutOverlay = document.getElementById("aboutOverlay");
+  let aboutContent;
 
+  if (!aboutOverlay) {
+    aboutOverlay = document.createElement("div");
+    aboutOverlay.id = "aboutOverlay";
+    aboutOverlay.className = "overlay";
 
+    aboutContent = document.createElement("div");
+    aboutContent.id = "aboutContent";
+    aboutContent.className = "overlayContent";
 
-
-
-
-
-
-
+    aboutOverlay.appendChild(aboutContent);
+    document.body.appendChild(aboutOverlay);
+  } else {
+    aboutContent = aboutOverlay.querySelector(".overlayContent");
   }
-});
 
-// Klick außerhalb schließt Overlay
-aboutOverlay.addEventListener("click", e => {
-  if (!aboutContent.contains(e.target)) showMain();
-});
+  fetch("Daten/about.json")
+    .then(r => r.json())
+    .then(d => aboutContent.innerHTML = d.aboutText)
+    .catch(() => aboutContent.innerHTML = "<p>Über mich-Text nicht verfügbar.</p>");
 
-fetch("Daten/about.json")
-  .then(r => r.json())
-  .then(d => {
-    aboutContent.innerHTML = d.aboutText;
-  })
-  .catch(() => {
-    aboutContent.innerHTML = "<p>Über mich-Text nicht verfügbar.</p>";
-  });
-
-document.addEventListener("openSection", e => {
-  if (e.detail === "aboutOverlay") {
-    hideAllOverlays();
-    aboutOverlay.style.display = "flex";
-    main.style.display = "none";
-  }
-});
-
-aboutOverlay.addEventListener("click", e => {
-  if (!aboutContent.contains(e.target)) showMain();
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  createOverlayHandler("aboutOverlay");
 
   /* ================= NEWS ================= */
   async function loadNews() {
@@ -420,32 +294,5 @@ aboutOverlay.addEventListener("click", e => {
     });
   }
   loadNews();
-
-  document
-  .querySelector('[data-target="meinezeitOverlay"]')
-  ?.addEventListener("click", e => {
-    e.preventDefault();
-    showMain();
-    document.getElementById("meinezeitOverlay").style.display = "flex";
-    main.style.display = "none";
-  });
-
-document
-  .querySelector('[data-target="archiveOverlay"]')
-  ?.addEventListener("click", e => {
-    e.preventDefault();
-    showMain();
-    document.getElementById("archiveOverlay").style.display = "flex";
-    main.style.display = "none";
-  });
-
-document
-  .querySelector('[data-target="aboutOverlay"]')
-  ?.addEventListener("click", e => {
-    e.preventDefault();
-    showMain();
-    document.getElementById("aboutOverlay").style.display = "flex";
-    main.style.display = "none";
-  });
 
 });
