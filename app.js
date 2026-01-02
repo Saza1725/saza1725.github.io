@@ -124,11 +124,8 @@ infoOverlay.addEventListener("click", e => {
   content.querySelector("#folderBackBtn").onclick = () => {
     overlay.style.display = "none";
     main.style.display = "flex";
+    };
   };
-
-      grid.appendChild(div);
-    });
-  });
 
   // Meine Zeit Overlay
   fetch("Daten/meinezeit.json").then(r=>r.json()).then(d=>{
