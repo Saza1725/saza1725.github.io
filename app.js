@@ -102,45 +102,66 @@ infoOverlay.addEventListener("click", e => {
   dailyFocusInput.value=localStorage.getItem(todayKey)||"";
   dailyFocusInput.addEventListener("input",()=>{localStorage.setItem(todayKey,dailyFocusInput.value);});
 
- // ================= ZITATE-ORDNER =================
+// ================= ZITATE-ORDNER =================
 fetch("Daten/folders.json")
   .then(r => r.json())
   .then(d => {
     const grid = document.getElementById("folderGrid");
 
-    // Für jeden Ordner ein Div erstellen
-    Object.keys(d.folders).forEach(name => {
-      const div = document.createElement("div");
-      div.className = "folderFrame";
-      div.innerText = name;
+    // Übersicht rendern
+    function renderOverview() {
+      grid.style.display = "grid"; // Grid sichtbar
+      const overlay = document.getElementById("folderOverlay");
+      const content = overlay.querySelector(".overlayContent");
 
-      // Klick auf Ordner
-      div.onclick = () => {
-        const overlay = document.getElementById("folderOverlay");
-        const content = overlay.querySelector(".overlayContent");
-        
-        // Hauptbereich ausblenden + Overlay einblenden
-        main.style.display = "none";
-        overlay.style.display = "flex";
+      // Alte Inhalte entfernen
+      content.querySelectorAll(".folderContent").forEach(el => el.remove());
 
-        // Inhalt + Zurück-Button
-        content.innerHTML = `
-          <h3>${name}</h3>
-          ${d.folders[name].map(q => `<p>${q}</p>`).join("")}
-          <button id="folderBackBtn">← Zurück</button>
-        `;
+      // Overlay anzeigen
+      overlay.style.display = "flex";
+      main.style.display = "none";
 
-        // Klick auf Zurück-Button
-        const backBtn = content.querySelector("#folderBackBtn");
-        backBtn.onclick = () => {
-          overlay.style.display = "none";
-          main.style.display = "flex";
-        };
+      // Grid mit Ordnern füllen
+      Object.keys(d.folders).forEach(name => {
+        const div = document.createElement("div");
+        div.className = "folderFrame";
+        div.innerText = name;
+
+        div.onclick = () => renderFolder(name);
+
+        grid.appendChild(div);
+      });
+    }
+
+    // Einzelner Ordner öffnen
+    function renderFolder(name) {
+      grid.style.display = "none"; // Grid ausblenden
+      const overlay = document.getElementById("folderOverlay");
+      const content = overlay.querySelector(".overlayContent");
+
+      // Ordnerinhalt anzeigen
+      const folderContent = document.createElement("div");
+      folderContent.className = "folderContent";
+      folderContent.innerHTML = `<h3>${name}</h3>`;
+      d.folders[name].forEach(q => {
+        folderContent.innerHTML += `<p>${q}</p>`;
+      });
+
+      // Zurück-Button in Ordner
+      const backBtn = document.createElement("button");
+      backBtn.innerText = "← Zurück";
+      backBtn.className = "closeBtn";
+      backBtn.onclick = () => {
+        folderContent.remove(); // Ordner entfernen
+        renderOverview();       // Grid wieder anzeigen
       };
 
-      // Div ans Grid anhängen
-      grid.appendChild(div);
-    });
+      folderContent.appendChild(backBtn);
+      content.appendChild(folderContent);
+    }
+
+    // Initial: Übersicht anzeigen
+    renderOverview();
   });
 
 
