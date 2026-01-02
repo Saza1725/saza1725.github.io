@@ -26,6 +26,33 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // ================= INFO OVERLAY =================
+const infoOverlay = document.getElementById("infoOverlay");
+const infoContent = document.getElementById("infoContent");
+
+// Info laden
+fetch("./Daten/info.json")
+  .then(r => {
+    if (!r.ok) throw new Error("info.json nicht gefunden");
+    return r.json();
+  })
+  .then(d => {
+    infoContent.innerHTML = d.infoText;
+  })
+  .catch(err => {
+    infoContent.innerHTML = "<p>Info konnte nicht geladen werden.</p>";
+    console.error(err);
+  });
+
+// Schließen bei Klick außerhalb
+infoOverlay.addEventListener("click", e => {
+  if (!infoContent.contains(e.target)) {
+    infoOverlay.style.display = "none";
+    main.style.display = "flex";
+  }
+});
+
+
   // Tageszeit
   const weekday = document.getElementById("weekday");
   const daytime = document.getElementById("daytime");
