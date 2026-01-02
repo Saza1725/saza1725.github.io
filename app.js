@@ -201,6 +201,48 @@ fetch("Daten/folders.json")
   }
 });
 
+  document.addEventListener("openSection", e => {
+  if (e.detail === "infoOverlay") {
+    hideAllOverlays();
+    infoOverlay.style.display = "flex";
+    main.style.display = "none";
+  }
+});
+  document.addEventListener("openSection", e => {
+  if (e.detail === "meinezeitOverlay") {
+    renderOverview();
+  }
+});
+
+
+fetch("Daten/archive.json")
+  .then(r => r.json())
+  .then(d => {
+
+    const overlay = document.getElementById("archiveOverlay");
+    const monthDetail = document.getElementById("monthDetail");
+
+    function renderArchive() {
+      monthDetail.innerHTML = "";
+      d.days.forEach(entry => {
+        const box = document.createElement("div");
+        box.className = "archiveEntry";
+        box.innerHTML = `<h4>${entry.date}</h4><p>${entry.quote}</p>`;
+        monthDetail.appendChild(box);
+      });
+
+      hideAllOverlays();
+      overlay.style.display = "flex";
+      main.style.display = "none";
+    }
+
+    document.addEventListener("openSection", e => {
+      if (e.detail === "archiveOverlay") {
+        renderArchive();
+      }
+    });
+  });
+
 
   /* ================= NEWS ================= */
   async function loadNews() {
