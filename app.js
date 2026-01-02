@@ -112,16 +112,25 @@ infoOverlay.addEventListener("click", e => {
        div.onclick=()=>{
         const overlay=document.getElementById("folderOverlay");
         const content=overlay.querySelector(".overlayContent");
-        main.style.display="none";
-        overlay.style.display="flex";
-        content.innerHTML=`<h3>${name}</h3>`+d.folders[name].map(q=>`<p>${q}</p>`).join("")+`<button id="closeFolderBtn">Schließen</button>`;
-        content.querySelector("#closeFolderBtn").onclick=()=>{overlay.style.display="none";main.style.display="flex";};
-      };
+       div.onclick = () => {
+  const overlay = document.getElementById("folderOverlay");
+  const content = overlay.querySelector(".overlayContent");
+  main.style.display = "none";
+  overlay.style.display = "flex";
 
-      grid.appendChild(div);
-    });
-  });
-  
+  // Overlay-Inhalt + Schließen-Button
+  content.innerHTML = `<h3>${name}</h3>` + 
+                      d.folders[name].map(q => `<p>${q}</p>`).join("") + 
+                      `<button id="closeFolderBtn">← Zurück</button>`;
+
+  // Button klickbar machen
+  const closeBtn = content.querySelector("#closeFolderBtn");
+  closeBtn.onclick = () => {
+    overlay.style.display = "none";
+    main.style.display = "flex";
+  };
+};
+
 
   // Meine Zeit Overlay
   fetch("Daten/meinezeit.json").then(r=>r.json()).then(d=>{
