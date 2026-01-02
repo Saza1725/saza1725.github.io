@@ -131,6 +131,8 @@ infoOverlay.addEventListener("click", e => {
   };
 };
 
+         grid.appendChild(div); // <- WICHTIG: ohne das erscheint der Button/Ordner gar nicht
+});
 
   // Meine Zeit Overlay
   fetch("Daten/meinezeit.json").then(r=>r.json()).then(d=>{
