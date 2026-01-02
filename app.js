@@ -33,20 +33,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   document.querySelectorAll("#menu a").forEach(link => {
-    link.addEventListener("click", e => {
-      e.preventDefault();
-      const target = link.dataset.target;
+  link.addEventListener("click", e => {
+    e.preventDefault();
+    const target = link.dataset.target;
 
-      showMain();
-      if (target === "home") return;
+    menu.style.right = "-260px";
+    hideAllOverlays();
 
-      const overlay = document.getElementById(target);
-      if (overlay) {
-        overlay.style.display = "flex";
-        main.style.display = "none";
-      }
-    });
+    if (target === "home") {
+      main.style.display = "flex";
+      return;
+    }
+
+    // 👉 nur Trigger, KEIN Overlay-Zwang
+    document.dispatchEvent(new CustomEvent("openSection", {
+      detail: target
+    }));
   });
+});
+
 
   /* ================= INFO ================= */
   const infoOverlay = document.getElementById("infoOverlay");
@@ -182,14 +187,19 @@ fetch("Daten/folders.json")
       content.appendChild(fc);
     }
 
-    // Menü-Klick → immer Übersicht öffnen
-    document
-      .querySelector('[data-target="folderOverlay"]')
-      .addEventListener("click", e => {
-        e.preventDefault();
-        showOverview();
-      });
+   document.addEventListener("openSection", e => {
+  if (e.detail === "folderOverlay") {
+    showOverview();
+  }
+});
+
   });
+
+  document.addEventListener("openSection", e => {
+  if (e.detail === "meinezeitOverlay") {
+    renderOverview();
+  }
+});
 
 
   /* ================= NEWS ================= */
