@@ -121,52 +121,68 @@ document.addEventListener("DOMContentLoaded", () => {
   focusInput.value = localStorage.getItem(focusKey) || "";
   focusInput.oninput = () => localStorage.setItem(focusKey, focusInput.value);
 
-  /* ================= ZITATE ORDNER ================= */
-  fetch("Daten/folders.json")
-    .then(r => r.json())
-    .then(d => {
-      const overlay = document.getElementById("folderOverlay");
-      const grid = document.getElementById("folderGrid");
-      const content = overlay.querySelector(".overlayContent");
+ /* ================= ZITATE ORDNER (FIX) ================= */
+fetch("Daten/folders.json")
+  .then(r => r.json())
+  .then(d => {
+    const overlay = document.getElementById("folderOverlay");
+    const grid = document.getElementById("folderGrid");
+    const content = overlay.querySelector(".overlayContent");
 
-      function showOverview() {
-        grid.innerHTML = "";
-        grid.style.display = "grid";
-        content.querySelectorAll(".folderContent").forEach(e => e.remove());
-        overlay.style.display = "flex";
-        main.style.display = "none";
+    function clearFolderContent() {
+      content.querySelectorAll(".folderContent").forEach(el => el.remove());
+    }
 
-        Object.keys(d.folders).forEach(name => {
-          const div = document.createElement("div");
-          div.className = "folderFrame";
-          div.textContent = name;
-          div.onclick = () => showFolder(name);
-          grid.appendChild(div);
-        });
-      }
+    function showOverview() {
+      clearFolderContent();
+      grid.innerHTML = "";
+      grid.style.display = "grid";
 
-      function showFolder(name) {
-        grid.style.display = "none";
-        const fc = document.createElement("div");
-        fc.className = "folderContent";
-        fc.innerHTML = `<h3>${name}</h3>` +
-          d.folders[name].map(q => `<p>${q}</p>`).join("");
+      overlay.style.display = "flex";
+      main.style.display = "none";
 
-        const back = document.createElement("button");
-        back.textContent = "← Zurück";
-        back.className = "closeBtn";
-        back.onclick = showOverview;
+      Object.keys(d.folders).forEach(name => {
+        const div = document.createElement("div");
+        div.className = "folderFrame";
+        div.textContent = name;
+        div.onclick = () => showFolder(name);
+        grid.appendChild(div);
+      });
+    }
 
-        fc.appendChild(back);
-        content.appendChild(fc);
-      }
+    function showFolder(name) {
+      clearFolderContent();
+      grid.style.display = "none";
 
-      document.querySelector('[data-target="folderOverlay"]')
-        .addEventListener("click", e => {
-          e.preventDefault();
-          showOverview();
-        });
-    });
+      const fc = document.createElement("div");
+      fc.className = "folderContent";
+
+      fc.innerHTML = `<h3>${name}</h3>`;
+
+      d.folders[name].forEach(q => {
+        const p = document.createElement("p");
+        p.textContent = q;
+        fc.appendChild(p);
+      });
+
+      const backBtn = document.createElement("button");
+      backBtn.textContent = "← Zurück";
+      backBtn.className = "closeBtn";
+      backBtn.onclick = showOverview;
+
+      fc.appendChild(backBtn);
+      content.appendChild(fc);
+    }
+
+    // Menü-Klick → immer Übersicht öffnen
+    document
+      .querySelector('[data-target="folderOverlay"]')
+      .addEventListener("click", e => {
+        e.preventDefault();
+        showOverview();
+      });
+  });
+
 
   /* ================= NEWS ================= */
   async function loadNews() {
