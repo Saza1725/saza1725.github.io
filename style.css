@@ -105,18 +105,15 @@ header {
 
 /* ================= MAIN ================= */
 main {
-  margin-left: 320px; /* Platz für News */
-}
-
-main {
-  padding: 220px 20px 50px;
+  padding: 220px 20px 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 22px;   /* gleichmäßige vertikale Abstände */
+  gap: 18px;
   position: relative;
-  z-index: 0;
+  z-index: 1;
 }
+
 @media (max-width: 900px) {
   #newsContainer {
     display: none;
@@ -224,10 +221,29 @@ button:hover {
   top: 50%;
   transform: translateY(-50%);
   width: 280px;
-  max-width: 280px;
-  text-align: left;
+  padding: 14px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.35);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
   z-index: 900;
 }
+
+#newsContainer h3 {
+  font-size: 1.05em;
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: 700;
+  color: rgba(0,0,0,0.75);
+}
+
+@media (max-width: 900px) {
+  #newsContainer {
+    display: none;
+  }
+}
+
 
 
 .newsItem {
