@@ -102,36 +102,47 @@ infoOverlay.addEventListener("click", e => {
   dailyFocusInput.value=localStorage.getItem(todayKey)||"";
   dailyFocusInput.addEventListener("input",()=>{localStorage.setItem(todayKey,dailyFocusInput.value);});
 
-  // FOLDER OVERLAY
-  fetch("Daten/folders.json").then(r=>r.json()).then(d=>{
-    const grid=document.getElementById("folderGrid");
-    Object.keys(d.folders).forEach(name=>{
-      const div=document.createElement("div");
-      div.className="folderFrame";
-      div.innerText=name;
-       div.onclick=()=>{
-        const overlay=document.getElementById("folderOverlay");
-        const content=overlay.querySelector(".overlayContent");
-       div.onclick = () => {
-  const overlay = document.getElementById("folderOverlay");
-  const content = overlay.querySelector(".overlayContent");
-  main.style.display = "none";
-  overlay.style.display = "flex";
+ // ================= ZITATE-ORDNER =================
+fetch("Daten/folders.json")
+  .then(r => r.json())
+  .then(d => {
+    const grid = document.getElementById("folderGrid");
 
-  // Overlay-Inhalt + Schließen-Button
-  content.innerHTML = `<h3>${name}</h3>` + 
-                      d.folders[name].map(q => `<p>${q}</p>`).join("") + 
-                      `<button id="closeFolderBtn">← Zurück</button>`;
+    // Für jeden Ordner ein Div erstellen
+    Object.keys(d.folders).forEach(name => {
+      const div = document.createElement("div");
+      div.className = "folderFrame";
+      div.innerText = name;
 
-  // Button klickbar machen
-  const closeBtn = content.querySelector("#closeFolderBtn");
-  closeBtn.onclick = () => {
-    overlay.style.display = "none";
-    main.style.display = "flex";
+      // Klick auf Ordner
+      div.onclick = () => {
+        const overlay = document.getElementById("folderOverlay");
+        const content = overlay.querySelector(".overlayContent");
+        
+        // Hauptbereich ausblenden + Overlay einblenden
+        main.style.display = "none";
+        overlay.style.display = "flex";
 
-     grid.appendChild(div); // <- WICHTIG: ohne das erscheint der Button/Ordner gar nicht
-  };
-};
+        // Inhalt + Zurück-Button
+        content.innerHTML = `
+          <h3>${name}</h3>
+          ${d.folders[name].map(q => `<p>${q}</p>`).join("")}
+          <button id="folderBackBtn">← Zurück</button>
+        `;
+
+        // Klick auf Zurück-Button
+        const backBtn = content.querySelector("#folderBackBtn");
+        backBtn.onclick = () => {
+          overlay.style.display = "none";
+          main.style.display = "flex";
+        };
+      };
+
+      // Div ans Grid anhängen
+      grid.appendChild(div);
+    });
+  });
+
 
   // Meine Zeit Overlay
   fetch("Daten/meinezeit.json").then(r=>r.json()).then(d=>{
