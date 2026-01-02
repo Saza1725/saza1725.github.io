@@ -7,6 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
  // ================== START: nur Hauptseite sichtbar ==================
 main.style.display = "flex";                 // Hauptbereich anzeigen
 overlays.forEach(o => o.style.display = "none"); // Alle Overlays verstecken
+dailyQuoteBox.style.display = "block"; // Tageszitat sichtbar
+personalQuoteDisplay.style.display = "none"; // Personal Quote erst nach Klick sichtbar
+
 const personalOverlay = document.getElementById("personalOverlay");
 const mainSlide = document.getElementById("mainPersonalSlide");
 if(personalOverlay) personalOverlay.style.display = "none";
