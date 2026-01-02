@@ -57,7 +57,7 @@ body {
 }
 
 #menu a {
-  display: block;
+  display: fixed;
   padding: 18px;
   color: #111;
   text-decoration: none;
