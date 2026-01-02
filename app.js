@@ -191,4 +191,31 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   loadNews();
 
+  document
+  .querySelector('[data-target="meinezeitOverlay"]')
+  ?.addEventListener("click", e => {
+    e.preventDefault();
+    showMain();
+    document.getElementById("meinezeitOverlay").style.display = "flex";
+    main.style.display = "none";
+  });
+
+document
+  .querySelector('[data-target="archiveOverlay"]')
+  ?.addEventListener("click", e => {
+    e.preventDefault();
+    showMain();
+    document.getElementById("archiveOverlay").style.display = "flex";
+    main.style.display = "none";
+  });
+
+document
+  .querySelector('[data-target="aboutOverlay"]')
+  ?.addEventListener("click", e => {
+    e.preventDefault();
+    showMain();
+    document.getElementById("aboutOverlay").style.display = "flex";
+    main.style.display = "none";
+  });
+
 });
