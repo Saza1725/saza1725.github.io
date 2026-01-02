@@ -299,9 +299,45 @@ fetch("Daten/meinezeit.json")
     });
   });
   
-/* ================= ÜBER MICH ================= */
-const aboutOverlay = document.getElementById("aboutOverlay");
-const aboutContent = document.getElementById("aboutContent");
+// ================= ÜBER MICH =================
+let aboutOverlay = document.getElementById("aboutOverlay");
+let aboutContent;
+
+if (!aboutOverlay) {
+  aboutOverlay = document.createElement("div");
+  aboutOverlay.id = "aboutOverlay";
+  aboutOverlay.className = "overlay";
+
+  aboutContent = document.createElement("div");
+  aboutContent.id = "aboutContent";
+  aboutContent.className = "overlayContent";
+
+  aboutOverlay.appendChild(aboutContent);
+  document.body.appendChild(aboutOverlay);
+}
+
+fetch("Daten/about.json")
+  .then(r => r.json())
+  .then(d => {
+    aboutContent.innerHTML = d.aboutText;
+  })
+  .catch(() => {
+    aboutContent.innerHTML = "<p>Über mich-Text nicht verfügbar.</p>";
+  });
+
+// Menü-Event
+document.addEventListener("openSection", e => {
+  if (e.detail === "aboutOverlay") {
+    hideAllOverlays();
+    aboutOverlay.style.display = "flex";
+    main.style.display = "none";
+  }
+});
+
+// Klick außerhalb schließt Overlay
+aboutOverlay.addEventListener("click", e => {
+  if (!aboutContent.contains(e.target)) showMain();
+});
 
 fetch("Daten/about.json")
   .then(r => r.json())
