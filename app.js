@@ -32,39 +32,47 @@ document.addEventListener("DOMContentLoaded", () => {
 };
 
 
-  document.querySelectorAll("#menu a").forEach(link => {
+ document.querySelectorAll("#menu a").forEach(link => {
   link.addEventListener("click", e => {
     e.preventDefault();
     const target = link.dataset.target;
 
     menu.style.right = "-260px";
-    hideAllOverlays();
 
     if (target === "home") {
-      main.style.display = "flex";
+      showMain();
       return;
     }
 
-    // 👉 nur Trigger, KEIN Overlay-Zwang
-    document.dispatchEvent(new CustomEvent("openSection", {
-      detail: target
-    }));
+    document.dispatchEvent(
+      new CustomEvent("openSection", { detail: target })
+    );
   });
 });
 
 
+
   /* ================= INFO ================= */
   const infoOverlay = document.getElementById("infoOverlay");
-  const infoContent = document.getElementById("infoContent");
+const infoContent = document.getElementById("infoContent");
 
-  fetch("Daten/info.json")
-    .then(r => r.json())
-    .then(d => infoContent.innerHTML = d.infoText)
-    .catch(() => infoContent.innerHTML = "<p>Info nicht verfügbar</p>");
+fetch("Daten/info.json")
+  .then(r => r.json())
+  .then(d => infoContent.innerHTML = d.infoText)
+  .catch(() => infoContent.innerHTML = "<p>Info nicht verfügbar</p>");
 
-  infoOverlay.addEventListener("click", e => {
-    if (!infoContent.contains(e.target)) showMain();
-  });
+document.addEventListener("openSection", e => {
+  if (e.detail !== "infoOverlay") return;
+
+  hideAllOverlays();
+  infoOverlay.style.display = "flex";
+  main.style.display = "none";
+});
+
+infoOverlay.addEventListener("click", e => {
+  if (!infoContent.contains(e.target)) showMain();
+});
+
 
   /* ================= HEADER ================= */
   const weekday = document.getElementById("weekday");
@@ -195,11 +203,6 @@ fetch("Daten/folders.json")
 
   });
 
-  document.addEventListener("openSection", e => {
-  if (e.detail === "meinezeitOverlay") {
-    renderOverview();
-  }
-});
 
   document.addEventListener("openSection", e => {
   if (e.detail === "infoOverlay") {
@@ -207,11 +210,7 @@ fetch("Daten/folders.json")
     infoOverlay.style.display = "flex";
     main.style.display = "none";
   }
-});
-  document.addEventListener("openSection", e => {
-  if (e.detail === "meinezeitOverlay") {
-    renderOverview();
-  }
+
 });
 
 
@@ -239,6 +238,63 @@ fetch("Daten/archive.json")
     document.addEventListener("openSection", e => {
       if (e.detail === "archiveOverlay") {
         renderArchive();
+      }
+    });
+  });
+
+  /* ================= MEINE ZEIT ================= */
+fetch("Daten/meinezeit.json")
+  .then(r => r.json())
+  .then(d => {
+
+    const overlay = document.getElementById("meinezeitOverlay");
+    const content = overlay.querySelector(".overlayContent");
+    const grid = document.getElementById("meinezeitGrid");
+
+    function renderOverview() {
+      grid.innerHTML = "";
+      grid.style.display = "grid";
+      content.querySelectorAll(".folderContent").forEach(e => e.remove());
+
+      Object.keys(d.folders).forEach(name => {
+        const div = document.createElement("div");
+        div.className = "myTimeFolder";
+        div.textContent = name;
+        div.onclick = () => renderFolder(name);
+        grid.appendChild(div);
+      });
+
+      hideAllOverlays();
+      overlay.style.display = "flex";
+      main.style.display = "none";
+    }
+
+    function renderFolder(name) {
+      grid.style.display = "none";
+
+      const fc = document.createElement("div");
+      fc.className = "folderContent";
+      fc.innerHTML = `<h3>${name}</h3>`;
+
+      d.folders[name].forEach(e => {
+        fc.innerHTML += `<h4>${e.title}</h4><p>${e.text}</p>`;
+        if (e.image) {
+          fc.innerHTML += `<img src="${e.image}" class="myTimeImage">`;
+        }
+      });
+
+      const back = document.createElement("button");
+      back.textContent = "← Zurück";
+      back.className = "closeBtn";
+      back.onclick = renderOverview;
+
+      fc.appendChild(back);
+      content.appendChild(fc);
+    }
+
+    document.addEventListener("openSection", e => {
+      if (e.detail === "meinezeitOverlay") {
+        renderOverview();
       }
     });
   });
