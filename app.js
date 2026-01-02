@@ -12,13 +12,24 @@ document.addEventListener("DOMContentLoaded", () => {
     menu.style.right = menu.style.right === "0px" ? "-260px" : "0";
   };
 
-  function closeAllOverlays() {
-    overlays.forEach(o => {
-      o.style.display = "none";
-      o.classList.add("hidden");
+  document.querySelectorAll("#menu a").forEach(a => {
+    a.addEventListener("click", e => {
+      e.preventDefault();
+      const target = a.dataset.target;
+
+      // Alle Overlay-Inhalte schließen
+      overlays.forEach(o => o.style.display = "none");
+
+      // Menü schließen
+      menu.style.right = "-260px";
+
+      if (target === "home") return; // zurück zur Hauptseite
+
+      // Overlay öffnen
+      const overlay = document.getElementById(target);
+      if (overlay) overlay.style.display = "flex";
     });
-    main.style.display = "flex";
-  }
+  });
 
   /* ================= HEADER + TAGESZITAT ================= */
   const weekday = document.getElementById("weekday");
@@ -44,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const today = new Date().toISOString().split("T")[0];
       const seed = Number(today.replaceAll("-", ""));
       dailyQuoteBox.innerText = data.quotes[seed % data.quotes.length];
-    }).catch(()=>{ dailyQuoteBox.innerText="Tageszitat keine Daten verfügbar"; });
+    }).catch(() => { dailyQuoteBox.innerText = "Tageszitat keine Daten verfügbar"; });
 
   /* ================= PERSONAL QUOTES ================= */
   const personalQuoteDisplay = document.getElementById("personalQuoteDisplay");
@@ -91,19 +102,11 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(r=>r.json())
     .then(d=>infoContent.innerHTML = d.infoText.replace(/\n/g,"<br>"))
     .catch(()=>{ infoContent.innerHTML="Keine Daten verfügbar"; });
+
   infoOverlay.addEventListener("click", e=>{
     if(!infoContent.contains(e.target)){
       infoOverlay.style.display="none";
-      main.style.display="flex";
     }
-  });
-
-  document.querySelector('a[data-target="infoOverlay"]').addEventListener("click", e=>{
-    e.preventDefault();
-    closeAllOverlays();
-    menu.style.right="-260px";
-    infoOverlay.style.display="flex";
-    main.style.display="none";
   });
 
   /* ================= FOLDERS ================= */
@@ -129,7 +132,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     folderOverlay.style.display="flex";
-    main.style.display="none";
     folderGrid.style.display="grid";
   }
 
@@ -145,10 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const backBtn = document.createElement("button");
     backBtn.innerText = "← Zurück";
     backBtn.className = "closeBtn";
-    backBtn.onclick = () => {
-      folderContent.remove();
-      folderGrid.style.display = "grid"; // Übersicht wieder anzeigen
-    };
+    backBtn.onclick = () => { folderContent.remove(); folderGrid.style.display="grid"; };
 
     folderContent.appendChild(backBtn);
     content.appendChild(folderContent);
@@ -156,8 +155,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelector('a[data-target="folderOverlay"]').addEventListener("click", e=>{
     e.preventDefault();
-    closeAllOverlays();
-    menu.style.right="-260px";
     renderFolderOverview();
   });
 
@@ -206,10 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelector('a[data-target="personalOverlay"]').addEventListener("click", e=>{
     e.preventDefault();
-    closeAllOverlays();
-    menu.style.right="-260px";
     personalOverlay.style.display="flex";
-    main.style.display="none";
     index=-1;
     renderSlides();
   });
@@ -230,10 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelector('a[data-target="archiveOverlay"]').addEventListener("click", e=>{
     e.preventDefault();
-    closeAllOverlays();
-    menu.style.right="-260px";
     document.getElementById("archiveOverlay").style.display="flex";
-    main.style.display="none";
   });
 
   /* ================= MEINE ZEIT ================= */
@@ -258,7 +249,6 @@ document.addEventListener("DOMContentLoaded", () => {
           grid.appendChild(div);
         });
         overlay.style.display="flex";
-        main.style.display="none";
       }
 
       function renderFolderTime(name){
@@ -280,7 +270,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       document.querySelector('a[data-target="meinezeitOverlay"]').addEventListener("click", e=>{
         e.preventDefault();
-        closeAllOverlays();
         renderOverview();
       });
     }).catch(()=>{ console.log("Meine Zeit Daten fehlen"); });
