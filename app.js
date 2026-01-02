@@ -3,70 +3,63 @@ document.addEventListener("DOMContentLoaded", () => {
   const menuButton = document.getElementById("menuButton");
   const main = document.querySelector("main");
   const overlays = document.querySelectorAll(".overlay");
+  const dailyQuoteBox = document.getElementById("dailyQuoteBox");
+  const personalQuoteDisplay = document.getElementById("personalQuoteDisplay");
 
- // ================== START: nur Hauptseite sichtbar ==================
-main.style.display = "flex";                 // Hauptbereich anzeigen
-overlays.forEach(o => o.style.display = "none"); // Alle Overlays verstecken
-dailyQuoteBox.style.display = "block"; // Tageszitat sichtbar
-personalQuoteDisplay.style.display = "none"; // Personal Quote erst nach Klick sichtbar
+  // ===================== START: Hauptseite sichtbar =====================
+  function showMainPage() {
+    main.style.display = "flex";               // Hauptbereich zeigen
+    overlays.forEach(o => o.style.display = "none"); // Alle Overlays ausblenden
+    dailyQuoteBox.style.display = "block";     // Tageszitat sichtbar
+    personalQuoteDisplay.style.display = "none"; // Personal Quotes erst nach Klick
+    menu.style.right = "-260px";               // Menü zu
+  }
 
-const personalOverlay = document.getElementById("personalOverlay");
-const mainSlide = document.getElementById("mainPersonalSlide");
-if(personalOverlay) personalOverlay.style.display = "none";
-if(mainSlide) mainSlide.style.display = "none";
+  // Beim Start
+  showMainPage();
 
-
-  // ================== MENU BUTTON ==================
+  // ===================== MENU BUTTON =====================
   menuButton.onclick = () => {
     menu.style.right = menu.style.right === "0px" ? "-260px" : "0";
   };
 
-  function closeAllOverlays() {
-    overlays.forEach(o => o.style.display = "none");
-    main.style.display = "flex";
-    menu.style.right = "-260px";
-  }
-
+  // ===================== MENÜ LINKS =====================
   document.querySelectorAll("#menu a").forEach(a => {
     a.addEventListener("click", e => {
       e.preventDefault();
       const target = a.dataset.target;
-      closeAllOverlays();
 
-      if (target === "home") return; // Home zeigt Hauptseite
+      // Hauptseite und alle Overlays erst schließen
+      showMainPage();
+
+      if (target === "home") return; // Home bleibt Hauptseite
+
       const overlay = document.getElementById(target);
       if (overlay) {
-        overlay.style.display = "flex";
-        main.style.display = "none";
+        overlay.style.display = "flex"; // Ziel-Overlay zeigen
+        main.style.display = "none";    // Hauptseite ausblenden
       }
     });
   });
 
-  // ================== INFO OVERLAY ==================
+  // ===================== INFO OVERLAY =====================
   const infoOverlay = document.getElementById("infoOverlay");
   const infoContent = document.getElementById("infoContent");
 
   fetch("./Daten/info.json")
     .then(r => r.json())
-    .then(d => infoContent.innerHTML = d.infoText)
-    .catch(err => {
-      infoContent.innerHTML = "<p>Info konnte nicht geladen werden.</p>";
-      console.error(err);
-    });
+    .then(d => { infoContent.innerHTML = d.infoText; })
+    .catch(() => { infoContent.innerHTML = "<p>Info konnte nicht geladen werden.</p>"; });
 
   infoOverlay.addEventListener("click", e => {
-    if (!infoContent.contains(e.target)) {
-      infoOverlay.style.display = "none";
-      main.style.display = "flex";
-    }
+    if (!infoContent.contains(e.target)) showMainPage();
   });
 
-  // ================== HEADER: Uhr + Datum + Tageszitat ==================
+  // ===================== TAGESZITAT =====================
   const weekday = document.getElementById("weekday");
   const daytime = document.getElementById("daytime");
   const dateEl = document.getElementById("date");
   const timeEl = document.getElementById("time");
-  const dailyQuoteBox = document.getElementById("dailyQuoteBox");
 
   function updateHeader() {
     const now = new Date();
@@ -77,90 +70,87 @@ if(mainSlide) mainSlide.style.display = "none";
     timeEl.innerText = now.toLocaleTimeString("de-DE");
   }
   updateHeader();
-  setInterval(updateHeader, 1000);
+  setInterval(updateHeader,1000);
 
-  fetch("Daten/tageszeit.json")
-    .then(r => r.json())
-    .then(data => {
-      const today = new Date().toISOString().split("T")[0];
-      const seed = Number(today.replaceAll("-", ""));
-      dailyQuoteBox.innerText = data.quotes[seed % data.quotes.length];
-    });
+  fetch("Daten/tageszeit.json").then(r=>r.json()).then(data=>{
+    const today = new Date().toISOString().split("T")[0];
+    const seed = Number(today.replaceAll("-",""));
+    dailyQuoteBox.innerText = data.quotes[seed % data.quotes.length];
+  });
 
-  // ================== PERSONAL QUOTES ==================
-  const personalQuoteDisplay = document.getElementById("personalQuoteDisplay");
-  fetch("Daten/dailyTexts.json")
-    .then(r => r.json())
-    .then(d => {
-      const today = new Date().toISOString().split("T")[0];
-      const seed = Number(today.replaceAll("-", ""));
-      function show(type) {
-        personalQuoteDisplay.innerText = d[type][seed % d[type].length];
-        personalQuoteDisplay.style.display = "block";
-      }
-      document.getElementById("morningBtn").onclick = () => show("morning");
-      document.getElementById("noonBtn").onclick = () => show("noon");
-      document.getElementById("eveningBtn").onclick = () => show("evening");
-    });
+  // ===================== PERSONAL QUOTES =====================
+  fetch("Daten/dailyTexts.json").then(r=>r.json()).then(d=>{
+    const today = new Date().toISOString().split("T")[0];
+    const seed = Number(today.replaceAll("-",""));
+    function show(type){
+      personalQuoteDisplay.innerText=d[type][seed%d[type].length];
+      personalQuoteDisplay.style.display="block";
+    }
+    document.getElementById("morningBtn").onclick=()=>show("morning");
+    document.getElementById("noonBtn").onclick=()=>show("noon");
+    document.getElementById("eveningBtn").onclick=()=>show("evening");
+  });
 
-  // ================== SHARE BUTTON ==================
+  // ===================== SHARE BUTTON =====================
   const shareBtn = document.getElementById("shareQuoteBtn");
-  shareBtn.addEventListener("click", () => {
+  shareBtn.addEventListener("click",()=>{
     const quote = dailyQuoteBox.innerText.trim();
-    if (navigator.share) navigator.share({title:'Tageszitat', text:quote}).catch(()=>{});
-    else navigator.clipboard.writeText(quote).then(()=>alert("Zitat kopiert!"));
+    if(navigator.share){navigator.share({title:'Tageszitat',text:quote}).catch(()=>{});}
+    else{navigator.clipboard.writeText(quote).then(()=>alert("Zitat kopiert!"));}
   });
 
-  // ================== TAGESFOKUS ==================
+  // ===================== TAGESFOKUS =====================
   const dailyFocusInput = document.getElementById("dailyFocusInput");
-  const todayKey = "dailyFocus-" + new Date().toISOString().split("T")[0];
+  const todayKey = "dailyFocus-"+new Date().toISOString().split("T")[0];
   dailyFocusInput.value = localStorage.getItem(todayKey) || "";
-  dailyFocusInput.addEventListener("input", () => {
-    localStorage.setItem(todayKey, dailyFocusInput.value);
-  });
+  dailyFocusInput.addEventListener("input",()=>{localStorage.setItem(todayKey,dailyFocusInput.value);});
 
-  // ================== ZITATE-ORDNER ==================
-  fetch("Daten/folders.json").then(r => r.json()).then(d => {
+  // ===================== FOLDER OVERLAY =====================
+  fetch("Daten/folders.json").then(r=>r.json()).then(d=>{
     const grid = document.getElementById("folderGrid");
 
     function renderOverview() {
-      grid.style.display = "grid";
+      grid.style.display="grid";
       const overlay = document.getElementById("folderOverlay");
       const content = overlay.querySelector(".overlayContent");
-      content.querySelectorAll(".folderContent").forEach(el => el.remove());
-      overlay.style.display = "flex";
-      main.style.display = "none";
+      content.querySelectorAll(".folderContent").forEach(el=>el.remove());
+      overlay.style.display="flex";
+      main.style.display="none";
 
-      Object.keys(d.folders).forEach(name => {
+      Object.keys(d.folders).forEach(name=>{
         const div = document.createElement("div");
-        div.className = "folderFrame";
-        div.innerText = name;
+        div.className="folderFrame";
+        div.innerText=name;
         div.onclick = () => renderFolder(name);
         grid.appendChild(div);
       });
     }
 
-    function renderFolder(name) {
-      grid.style.display = "none";
+    function renderFolder(name){
+      grid.style.display="none";
       const overlay = document.getElementById("folderOverlay");
       const content = overlay.querySelector(".overlayContent");
+
       const folderContent = document.createElement("div");
-      folderContent.className = "folderContent";
-      folderContent.innerHTML = `<h3>${name}</h3>` + d.folders[name].map(q => `<p>${q}</p>`).join("");
+      folderContent.className="folderContent";
+      folderContent.innerHTML = `<h3>${name}</h3>`+d.folders[name].map(q=>`<p>${q}</p>`).join("");
 
       const backBtn = document.createElement("button");
-      backBtn.innerText = "← Zurück";
-      backBtn.className = "closeBtn";
-      backBtn.onclick = () => {
-        folderContent.remove();
-        renderOverview();
-      };
+      backBtn.innerText="← Zurück";
+      backBtn.className="closeBtn";
+      backBtn.onclick=renderOverview;
+
       folderContent.appendChild(backBtn);
       content.appendChild(folderContent);
     }
 
-    renderOverview();
+    renderOverview(); // beim Start die Ordnerübersicht laden
   });
+
+  // ===================== News, Meine Zeit, Personal Slides ... =====================
+  // Diese Logik bleibt wie gehabt, Overlays erscheinen nur bei Klick
+});
+
 
   // ================== MEINE ZEIT ==================
   fetch("Daten/meinezeit.json").then(r => r.json()).then(d => {
