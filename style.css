@@ -23,15 +23,16 @@ body {
   font-weight: 900;
   color: #c40000;
   cursor: pointer;
-  z-index: 3000;
 
-  /* Umrandung */
+  z-index: 20000; /* 🔥 höher als Overlay */
+
   border: 2px solid rgba(196, 0, 0, 0.6);
   border-radius: 12px;
   padding: 6px 10px;
   background: rgba(255,255,255,0.15);
   backdrop-filter: blur(6px);
 }
+
 
 #menuButton:hover {
   border-color: #c40000;
