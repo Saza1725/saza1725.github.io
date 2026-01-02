@@ -23,20 +23,25 @@ body {
   font-weight: 900;
   color: #c40000;
   cursor: pointer;
-  z-index: 3000;
+
+  z-index: 20000; /* 🔥 höher als Overlay */
+
   border: 2px solid rgba(196, 0, 0, 0.6);
   border-radius: 12px;
   padding: 6px 10px;
   background: rgba(255,255,255,0.15);
   backdrop-filter: blur(6px);
-  transition: transform 0.2s ease, background 0.2s ease;
+
 }
+
 
 #menuButton:hover {
   border-color: #c40000;
   background: rgba(255,255,255,0.25);
   transform: scale(1.08);
 }
+
+
 
 /* ================= SEITENMENÜ ================= */
 #menu {
@@ -70,15 +75,22 @@ header {
   left: 0;
   width: 100%;
   padding: 10px 0;
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(6px);
-  color: rgba(255,255,255,0.9);
+  background: rgba(0, 0, 0, 0.35); /* transparenter */
+  backdrop-filter: blur(6px);     /* weniger Blur */
+  color: rgba(255,255,255,0.9);   /* leicht softer Text */
   text-align: center;
   z-index: 1000;
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
+
+#date,
+#time {
+  opacity: 0.85;
+  font-size: 0.95em;
+}
+
 
 #weekday {
   font-size: 2em;
@@ -90,10 +102,11 @@ header {
   font-weight: 600;
 }
 
-#date, #time {
+#date,
+#time {
   font-size: 1em;
   font-weight: 500;
-  opacity: 0.85;
+
 }
 
 #dailyQuoteBox {
@@ -125,7 +138,12 @@ main {
   #newsContainer {
     display: none;
   }
+
+  main {
+    margin-left: 0;
+  }
 }
+
 
 /* ================= BUTTONS ================= */
 #buttons button {
@@ -137,14 +155,32 @@ main {
   background: #1e1e1e;
   color: #fff;
   cursor: pointer;
-  margin-right: 6px;
+
 }
 
 #buttons button:hover {
   background: #333;
 }
 
-button.closeBtn {
+
+button {
+  padding: 14px 22px;
+  background: #fff;
+  color: #111;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.1em;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+#folderBackBtn {
   margin-top: 12px;
   padding: 8px 14px;
   border-radius: 12px;
@@ -153,15 +189,17 @@ button.closeBtn {
   color: #fff;
   font-weight: 700;
   cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
-button.closeBtn:hover {
+#folderBackBtn:hover {
   transform: scale(1.05);
 }
 
+
 /* ================= PERSONAL QUOTES ================= */
 #personalQuoteDisplay {
-  margin-top: 18px;
+  margin-top: 18px;        /* Abstand zu Buttons */
   padding: 14px 20px;
   background: rgba(255,255,255,0.88);
   border-radius: 16px;
@@ -172,9 +210,10 @@ button.closeBtn:hover {
   display: none;
 }
 
+
 /* ================= TAGESFOKUS ================= */
 #dailyFocusContainer {
-  margin-top: 32px;
+  margin-top: 32px;        /* klarer Abstand zum Zitat */
   padding: 16px 20px;
   background: rgba(0,0,0,0.5);
   border-radius: 16px;
@@ -184,7 +223,15 @@ button.closeBtn:hover {
   text-align: left;
 }
 
-#dailyFocusContainer input {
+
+#dailyFocusContainer p {
+  margin-bottom: 10px;
+  font-family: 'Libre Baskerville', serif;
+  font-size: 0.95rem;
+  color: #ccc;
+}
+
+#dailyFocusInput {
   width: 100%;
   max-width: 360px;
   padding: 10px 14px;
@@ -193,6 +240,17 @@ button.closeBtn:hover {
   font-family: 'Libre Baskerville', serif;
   font-size: 0.9rem;
 }
+
+#dailyMotivationText {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-align: center;
+  margin: 30px 20px 25px;
+  color: #111;
+  letter-spacing: 0.5px;
+}
+
 
 /* ================= NEWS ================= */
 #newsContainer {
@@ -210,6 +268,22 @@ button.closeBtn:hover {
   z-index: 900;
 }
 
+#newsContainer h3 {
+  font-size: 1.05em;
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: 700;
+  color: rgba(0,0,0,0.75);
+}
+
+@media (max-width: 900px) {
+  #newsContainer {
+    display: none;
+  }
+}
+
+
+
 .newsItem {
   background: rgba(255,255,255,0.88);
   padding: 12px 14px;
@@ -219,6 +293,7 @@ button.closeBtn:hover {
   backdrop-filter: blur(6px);
 }
 
+
 .newsMeta {
   font-size: 0.8em;
   font-weight: 600;
@@ -226,11 +301,13 @@ button.closeBtn:hover {
   margin-bottom: 6px;
 }
 
+
 .newsText {
   font-size: 0.95em;
   color: #111;
   line-height: 1.4;
 }
+
 
 /* ================= OVERLAYS ================= */
 .overlay {
@@ -239,25 +316,32 @@ button.closeBtn:hover {
   background: rgba(0,0,0,0.45);
   backdrop-filter: blur(6px);
   display: none;
+
   justify-content: center;
   align-items: flex-start;
+
   padding: 40px 20px;
   overflow-y: auto;
-  z-index: 9999;
+
+  z-index: 9999; /* WICHTIG */
 }
+
 
 .overlayContent {
   background: rgba(255,255,255,0.97);
   padding: 24px;
   border-radius: 18px;
+
   max-width: 800px;
   width: 100%;
   max-height: calc(100vh - 80px);
+
   overflow-y: auto;
   position: relative;
 }
 
-/* ================= ORDNER / GRID ================= */
+
+/* ================= ORDNER / ARCHIV ================= */
 #meinezeitGrid,
 #folderGrid,
 #monthDetail {
@@ -278,17 +362,21 @@ button.closeBtn:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
-.folderContent h3,
-.folderContent h4 {
-  margin-bottom: 10px;
-  color: #111;
+.folderContent {
+  display: block;
+  margin-top: 10px;
+}
+
+.folderContent h3 {
+  margin-bottom: 12px;
 }
 
 .folderContent p {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   line-height: 1.5;
-  color: #111;
+
 }
+
 
 /* ================= MEINE ZEIT BILDER ================= */
 .myTimeImage {
