@@ -40,6 +40,18 @@ body {
   background: rgba(255,255,255,0.25);
   transform: scale(1.08);
 }
+#menu {
+  z-index: 30000;
+}
+
+#menuButton {
+  z-index: 31000;
+}
+
+.overlay,
+#aboutOverlay {
+  z-index: 20000;
+}
 
 
 
