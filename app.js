@@ -128,11 +128,10 @@ infoOverlay.addEventListener("click", e => {
   closeBtn.onclick = () => {
     overlay.style.display = "none";
     main.style.display = "flex";
+
+     grid.appendChild(div); // <- WICHTIG: ohne das erscheint der Button/Ordner gar nicht
   };
 };
-
-         grid.appendChild(div); // <- WICHTIG: ohne das erscheint der Button/Ordner gar nicht
-});
 
   // Meine Zeit Overlay
   fetch("Daten/meinezeit.json").then(r=>r.json()).then(d=>{
