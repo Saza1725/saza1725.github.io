@@ -1,112 +1,89 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>Motivation App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#111">
-  <link rel="apple-touch-icon" href="icon.png">
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meine App</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- MENU BUTTON -->
-  <div id="menuButton">☰</div>
+<!-- ================= HEADER ================= -->
+<header>
+  <div id="weekday">Montag</div>
+  <div id="daytime">Morgens</div>
+  <div id="date">01.01.2026</div>
+  <div id="time">12:00:00</div>
+  <div id="dailyQuoteBox">Hier steht dein Tageszitat</div>
+</header>
 
-  <!-- SEITENMENÜ -->
-  <nav id="menu">
-    <a href="#" data-target="personalOverlay">🙇🏻 Über mich</a>
-    <a href="#" data-target="infoOverlay">ℹ️ Information</a>
-    <a href="#" data-target="meinezeitOverlay">🕒 Meine Zeit</a>
-    <a href="#" data-target="folderOverlay">📁 Zitate</a>
-    <a href="#" data-target="archiveOverlay">🏛️ Vergangene Tage</a>
-    <a href="#" data-target="home">🏠 Home</a>
-  </nav>
+<!-- ================= MENU BUTTON ================= -->
+<div id="menuButton">☰</div>
 
-  <!-- HEADER FIXIERT -->
-  <header>
-    <div id="weekday"></div>
-    <div id="daytime"></div>
-    <div id="date"></div>
-    <div id="time"></div>
-    <div id="dailyQuoteBox"></div>
-  </header>
+<!-- ================= SEITENMENÜ ================= -->
+<nav id="menu">
+  <a href="#" data-target="home">Startseite</a>
+  <a href="#" data-target="folderOverlay">Zitate</a>
+  <a href="#" data-target="meinezeitOverlay">Meine Zeit</a>
+  <a href="#" data-target="aboutOverlay">Über mich</a>
+  <a href="#" data-target="archiveOverlay">Vergangene Tage</a>
+  <a href="#" data-target="infoOverlay">Information</a>
+</nav>
 
-  <!-- MAIN CONTENT -->
-  <main>
-    <div id="dailyMotivationText">Hol dir deine Tages-Inspiration!</div>
+<!-- ================= MAIN ================= -->
+<main>
+  <div id="personalQuoteDisplay" style="display:none;"></div>
 
-    <div id="dailyQuoteActions">
-      <button id="shareQuoteBtn">📤 Teilen</button>
-    </div>
-
-    <div id="buttons">
-      <button id="morningBtn">Morgen</button>
-      <button id="noonBtn">Mittag</button>
-      <button id="eveningBtn">Abend</button>
-    </div>
-
-    <div id="personalQuoteDisplay"></div>
-
-    <div id="dailyFocusContainer">
-      <p>Mein Fokus heute:</p>
-      <input type="text" id="dailyFocusInput" placeholder="Schreibe hier deinen Fokus..." maxlength="100">
-    </div>
-
-    <!-- NEWS -->
-    <section id="newsContainer">
-      <h3>Neuigkeiten</h3>
-      <div id="newsList"></div>
-    </section>
-  </main>
-
-  <!-- PERSONAL OVERLAY -->
-  <div id="personalOverlay" class="overlay">
-    <div class="overlayContent">
-      <h2>Persönlich</h2>
-      <div id="mainPersonalSlide" class="personalSlide">
-        <div id="mainPersonalText"></div>
-        <button id="startSlidesBtn">Weiter</button>
-      </div>
-      <div id="personalSlidesContainer"></div>
-      <div id="personalSlidesProgress"></div>
-      <div id="personalSlidesWrapper">
-        <button id="prevSlide">← Zurück</button>
-        <button id="nextSlide">Weiter →</button>
-      </div>
-    </div>
+  <div id="buttons">
+    <button id="morningBtn">Morgen</button>
+    <button id="noonBtn">Mittag</button>
+    <button id="eveningBtn">Abend</button>
   </div>
 
-  <!-- FOLDER OVERLAY -->
-  <div id="folderOverlay" class="overlay">
-    <div class="overlayContent">
-      <h2>Zitate-Ordner</h2>
-      <div id="folderGrid"></div>
-    </div>
+  <div id="dailyFocusContainer">
+    <p>Tagesfokus:</p>
+    <input type="text" id="dailyFocusInput" placeholder="Was ist dein Fokus heute?">
   </div>
 
-  <!-- MEINE ZEIT OVERLAY -->
-  <div id="meinezeitOverlay" class="overlay">
-    <div class="overlayContent">
-      <h2>Meine Zeit</h2>
-      <div id="meinezeitGrid"></div>
-    </div>
+  <div id="newsContainer">
+    <h3>Neuigkeiten</h3>
+    <div id="newsList"></div>
   </div>
 
-  <!-- ARCHIV OVERLAY -->
-  <div id="archiveOverlay" class="overlay">
-    <div class="overlayContent">
-      <h2>Archiv</h2>
-      <div id="monthDetail"></div>
-    </div>
-  </div>
+  <button id="shareQuoteBtn">Zitat teilen</button>
+</main>
 
-  <!-- INFO OVERLAY -->
-  <div id="infoOverlay" class="overlay">
-    <div class="overlayContent" id="infoContent"></div>
-  </div>
+<!-- ================= INFO Overlay ================= -->
+<div id="infoOverlay" class="overlay">
+  <div id="infoContent" class="overlayContent"></div>
+</div>
 
-  <script src="app.js"></script>
+<!-- ================= ÜBER MICH Overlay ================= -->
+<div id="aboutOverlay" class="overlay">
+  <div id="aboutContent" class="overlayContent"></div>
+</div>
+
+<!-- ================= ZITATE Overlay ================= -->
+<div id="folderOverlay" class="overlay">
+  <div class="overlayContent">
+    <div id="folderGrid"></div>
+  </div>
+</div>
+
+<!-- ================= MEINE ZEIT Overlay ================= -->
+<div id="meinezeitOverlay" class="overlay">
+  <div class="overlayContent">
+    <div id="meinezeitGrid"></div>
+  </div>
+</div>
+
+<!-- ================= VERGANGENE TAGE Overlay ================= -->
+<div id="archiveOverlay" class="overlay">
+  <div class="overlayContent">
+    <div id="monthDetail"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
