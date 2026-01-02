@@ -122,23 +122,6 @@ infoOverlay.addEventListener("click", e => {
     });
   });
   
-      div.onclick = () => {
-  const overlay = document.getElementById("folderOverlay");
-  const content = overlay.querySelector(".overlayContent");
-  main.style.display = "none";
-  overlay.style.display = "flex";
-  content.innerHTML = `
-    <h3>${name}</h3>
-    ${d.folders[name].map(q => `<p>${q}</p>`).join("")}
-    <button id="folderBackBtn">← Zurück</button>
-  `;
-  
-  // Button klickbar machen
-  content.querySelector("#folderBackBtn").onclick = () => {
-    overlay.style.display = "none";
-    main.style.display = "flex";
-    };
-  };
 
   // Meine Zeit Overlay
   fetch("Daten/meinezeit.json").then(r=>r.json()).then(d=>{
