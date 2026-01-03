@@ -301,43 +301,50 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // ================= INTRO JS =================
 document.addEventListener("DOMContentLoaded", () => {
-  
-const playBtn = document.getElementById("playIntroBtn");
   const overlay = document.getElementById("introOverlay");
   const card = document.getElementById("introCard");
   const textEl = document.getElementById("introText");
   const button = document.getElementById("introButton");
+  const playBtn = document.getElementById("playIntroBtn");
 
-
- // Musik vorbereiten (Pfad korrekt prüfen!)
+  // Musik vorbereiten
   const audio = new Audio("introMusic.mp3");
   audio.volume = 0.4;
-  
-/ Text
-  const introText = "Willkommen. Diese Seite ist ein Ort für Gedanken, Zitate und Momente der Ruhe. Wenn du bereit bist, nimm dir Zeit. Wenn nicht – komm später zurück.";
+
+  // Text
+  const introText = `Willkommen.
+
+Diese Seite ist ein Ort für Gedanken, Zitate
+und Momente der Ruhe.
+
+Wenn du bereit bist,
+nimm dir Zeit.
+
+Wenn nicht – komm später zurück.`;
+
+  // Schreibmaschinen-Effekt
   let i = 0;
 
-function typeWriter() {
+  function typeWriter() {
     if (i < introText.length) {
       textEl.textContent += introText.charAt(i);
       i++;
-      setTimeout(typeWriter, 50);
+      setTimeout(typeWriter, 50); // Geschwindigkeit
     } else {
       button.disabled = false;
       button.classList.add("active");
     }
   }
 
- // Play-Button klick
+  // Play-Button klick → Musik starten + Card einfliegen + Text starten
   playBtn.onclick = () => {
-    audio.play().catch(()=>{});
-    playBtn.style.display = "none";
+    audio.play().catch(() => {});
     card.classList.add("show");
     typeWriter();
+    playBtn.style.display = "none"; // Play-Button verschwinden
   };
 
-
-// Weiter-Button klick
+  // Weiter-Button klick → Overlay weg
   button.onclick = () => {
     overlay.style.opacity = "0";
     setTimeout(() => overlay.style.display = "none", 800);
