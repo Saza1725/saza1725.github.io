@@ -265,7 +265,7 @@ backBtn.onclick = (e) => {
     .catch(() => infoContent.innerHTML = "<p>Info nicht verfügbar</p>");
   createOverlayHandler("infoOverlay");
 
-  /* ================= ÜBER MICH OVERLAY ================= */
+/* ================= ÜBER MICH OVERLAY ================= */
 let aboutOverlay = document.getElementById("aboutOverlay");
 let aboutContent;
 
@@ -280,12 +280,15 @@ if (!aboutOverlay) {
   aboutContent.id = "aboutContent";
   aboutContent.className = "overlayContent";
 
+  // Klicks IM Overlay blockieren, damit Overlay nicht sofort schließt
+  aboutContent.addEventListener("click", e => e.stopPropagation());
+
   // Schließen-Button
   const closeBtn = document.createElement("button");
   closeBtn.innerText = "← Zurück";
   closeBtn.className = "closeBtn";
   closeBtn.onclick = e => {
-    e.stopPropagation(); // 🔥 verhindert sofortiges Schließen
+    e.stopPropagation();
     showMain();
   };
 
@@ -294,13 +297,17 @@ if (!aboutOverlay) {
   document.body.appendChild(aboutOverlay);
 } else {
   aboutContent = aboutOverlay.querySelector(".overlayContent");
+  aboutContent.addEventListener("click", e => e.stopPropagation());
 }
 
+// Overlay öffnen, wenn im Menü „Über mich“ angeklickt wird
 createOverlayHandler("aboutOverlay");
 
+// JSON laden und Text anzeigen
 fetch("Daten/about.json")
   .then(r => r.json())
   .then(d => {
+    // Text oben im Overlay
     aboutContent.innerHTML = d.aboutText;
 
     // Schließen-Button erneut hinzufügen, damit er immer da ist
@@ -324,6 +331,7 @@ fetch("Daten/about.json")
     };
     aboutContent.appendChild(closeBtn);
   });
+
 
 
 // Menü-Button Integration (sichtbar über Overlay)
