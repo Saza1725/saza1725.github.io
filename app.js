@@ -329,7 +329,6 @@ async function collectNews() {
 }
 
 /* ================= RENDER ================= */
-
 function renderNews(items) {
   const list = document.getElementById("newsList");
   if (!list) return;
@@ -343,7 +342,10 @@ function renderNews(items) {
 
   items.forEach(n => {
     const div = document.createElement("div");
-    div.className = "newsItem";
+    div.className = "newsItem clickable";
+    div.dataset.source = n.source;
+    div.dataset.target = n.date || "";
+
     div.innerHTML = `
       <div class="newsHeader">
         <strong>${n.title}</strong>
@@ -351,11 +353,14 @@ function renderNews(items) {
       </div>
       <div class="newsText">${n.text}</div>
     `;
+
+    div.addEventListener("click", () => openNewsTarget(n));
     list.appendChild(div);
   });
 
   activateNewsBell();
 }
+
 
 /* ================= GLOCKE ================= */
 
