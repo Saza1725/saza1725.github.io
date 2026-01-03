@@ -312,15 +312,18 @@ document.addEventListener("DOMContentLoaded", () => {
   audio.volume = 0.4;
 
   // Text
-  const introText = `Willkommen.
+  const introText = `
+  Diese Seite ist ein Ort für Gedanken, Zitate
+  und Momente der Ruhe.
 
-Diese Seite ist ein Ort für Gedanken, Zitate
-und Momente der Ruhe.
 
-Wenn du bereit bist,
-nimm dir Zeit.
+  Einfach mal nachdenken, vieles anders sehen
+  und bedacht an manche Dinge herangehen.
 
-Wenn nicht – komm später zurück.`;
+
+  Ich habe dies zu meinem persönlichen Projekt
+  gemacht und bin gespannt, was das Jahr
+  2026 mit sich bringt.`;
 
   // Schreibmaschinen-Effekt
   let i = 0;
