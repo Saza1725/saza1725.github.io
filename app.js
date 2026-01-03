@@ -260,44 +260,116 @@ document.addEventListener("DOMContentLoaded", () => {
   createOverlayHandler("personalOverlay");
 
   /* ================= NEWS ================= */
-  async function loadNews(){
-    const list=document.getElementById("newsList");
-    if(!list) return;
+ /* ================= NEWS COLLECTOR ================= */
 
-    let items=[];
-    try{
-      const data=await fetch("Daten/archive.json").then(r=>r.json());
-      data.days.forEach(d=>items.push({
-        date:d.date,
-        text:d.quote,
-        location:d.location||"–"
-      }));
-    }catch(err){
-      console.error("Fehler beim Laden der News:", err);
-      return;
+const NEWS_KEY = "seenNewsState";
+const REFRESH_INTERVAL = 30000; // 30 Sekunden
+
+async function collectNews() {
+  const news = [];
+  const stored = JSON.parse(localStorage.getItem(NEWS_KEY)) || {};
+
+  /* -------- ARCHIVE -------- */
+  try {
+    const archive = await fetch("Daten/archive.json").then(r => r.json());
+    const newestDate = archive.days[archive.days.length - 1]?.date;
+
+    if (newestDate && stored.archive !== newestDate) {
+      news.push({
+        source: "archive",
+        title: "Neuer Tagesgedanke",
+        text: "Ein neuer Eintrag wurde hinzugefügt",
+        date: newestDate
+      });
+      stored.archive = newestDate;
     }
-
-    items.sort((a,b)=>new Date(b.date)-new Date(a.date));
-
-    list.innerHTML=""; // alte News löschen
-
-    items.slice(0,3).forEach(item=>{
-      const div=document.createElement("div");
-      div.className="newsItem";
-      div.innerHTML=`
-        <div class="newsHeader">
-          <span class="newsDate">${item.date}</span>
-          <span class="newsLocation">${item.location}</span>
-        </div>
-        <div class="newsText">${item.text}</div>
-      `;
-      list.appendChild(div);
-    });
+  } catch (e) {
+    console.warn("Archive News Fehler", e);
   }
 
-  loadNews();
+  /* -------- PERSONAL SLIDES -------- */
+  try {
+    const personal = await fetch("Daten/personalSlides.json").then(r => r.json());
+    const count = personal.slides?.length || 0;
 
-});
+    if (stored.personal !== count) {
+      news.push({
+        source: "personal",
+        title: "Neuer persönlicher Einblick",
+        text: "Ein neuer Text wurde veröffentlicht",
+        date: new Date().toISOString().split("T")[0]
+      });
+      stored.personal = count;
+    }
+  } catch (e) {
+    console.warn("Personal News Fehler", e);
+  }
+
+  /* -------- MEINE ZEIT -------- */
+  try {
+    const mz = await fetch("Daten/meinezeit.json").then(r => r.json());
+    let total = 0;
+    Object.values(mz.folders).forEach(arr => total += arr.length);
+
+    if (stored.meinezeit !== total) {
+      news.push({
+        source: "meinezeit",
+        title: "Neuer Beitrag in Meine Zeit",
+        text: "Ein neuer persönlicher Abschnitt wurde ergänzt",
+        date: new Date().toISOString().split("T")[0]
+      });
+      stored.meinezeit = total;
+    }
+  } catch (e) {
+    console.warn("MeineZeit News Fehler", e);
+  }
+
+  localStorage.setItem(NEWS_KEY, JSON.stringify(stored));
+  renderNews(news);
+}
+
+/* ================= RENDER ================= */
+
+function renderNews(items) {
+  const list = document.getElementById("newsList");
+  if (!list) return;
+
+  if (!items.length) {
+    list.innerHTML = "<p class='noNews'>Keine neuen Neuigkeiten</p>";
+    return;
+  }
+
+  list.innerHTML = "";
+
+  items.forEach(n => {
+    const div = document.createElement("div");
+    div.className = "newsItem";
+    div.innerHTML = `
+      <div class="newsHeader">
+        <strong>${n.title}</strong>
+        <span>${n.date}</span>
+      </div>
+      <div class="newsText">${n.text}</div>
+    `;
+    list.appendChild(div);
+  });
+
+  activateNewsBell();
+}
+
+/* ================= GLOCKE ================= */
+
+function activateNewsBell() {
+  const bell = document.getElementById("newsBell");
+  if (!bell) return;
+  bell.classList.add("active");
+}
+
+/* ================= AUTO UPDATE ================= */
+
+collectNews();
+setInterval(collectNews, REFRESH_INTERVAL);
+
 
 // ================= INTRO JS =================
 document.addEventListener("DOMContentLoaded", () => {
