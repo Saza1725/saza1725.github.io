@@ -154,7 +154,7 @@ main {
 }
 
 #dailyQuoteActions button {
-  padding: 10px 18px;
+  padding: 10px 20px;
   border-radius: 22px;
   border: none;
   font-family: 'Libre Baskerville', serif;
@@ -176,8 +176,8 @@ main {
   font-size: 1rem;
   font-weight: 600;
   color: #fff; /* weiße Schrift */
-  background: rgba(255, 255, 255, 0.15); /* halbtransparent wie Teilen-Button */
-  border: 2px solid rgba(255, 255, 255, 0.35);
+  background: rgba(34,34,34,0.9);   /* dunkler Hintergrund wie Teilen-Button */
+  border: 2px solid rgba(255, 255, 255, 0.55);
   border-radius: 12px;
   padding: 10px 18px;
   margin: 70px;
