@@ -307,7 +307,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const button = document.getElementById("introButton");
 
   // Text für Intro
-  const introText = "Willkommen.\n\nDiese Seite ist ein Ort für Gedanken, Zitate\nund Momente der Ruhe.\n\nWenn du bereit bist,\nnimm dir Zeit.\n\nWenn nicht – komm später zurück.";
+  const introText = 
+    Diese Seite ist ein Ort für Gedanken, Zitate
+und Momente der Ruhe.
+
+
+Einfach mal nachdenken, vieles anders sehen
+und bedacht an manche Dinge herangehen.
+
+
+Ich habe dies zu meinem persönlichen Projekt
+gemacht und bin gespannt, was das Jahr
+2026 mit sich bringt.
+
+
+Wenn du bereit bist,
+nimm dir Zeit.
+
+
+Wenn nicht – komm später zurück.
+`;
 
   // Musik vorbereiten (nicht automatisch)
   const audio = new Audio("introMusic.mp3");
