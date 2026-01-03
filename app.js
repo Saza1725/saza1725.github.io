@@ -271,24 +271,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
   closePersonalOverlay.onclick = () => showMain();
 
-  /* ================= NEWS ================= */
-  async function loadNews() {
-    const list = document.getElementById("newsList");
-    if (!list) return;
-    let items = [];
-    try {
-      const a = await fetch("Daten/archive.json").then(r => r.json());
-      a.days.forEach(d => items.push({ date:d.date, text:d.quote }));
-    } catch {}
-    items.sort((a,b)=>new Date(b.date)-new Date(a.date));
-    list.innerHTML = "";
-    items.slice(0,3).forEach(i => {
-      const div = document.createElement("div");
-      div.className = "newsItem";
-      div.innerHTML = `<strong>${i.date}</strong><br>${i.text}`;
-      list.appendChild(div);
-    });
-  }
-  loadNews();
+ /* ================= NEWS ================= */
+async function loadNews() {
+  const list = document.getElementById("newsList");
+  if (!list) return;
 
-});
+  let items = [];
+  try {
+    const a = await fetch("Daten/archive.json").then(r => r.json());
+
+    // Datum, Text und optional Ort
+    a.days.forEach(d => items.push({
+      date: d.date,
+      text: d.quote,
+      location: d.location || "–" // falls Ort vorhanden
+    }));
+
+  } catch (err) {
+    console.error("Fehler beim Laden der News:", err);
+  }
+
+  // Sortieren: neueste zuerst
+  items.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  list.innerHTML = "";
+
+  // Nur die 3 neuesten anzeigen
+  items.slice(0, 3).forEach(i => {
+    const div = document.createElement("div");
+    div.className = "newsItem";
+
+    div.innerHTML = `
+      <div class="newsHeader">
+        <span class="newsDate">${i.date}</span>
+        <span class="newsLocation">${i.location}</span>
+      </div>
+      <div class="newsText">${i.text}</div>
+    `;
+
+    list.appendChild(div);
+  });
+}
+
+loadNews();
