@@ -85,20 +85,22 @@ header {
 
 /* ================= TAGESZITAT ================= */
 #dailyQuoteBox {
-  margin-top: 10px;
-  padding: 14px 22px;
-  background: #111;       /* Schwarzer Rahmen */
-  color: gold;            /* Goldene Schrift */
-  border-radius: 16px;
-  font-size: 1.3em;
-  font-weight: 700;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-radius: 12px;
+  padding: 12px 20px;
   text-align: center;
-  line-height: 1.4;
+  max-width: 600px;
+  margin: 8px auto;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  backdrop-filter: blur(6px);
 }
+
 
 /* ================= MAIN ================= */
 main {
@@ -195,12 +197,20 @@ main {
 }
 
 #dailyMotivationText {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: #111;
+  font-family: 'Libre Baskerville', serif; /* hochwertiger Serif-Look */
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fff; /* weiße Schrift */
   text-align: center;
+
+  background: rgba(255, 255, 255, 0.15); /* leicht transparent wie Teilen-Button */
+  border: 2px solid rgba(255, 255, 255, 0.35); /* Rahmen ähnlich Teilen-Button */
+  border-radius: 12px;
+  padding: 10px 18px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  backdrop-filter: blur(6px); /* schöne leichte Unschärfe */
 }
+
 
 
 /* ================= PERSONAL QUOTES ================= */
