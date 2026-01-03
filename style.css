@@ -336,6 +336,7 @@ main {
   font-size: 1.2em;
   font-weight: 700;
   color: #f5d36a; /* Gold */
+  background: rgba(34,34,34,0.9);   /* dunkler Hintergrund wie Teilen-Button */
   margin-bottom: 12px;
   text-align: center;
 }
