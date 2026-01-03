@@ -306,30 +306,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const textEl = document.getElementById("introText");
   const button = document.getElementById("introButton");
 
-  // 🎵 Musik
+  // Musik
   const audio = new Audio("introMusic.mp3");
   audio.volume = 0.4;
-  audio.play().catch(()=>{}); // kann blockiert werden
+  audio.play().catch(()=>{});
 
-  // ✍️ Schreibmaschinen-Text
   const introText = "Willkommen.\n\nDiese Seite ist ein Ort für Gedanken, Zitate\nund Momente der Ruhe.\n\nWenn du bereit bist, nimm dir Zeit.\nWenn nicht – komm später zurück.";
-  let i = 0;
 
-  function typeWriter() {
-    if(i < introText.length){
-      textEl.textContent += introText.charAt(i);
-      i++;
-      setTimeout(typeWriter, 40); // Geschwindigkeit anpassen
-    } else {
-      button.disabled = false;
-      button.classList.add("active");
-    }
-  }
-
-  // Intro Overlay + Card einblenden
+  // Overlay + Card einblenden
   overlay.style.opacity = 1;
   setTimeout(() => card.classList.add("show"), 200);
-  typeWriter();
+
+  // Text in Buchstaben splitten
+  let letters = introText.split("");
+  letters.forEach((char, idx) => {
+    let span = document.createElement("span");
+    span.textContent = char;
+    span.style.animationDelay = `${idx * 0.04}s`;
+    textEl.appendChild(span);
+  });
+
+  // Button aktivieren, wenn Animation durch
+  const totalDuration = letters.length * 40 + 200; // ms
+  setTimeout(() => {
+    button.disabled = false;
+    button.classList.add("active");
+  }, totalDuration);
 
   // Button klick → Overlay weg
   button.onclick = () => {
@@ -337,9 +339,7 @@ document.addEventListener("DOMContentLoaded", () => {
     overlay.style.opacity = 0;
     setTimeout(() => overlay.style.display = "none", 800);
     audio.pause();
-
-    // Jetzt Hauptseite anzeigen
-    showMain();
+    showMain(); // Hauptseite anzeigen
   };
 });
 
