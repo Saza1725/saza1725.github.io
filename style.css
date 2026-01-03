@@ -256,7 +256,7 @@ main {
   max-width: 520px;        /* 🔥 vorher ~680 → deutlich schmaler */
   line-height: 1.45;
 }
-  
+
 /* ================= PERSONAL QUOTES ================= */
 #personalQuoteDisplay {
   margin-top: 18px;
@@ -290,19 +290,19 @@ main {
 
 
 #dailyFocusContainer p {
-  font-size: 1,6rem;
+  font-size: 1rem;
   color: #555;
-  border: 2px solid rgba(245, 211, 106, 0.55);
+
 }
 
 #dailyFocusInput {
   width: 100%;
-    background: rgba(0, 0, 0, 0.65);
+
   padding: 12px 16px;
   border-radius: 12px;
- border: 2px solid rgba(245, 211, 106, 0.55);
+  border: 1px solid #ccc;
   font-family: 'Libre Baskerville', serif;
-  font-size: 1,6rem;
+  font-size: 1rem;
   transition: all 0.2s ease;
 }
 
