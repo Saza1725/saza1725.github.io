@@ -396,56 +396,57 @@ collectNews();
 setInterval(collectNews, REFRESH_INTERVAL);
 
 
-/* ================= INTRO ================= */
 document.addEventListener("DOMContentLoaded", () => {
   const overlay = document.getElementById("introOverlay");
   const card = document.getElementById("introCard");
   const textEl = document.getElementById("introText");
   const button = document.getElementById("introButton");
+  const playBtn = document.getElementById("playIntroBtn"); // optionaler Play-Button
 
-  // 🎛️ Entwicklungsmodus
-  const DEV_MODE = true; // auf true setzen, damit Overlay nicht blockiert
-
+  // DEV_MODE nur für Entwicklung
+  const DEV_MODE = false; 
   if (DEV_MODE) {
-    overlay.style.display = "none"; // Overlay direkt ausblenden
-    return; // Rest des Intros wird nicht ausgeführt
+    overlay.style.display = "none";
+    return;
   }
 
-  // Musik vorbereiten
   const audio = new Audio("introMusic.mp3");
   audio.volume = 0.4;
 
-  // Text vorbereiten
-  const introText = "Willkommen. Diese Seite ist ein Ort für Gedanken, Zitate und Momente der Ruhe. Wenn du bereit bist, nimm dir Zeit. Wenn nicht – komm später zurück.";
-  let i = 0;
+  const introText = textEl.textContent; // Text aus HTML
   textEl.textContent = "";
   textEl.style.whiteSpace = "pre-line";
+  let i = 0;
 
   function typeWriter() {
     if (i < introText.length) {
       textEl.textContent += introText.charAt(i);
       i++;
-      setTimeout(typeWriter, 50); // Geschwindigkeit
+      setTimeout(typeWriter, 50); // Geschwindigkeit anpassen
     } else {
       button.disabled = false;
       button.classList.add("active");
     }
   }
 
-  // Overlay und Karte einblenden
-  overlay.style.display = "flex";
-  setTimeout(() => card.classList.add("show"), 200);
+  function startIntro() {
+    overlay.style.display = "flex";
+    setTimeout(() => card.classList.add("show"), 200); // Einfliegen
+    audio.play().catch(()=>{}); // Musik starten
+    typeWriter();
+  }
 
-  // Start Text
-  typeWriter();
+  // Play-Button nur sichtbar, wenn man aktiv starten will
+  if (playBtn) {
+    playBtn.addEventListener("click", startIntro);
+  } else {
+    // Ohne Play-Button automatisch starten (funktioniert nur, wenn Browser Autoplay erlaubt)
+    startIntro();
+  }
 
-  // Button klick → Overlay weg
   button.onclick = () => {
-    overlay.style.opacity = "0";
+    overlay.style.opacity = 0;
     setTimeout(() => overlay.style.display = "none", 800);
     audio.pause();
   };
-
-  // Musik starten beim Einblenden
-  audio.play().catch(() => {});
 });
