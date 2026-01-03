@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     menu.style.right = "-260px";
   }
 
+  // STARTZUSTAND
   showMain();
 
   /* ================= MENU ================= */
@@ -27,18 +28,25 @@ document.addEventListener("DOMContentLoaded", () => {
     link.addEventListener("click", e => {
       e.preventDefault();
       const target = link.dataset.target;
+
       menu.style.right = "-260px";
-      if (target === "home") { showMain(); return; }
-      document.dispatchEvent(new CustomEvent("openSection", { detail: target }));
+
+      if (target === "home") {
+        showMain();
+        return;
+      }
+
+      document.dispatchEvent(
+        new CustomEvent("openSection", { detail: target })
+      );
     });
   });
 
-  /* ================= HEADER ================= */
+  /* ================= HEADER / DATUM / UHRZEIT ================= */
   const weekday = document.getElementById("weekday");
   const daytime = document.getElementById("daytime");
   const dateEl = document.getElementById("date");
   const timeEl = document.getElementById("time");
-  const dailyQuoteBox = document.getElementById("dailyQuoteBox");
 
   function updateHeader() {
     const now = new Date();
@@ -54,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(updateHeader, 1000);
 
   /* ================= TAGESZITAT ================= */
+  const dailyQuoteBox = document.getElementById("dailyQuoteBox");
   fetch("Daten/tageszeit.json")
     .then(r => r.json())
     .then(data => {
@@ -61,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const seed = Number(today.replaceAll("-", ""));
       dailyQuoteBox.textContent = data.quotes[seed % data.quotes.length];
     });
+
   /* ================= PERSONAL QUOTES ================= */
   const personalQuoteDisplay = document.getElementById("personalQuoteDisplay");
   fetch("Daten/dailyTexts.json")
@@ -120,10 +130,8 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(r => r.json())
     .then(d => {
       const grid = document.getElementById("folderGrid");
-      let currentView = "overview";
 
       function renderOverview() {
-        currentView = "overview";
         grid.innerHTML = "";
         Object.keys(d.folders).forEach(name => {
           const div = document.createElement("div");
@@ -135,9 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       function renderFolder(name) {
-        currentView = "folder";
         grid.innerHTML = "";
-
         const fc = document.createElement("div");
         fc.className = "folderContent";
         fc.innerHTML = `<h3>${name}</h3>`;
@@ -146,13 +152,11 @@ document.addEventListener("DOMContentLoaded", () => {
           p.textContent = q;
           fc.appendChild(p);
         });
-
         const backBtn = document.createElement("button");
         backBtn.textContent = "← Zurück";
         backBtn.className = "closeBtn";
         backBtn.onclick = e => { e.stopPropagation(); renderOverview(); };
         fc.appendChild(backBtn);
-
         grid.appendChild(fc);
       }
 
@@ -185,13 +189,11 @@ document.addEventListener("DOMContentLoaded", () => {
           fc.innerHTML += `<h4>${e.title}</h4><p>${e.text}</p>`;
           if(e.image) fc.innerHTML += `<img src="${e.image}" class="myTimeImage">`;
         });
-
         const backBtn = document.createElement("button");
         backBtn.textContent = "← Zurück";
         backBtn.className = "closeBtn";
         backBtn.onclick = e => { e.stopPropagation(); renderOverview(); };
         fc.appendChild(backBtn);
-
         grid.appendChild(fc);
       }
 
@@ -229,7 +231,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const slidesProgress = document.getElementById("personalSlidesProgress");
   const prevSlideBtn = document.getElementById("prevSlide");
   const nextSlideBtn = document.getElementById("nextSlide");
-  const closePersonalOverlay = document.getElementById("closePersonalOverlay");
 
   let slides = [];
   let currentSlide = 0;
@@ -237,61 +238,58 @@ document.addEventListener("DOMContentLoaded", () => {
   fetch("Daten/personalSlides.json")
     .then(r => r.json())
     .then(d => {
-      // Intro anzeigen
+      // Intro
       slidesContainer.innerHTML = `<h3>${d.intro.title}</h3><p>${d.intro.text.replace(/\n/g,'<br>')}</p>`;
-
       slides = d.slides;
 
-      // Slide-Buttons aktivieren
       function renderSlide(index) {
         slidesContainer.innerHTML = `<h3>${slides[index].title}</h3><p>${slides[index].text.replace(/\n/g,'<br>')}</p>`;
-        slidesProgress.textContent = `${index + 1} / ${slides.length}`;
+        slidesProgress.textContent = `${index+1} / ${slides.length}`;
         prevSlideBtn.style.display = index === 0 ? "none" : "inline-block";
-        nextSlideBtn.style.display = index === slides.length - 1 ? "none" : "inline-block";
+        nextSlideBtn.style.display = index === slides.length-1 ? "none" : "inline-block";
       }
 
-      prevSlideBtn.onclick = () => { if(currentSlide > 0){ currentSlide--; renderSlide(currentSlide); } };
-      nextSlideBtn.onclick = () => { if(currentSlide < slides.length -1){ currentSlide++; renderSlide(currentSlide); } };
+      prevSlideBtn.onclick = () => { if(currentSlide>0){currentSlide--; renderSlide(currentSlide);} };
+      nextSlideBtn.onclick = () => { if(currentSlide<slides.length-1){currentSlide++; renderSlide(currentSlide);} };
 
       renderSlide(0);
     });
 
   createOverlayHandler("personalOverlay");
 
-  closePersonalOverlay.onclick = () => showMain();
+  /* ================= NEWS ================= */
+  async function loadNews() {
+    const list = document.getElementById("newsList");
+    if (!list) return;
 
-async function loadNews() {
-  const list = document.getElementById("newsList");
-  if (!list) return;
+    let items = [];
+    try {
+      const data = await fetch("Daten/archive.json").then(r => r.json());
+      data.days.forEach(d => items.push({
+        date: d.date,
+        text: d.quote,
+        location: d.location || "–"
+      }));
+    } catch (err) {
+      console.error("Fehler beim Laden der News:", err);
+      return;
+    }
 
-  let items = [];
-  try {
-    const data = await fetch("Daten/archive.json").then(r => r.json());
-    data.days.forEach(d => items.push({
-      date: d.date,
-      text: d.quote,
-      location: d.location || "–"
-    }));
-  } catch (err) {
-    console.error("Fehler beim Laden der News:", err);
-    return;
+    items.sort((a,b)=> new Date(b.date) - new Date(a.date));
+    list.innerHTML = "";
+    items.slice(0,3).forEach(item => {
+      const div = document.createElement("div");
+      div.className = "newsItem";
+      div.innerHTML = `
+        <div class="newsHeader">
+          <span class="newsDate">${item.date}</span>
+          <span class="newsLocation">${item.location}</span>
+        </div>
+        <div class="newsText">${item.text}</div>
+      `;
+      list.appendChild(div);
+    });
   }
+  loadNews();
 
-  // Sortieren: neueste zuerst
-  items.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-  list.innerHTML = ""; // nur die News-Liste leeren
-
-  items.slice(0, 3).forEach(item => {
-    const div = document.createElement("div");
-    div.className = "newsItem";
-    div.innerHTML = `
-      <div class="newsHeader">
-        <span class="newsDate">${item.date}</span>
-        <span class="newsLocation">${item.location}</span>
-      </div>
-      <div class="newsText">${item.text}</div>
-    `;
-    list.appendChild(div);
-  });
-}
+});
