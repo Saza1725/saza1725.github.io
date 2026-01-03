@@ -271,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   closePersonalOverlay.onclick = () => showMain();
 
- /* ================= NEWS ================= */
+/* ================= NEWS ================= */
 async function loadNews() {
   const list = document.getElementById("newsList");
   if (!list) return;
@@ -279,38 +279,43 @@ async function loadNews() {
   let items = [];
   try {
     const a = await fetch("Daten/archive.json").then(r => r.json());
-
-    // Datum, Text und optional Ort
-    a.days.forEach(d => items.push({
-      date: d.date,
-      text: d.quote,
-      location: d.location || "–" // falls Ort vorhanden
-    }));
-
+    a.days.forEach(d => {
+      items.push({
+        date: d.date,
+        text: d.quote,
+        location: d.location || "–"
+      });
+    });
   } catch (err) {
     console.error("Fehler beim Laden der News:", err);
+    list.innerHTML = "<p>News konnten nicht geladen werden.</p>";
+    return;
   }
 
   // Sortieren: neueste zuerst
   items.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-  list.innerHTML = "";
+  // Tabelle erzeugen
+  let table = `<table class="newsTable">
+    <tr>
+      <th>Datum</th>
+      <th>Ort</th>
+      <th>Neuigkeit</th>
+    </tr>`;
 
-  // Nur die 3 neuesten anzeigen
+  // Nur 3 neueste
   items.slice(0, 3).forEach(i => {
-    const div = document.createElement("div");
-div.className = "newsItem";
-
-div.innerHTML = `
-  <div class="newsHeader">
-    <span class="newsDate">${i.date}</span>
-    <span class="newsLocation">${i.textLocation || "–"}</span>
-  </div>
-  <div class="newsText">${i.text}</div>
-`;
-list.appendChild(div);
-
+    table += `
+      <tr>
+        <td>${i.date}</td>
+        <td>${i.location}</td>
+        <td>${i.text}</td>
+      </tr>
+    `;
   });
+
+  table += "</table>";
+  list.innerHTML = table;
 }
 
 loadNews();
