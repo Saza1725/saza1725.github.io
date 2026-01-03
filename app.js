@@ -161,18 +161,30 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ================= ÜBER MICH ================= */
-  setupOverlay("aboutOverlay", container => {
-    fetch("Daten/about.json")
+  setupOverlay("personalSlides"), container => {
+    fetch("Daten/personalSlides.json")
       .then(r => r.json())
       .then(d => { container.innerHTML = d.aboutText; })
-      .catch(() => { container.innerHTML = "<p>Über mich-Text nicht verfügbar.</p>"; });
+      .catch(() => { container.innerHTML = "<p>Über mich-Text.</p>"; });
   });
+
+  /* ================= MENU ÜBER OVERLAY ================= */
+menuButton.onclick = () => {
+  const isOpen = menu.style.right === "0px";
+  menu.style.right = isOpen ? "-260px" : "0";
+
+  // Menü immer über Overlay
+  menu.style.zIndex = 6000;
+
+  // Alle Overlays unter Menü
+  document.querySelectorAll(".overlay").forEach(o => o.style.zIndex = 2000);
+};
 
   /* ================= ZITATE (FOLDERS) ================= */
   fetch("Daten/folders.json").then(r => r.json()).then(d => {
     const grid = document.getElementById("folderGrid");
 
-    setupOverlay("folderOverlay", container => {
+    setupOverlay("foldersOverlay", container => {
       grid.style.display = "grid";
       grid.innerHTML = "";
 
