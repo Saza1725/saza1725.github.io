@@ -561,3 +561,37 @@ main {
     margin-right: auto;
   }
 }
+
+/* ================= MOBILE INTRO ================= */
+@media (max-width: 600px) {
+
+  #introOverlay {
+    padding: 20px;
+  }
+
+  #introCard {
+    width: 100%;
+    max-width: 100%;
+    padding: 26px 22px;
+    font-size: 1.35rem;   /* größere, gut lesbare Schrift */
+    line-height: 1.55;
+    border-radius: 18px;
+  }
+
+  #introText {
+    font-size: 1.35rem;
+  }
+
+  #introButton,
+  #playIntroBtn {
+    width: 100%;
+    max-width: 260px;
+    font-size: 1.2rem;
+    padding: 14px 0;
+  }
+
+  #playIntroBtn {
+    margin-top: 24px;
+  }
+}
+
