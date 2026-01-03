@@ -339,7 +339,8 @@ document.addEventListener("DOMContentLoaded", () => {
     overlay.style.opacity = 0;
     setTimeout(() => overlay.style.display = "none", 800);
     audio.pause();
-    showMain(); // Hauptseite anzeigen
+   
+     // Jetzt Hauptseite anzeigen
+    showMain();
   };
 });
-
