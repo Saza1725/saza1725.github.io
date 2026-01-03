@@ -309,7 +309,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 🎵 Musik optional
   const audio = new Audio("introMusic.mp3");
-  audio.volume = 0.6;
+  audio.volume = 0.9;
   audio.play().catch(()=>{}); // kann im Browser blockiert werden
 
   // Text
@@ -319,12 +319,19 @@ Willkommen.
 Diese Seite ist ein Ort für Gedanken, Zitate
 und Momente der Ruhe.
 
+
+Einfach mal nachdenken, vieles anders sehen
+und bedacht an manche Dinge herangehen.
+
+
 Ich habe dies zu meinem persönlichen Projekt
 gemacht und bin gespannt, was das Jahr
 2026 mit sich bringt.
 
+
 Wenn du bereit bist,
 nimm dir Zeit.
+
 
 Wenn nicht – komm später zurück.
 `;
