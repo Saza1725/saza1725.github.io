@@ -223,20 +223,52 @@ button:hover { transform: scale(1.05); }
 
 
 /* ================= NEWS ================= */
+/* ================= NEWS ================= */
 #newsContainer {
   position: fixed;
   left: 20px;
   top: 50%;
   transform: translateY(-50%);
-  width: 280px;
-  padding: 14px;
-  background: rgba(255,255,255,0.25);
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.35);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+  width: 320px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 12px;
+  border: 2px solid #c40000;
+  padding: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
   z-index: 900;
+  font-family: 'Libre Baskerville', serif;
 }
+
+#newsContainer h3 {
+  text-align: center;
+  margin-bottom: 12px;
+  color: #c40000;
+}
+
+.newsTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.newsTable th,
+.newsTable td {
+  border: 1px solid #c40000;
+  padding: 6px 8px;
+  text-align: left;
+  font-size: 0.9em;
+}
+
+.newsTable th {
+  background: rgba(196,0,0,0.1);
+  font-weight: 700;
+  color: #c40000;
+}
+
+.newsTable td {
+  background: rgba(255,255,255,0.9);
+  color: #111;
+}
+
 
 .newsItem {
   background: rgba(255,255,255,0.95);
