@@ -429,54 +429,78 @@ main {
 #introOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.9); /* sehr dunkel, Hauptseite kaum sichtbar */
+  background: rgba(0,0,0,0.95);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 100000;
   flex-direction: column;
-  overflow: hidden;
+  z-index: 100000;
 }
 
+/* Karte */
 #introCard {
-  background: #111;
-  color: gold;
+  background: rgba(30,30,30,0.95);
+  color: #FFD700;
+  padding: 40px;
+  border-radius: 20px;
+  max-width: 600px;
+  text-align: center;
   font-family: 'Playfair Display', serif;
   font-size: 1.8rem;
-  padding: 30px 40px;
-  border-radius: 20px;
+  line-height: 1.6;
   opacity: 0;
-  transform: translateY(-100px);
+  transform: translateY(-50px) scale(0.8);
   transition: all 1s ease;
-  max-width: 800px;
-  text-align: center;
 }
 
+/* eingeblendet */
 #introCard.show {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
+}
+
+#introText {
+  white-space: pre-line;
+}
+
+#introButton {
+  margin-top: 30px;
+  padding: 14px 28px;
+  font-size: 1.3rem;
+  border-radius: 14px;
+  border: 2px solid #FFD700;
+  background: rgba(0,0,0,0.7);
+  color: #FFD700;
+  cursor: pointer;
+  font-weight: 700;
+  opacity: 0.7;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
+
+#introButton.active {
+  opacity: 1;
+}
+
+#introButton:hover.active {
+  transform: scale(1.05);
 }
 
 #playIntroBtn {
   margin-top: 20px;
   padding: 14px 28px;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   border-radius: 14px;
+  border: 2px solid #FFD700;
+  background: rgba(0,0,0,0.7);
+  color: #FFD700;
   cursor: pointer;
-  background: gold;
-  border: none;
-  color: black;
   font-weight: 700;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease;
 }
 
-#introButton.active {
-  background: gold;
-  color: black;
-  cursor: pointer;
+#playIntroBtn:hover {
+  transform: scale(1.05);
 }
-
-
 
 /* ================= ORDNER / ARCHIV ================= */
 #meinezeitGrid,
