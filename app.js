@@ -363,5 +363,21 @@ Wenn nicht – komm später zurück.
     overlay.style.opacity = 0;
     setTimeout(() => overlay.style.display = "none", 1000);
     audio.pause();
+
+    let audioStarted = false;
+const audio = new Audio("introMusic.mp3");
+audio.volume = 0.4;
+
+function startAudio() {
+  if (!audioStarted) {
+    audio.play().catch(()=>{});
+    audioStarted = true;
+  }
+}
+
+// Nutzer muss einmal klicken, damit Browser Audio erlaubt
+overlay.addEventListener("click", startAudio);
+card.addEventListener("click", startAudio);
+
   };
 });
