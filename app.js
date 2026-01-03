@@ -299,8 +299,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-/* ================= INTRO LOGIC ================= */
-const introTextContent = `Willkommen.
+/* ================= INTRO ================= */
+document.addEventListener("DOMContentLoaded", () => {
+
+  const overlay = document.getElementById("introOverlay");
+  const textEl = document.getElementById("introText");
+  const button = document.getElementById("introSkipBtn");
+  const audio = document.getElementById("introMusic");
+
+  if (!overlay || !textEl || !button) return;
+
+  const introText = `Willkommen.
 
 Diese Seite ist ein Ort für Gedanken, Zitate
 und Momente der Ruhe.
@@ -310,51 +319,37 @@ nimm dir Zeit.
 
 Wenn nicht – komm später zurück.`;
 
-const introOverlay = document.getElementById("introOverlay");
-const introTextEl = document.getElementById("introText");
-const introBtn = document.getElementById("introSkipBtn");
-const introMusic = document.getElementById("introMusic");
+  let i = 0;
+  textEl.textContent = "";
+  textEl.style.whiteSpace = "pre-line";
 
-let charIndex = 0;
-let typingFinished = false;
+  audio.volume = 0.35;
+  audio.play().catch(()=>{});
 
-// Musik leise starten
-introMusic.volume = 0.35;
-introMusic.play().catch(()=>{});
-
-// Typewriter
-function typeIntro() {
-  if (charIndex < introTextContent.length) {
-    introTextEl.textContent += introTextContent.charAt(charIndex);
-    charIndex++;
-    setTimeout(typeIntro, 35);
-  } else {
-    typingFinished = true;
-    introBtn.style.opacity = "1";
-  }
-}
-typeIntro();
-
-// Intro beenden
-function closeIntro() {
-  introOverlay.style.opacity = "0";
-  introOverlay.style.pointerEvents = "none";
-
-  // Musik ausfaden
-  const fade = setInterval(() => {
-    if (introMusic.volume > 0.05) {
-      introMusic.volume -= 0.05;
+  function typeWriter() {
+    if (i < introText.length) {
+      textEl.textContent += introText.charAt(i);
+      i++;
+      setTimeout(typeWriter, 35);
     } else {
-      introMusic.pause();
-      clearInterval(fade);
+      button.style.opacity = "1";
     }
-  }, 80);
+  }
 
-  setTimeout(() => {
-    introOverlay.style.display = "none";
-  }, 600);
-}
+  typeWriter();
 
-introBtn.onclick = closeIntro;
+  button.onclick = () => {
+    overlay.style.opacity = "0";
 
+    const fade = setInterval(() => {
+      if (audio.volume > 0.05) audio.volume -= 0.05;
+      else {
+        audio.pause();
+        clearInterval(fade);
+      }
+    }, 80);
 
+    setTimeout(() => overlay.style.display = "none", 600);
+  };
+
+});
