@@ -299,17 +299,17 @@ async function loadNews() {
   // Nur die 3 neuesten anzeigen
   items.slice(0, 3).forEach(i => {
     const div = document.createElement("div");
-    div.className = "newsItem";
+div.className = "newsItem";
 
-    div.innerHTML = `
-      <div class="newsHeader">
-        <span class="newsDate">${i.date}</span>
-        <span class="newsLocation">${i.location}</span>
-      </div>
-      <div class="newsText">${i.text}</div>
-    `;
+div.innerHTML = `
+  <div class="newsHeader">
+    <span class="newsDate">${i.date}</span>
+    <span class="newsLocation">${i.textLocation || "–"}</span>
+  </div>
+  <div class="newsText">${i.text}</div>
+`;
+list.appendChild(div);
 
-    list.appendChild(div);
   });
 }
 
