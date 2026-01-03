@@ -244,12 +244,13 @@ main {
   font-weight: 600;
   text-align: center;
   color: #ffffff;
-
-  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  color: rgba(255,255,255,0.9);
+ background: rgba(0, 0, 0, 0.35);
   border: 2px solid rgba(255, 255, 255, 0.35);
   border-radius: 18px;
 
-  padding: 16px 22px;
+  padding: 10px 22px;
   margin: 26px auto;
 
   max-width: 520px;        /* 🔥 vorher ~680 → deutlich schmaler */
