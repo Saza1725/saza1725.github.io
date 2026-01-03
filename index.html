@@ -16,7 +16,7 @@
 
   <!-- SEITENMENÜ -->
   <nav id="menu">
-    <a href="#" data-target="aboutOverlay">🙇🏻 Über mich</a>
+    <a href="#" data-target="personalOverlay">🙇🏻 Über mich</a>
     <a href="#" data-target="infoOverlay">ℹ️ Information</a>
     <a href="#" data-target="meinezeitOverlay">🕒 Meine Zeit</a>
     <a href="#" data-target="folderOverlay">📁 Zitate</a>
@@ -24,7 +24,7 @@
     <a href="#" data-target="home">🏠 Home</a>
   </nav>
 
-  <!-- HEADER FIXIERT -->
+  <!-- HEADER -->
   <header>
     <div id="weekday"></div>
     <div id="daytime"></div>
@@ -54,23 +54,26 @@
       <input type="text" id="dailyFocusInput" placeholder="Schreibe hier deinen Fokus..." maxlength="100">
     </div>
 
-    <!-- NEWS -->
     <section id="newsContainer">
       <h3>Neuigkeiten</h3>
       <div id="newsList"></div>
     </section>
   </main>
 
-  <!-- ÜBER MICH OVERLAY -->
-  <div id="aboutOverlay" class="overlay">
+  <!-- PERSONAL / ÜBER MICH -->
+  <div id="personalOverlay" class="overlay">
     <div class="overlayContent">
-      <!-- Inhalt wird dynamisch aus personalSlides.json geladen -->
-      <button class="closeBtn">← Zurück</button>
-      <div id="aboutContent"></div>
+      <h2>Über mich</h2>
+      <div id="personalSlidesContainer"></div>
+      <div id="personalSlidesProgress"></div>
+      <div id="personalSlidesWrapper">
+        <button id="prevSlide">← Zurück</button>
+        <button id="nextSlide">Weiter →</button>
+      </div>
     </div>
   </div>
 
-  <!-- FOLDER OVERLAY -->
+  <!-- ZITATE -->
   <div id="folderOverlay" class="overlay">
     <div class="overlayContent">
       <h2>Zitate-Ordner</h2>
@@ -78,7 +81,7 @@
     </div>
   </div>
 
-  <!-- MEINE ZEIT OVERLAY -->
+  <!-- MEINE ZEIT -->
   <div id="meinezeitOverlay" class="overlay">
     <div class="overlayContent">
       <h2>Meine Zeit</h2>
@@ -86,7 +89,7 @@
     </div>
   </div>
 
-  <!-- ARCHIV OVERLAY -->
+  <!-- ARCHIV -->
   <div id="archiveOverlay" class="overlay">
     <div class="overlayContent">
       <h2>Archiv</h2>
@@ -94,7 +97,7 @@
     </div>
   </div>
 
-  <!-- INFO OVERLAY -->
+  <!-- INFO -->
   <div id="infoOverlay" class="overlay">
     <div class="overlayContent" id="infoContent"></div>
   </div>
