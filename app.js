@@ -369,6 +369,26 @@ function activateNewsBell() {
   if (!bell) return;
   bell.classList.add("active");
 }
+  /* ================= OPEN FUNCTIONS (für News & Glocke) ================= */
+
+function openMeineZeit() {
+  document.dispatchEvent(
+    new CustomEvent("openSection", { detail: "meinezeitOverlay" })
+  );
+}
+
+function openArchive() {
+  document.dispatchEvent(
+    new CustomEvent("openSection", { detail: "archiveOverlay" })
+  );
+}
+
+function openPersonal() {
+  document.dispatchEvent(
+    new CustomEvent("openSection", { detail: "personalOverlay" })
+  );
+}
+
 
 /* ================= AUTO UPDATE ================= */
 
