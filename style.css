@@ -68,7 +68,7 @@ header {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 10px 0;
+  padding: 16px 0;
   background: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(6px);
   color: rgba(255,255,255,0.9);
@@ -76,12 +76,30 @@ header {
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
+header {
+  min-height: 140px;   /* sorgt für Stabilität */
+}
+
 
 #weekday { font-size: 2em; font-weight: 800; }
 #daytime { font-size: 1.4em; font-weight: 600; }
-#date, #time { font-size: 1em; font-weight: 500; opacity: 0.85; }
+#date, #time {
+  font-size: 1.15em;        /* 🔥 leicht größer */
+  font-weight: 600;         /* 🔥 klarer */
+  opacity: 1;               /* 🔥 volle Sichtbarkeit */
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+
+#time {
+  font-size: 1.25em;        /* 🔥 leicht größer */
+  font-weight: 700;         /* 🔥 klarer */
+  opacity: 1;               /* 🔥 volle Sichtbarkeit */
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
 
 /* ================= TAGESZITAT ================= */
 #dailyQuoteBox {
@@ -215,7 +233,7 @@ main {
 
 #dailyMotivationText {
   font-family: 'Playfair Display', serif;
-  font-size: 1.6rem;
+  font-size: 1.45rem;
   font-weight: 600;
   text-align: center;
   color: #ffffff;
@@ -224,17 +242,13 @@ main {
   border: 2px solid rgba(255, 255, 255, 0.35);
   border-radius: 18px;
 
-  padding: 18px 26px;
-  margin: 22px auto;
-  max-width: 680px;
+  padding: 16px 22px;
+  margin: 26px auto;
 
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
-  line-height: 1.5;
+  max-width: 520px;        /* 🔥 vorher ~680 → deutlich schmaler */
+  line-height: 1.45;
 }
-
-
-
-
+  
 /* ================= PERSONAL QUOTES ================= */
 #personalQuoteDisplay {
   margin-top: 18px;
@@ -252,7 +266,7 @@ main {
 
 /* ================= TAGESFOKUS ================= */
 #dailyFocusContainer {
-  margin-top: 30px;
+  margin-top: 70px;          /* 🔥 vorher 30px → deutlich weiter runter */
   padding: 18px 24px;
   background: rgba(255,255,255,0.95);
   border-radius: 16px;
@@ -265,6 +279,7 @@ main {
   flex-direction: column;
   gap: 12px;
 }
+
 
 #dailyFocusContainer p {
   font-size: 1rem;
@@ -290,8 +305,9 @@ main {
 #newsContainer {
   position: fixed;
   left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 40%;
+  bottom: 40px;             /* 🔥 unten angedockt */
+  transform: none;
   width: 300px;
   padding: 16px;
   background: rgba(255,255,255,0.9);
