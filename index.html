@@ -35,24 +35,24 @@
 
   <!-- MAIN CONTENT -->
  <main>
-  <div id="dailyMotivationText">Hol dir deine Tages-Inspiration!</div>
+  <!-- Tageszitat -->
+  <div id="dailyQuoteBox">Hol dir deine Tagesinspiration!</div>
 
+  <!-- Tagesinspiration Buttons -->
   <div id="dailyQuoteActions">
-    <button id="shareQuoteBtn">📤 Teilen</button>
-  </div>
-
-  <div id="buttons">
     <button id="morningBtn">Morgen</button>
     <button id="noonBtn">Mittag</button>
     <button id="eveningBtn">Abend</button>
+    <button id="shareQuoteBtn">📤 Teilen</button>
   </div>
 
-  <div id="personalQuoteDisplay"></div>
-
+  <!-- Mein Fokus -->
   <div id="dailyFocusContainer">
-    <p>Mein Fokus heute:</p>
+    <p>🎯 Mein Fokus heute:</p>
     <input type="text" id="dailyFocusInput" placeholder="Schreibe hier deinen Fokus..." maxlength="100">
   </div>
+</main>
+
 
   <!-- NEWS -->
   <section id="newsContainer">
@@ -91,13 +91,15 @@
     </div>
   </div>
 
-  <!-- ARCHIV -->
-  <div id="archiveOverlay" class="overlay">
-    <div class="overlayContent">
-      <h2>Archiv</h2>
-      <div id="monthDetail"></div>
-    </div>
+  <!-- ARCHIV OVERLAY -->
+<div id="archiveOverlay" class="overlay">
+  <div class="overlayContent">
+    <h2>Archiv</h2>
+    <div id="monthDetail"></div>
+    <button class="closeBtn" onclick="document.dispatchEvent(new CustomEvent('openSection', {detail:'home'}))">← Zurück</button>
   </div>
+</div>
+
 
   <!-- INFO -->
   <div id="infoOverlay" class="overlay">
