@@ -272,40 +272,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
   closePersonalOverlay.onclick = () => showMain();
 
-// === NEWS ===
-  async function loadNews() {
-    const list = document.getElementById("newsList");
-    if (!list) return;
+async function loadNews() {
+  const list = document.getElementById("newsList");
+  if (!list) return;
 
-    let items = [];
-    try {
-      const data = await fetch("Daten/archive.json").then(r => r.json());
-      data.days.forEach(d => items.push({
-        date: d.date,
-        text: d.quote,
-        location: d.location || "–"
-      }));
-    } catch (err) { console.error(err); return; }
-
-    items.sort((a,b) => new Date(b.date) - new Date(a.date));
-    list.innerHTML = "";
-    items.slice(0,3).forEach(item => {
-      const div = document.createElement("div");
-      div.className = "newsItem";
-      div.innerHTML = `
-        <div class="newsHeader">
-          <span class="newsDate">${item.date}</span>
-          <span class="newsLocation">${item.location}</span>
-        </div>
-        <div class="newsText">${item.text}</div>
-      `;
-      list.appendChild(div);
-    });
+  let items = [];
+  try {
+    const data = await fetch("Daten/archive.json").then(r => r.json());
+    data.days.forEach(d => items.push({
+      date: d.date,
+      text: d.quote,
+      location: d.location || "–"
+    }));
+  } catch (err) {
+    console.error("Fehler beim Laden der News:", err);
+    return;
   }
-  loadNews();
-});
 
-// Laden der News nach DOMContentLoaded
-document.addEventListener("DOMContentLoaded", () => {
-  loadNews();
-});
+  // Sortieren: neueste zuerst
+  items.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  list.innerHTML = ""; // nur die News-Liste leeren
+
+  items.slice(0, 3).forEach(item => {
+    const div = document.createElement("div");
+    div.className = "newsItem";
+    div.innerHTML = `
+      <div class="newsHeader">
+        <span class="newsDate">${item.date}</span>
+        <span class="newsLocation">${item.location}</span>
+      </div>
+      <div class="newsText">${item.text}</div>
+    `;
+    list.appendChild(div);
+  });
+}
