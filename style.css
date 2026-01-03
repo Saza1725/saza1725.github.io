@@ -123,14 +123,18 @@ header {
 
 /* ================= MAIN ================= */
 main {
-  padding: 220px 20px 40px;   /* Platz für festen Header */
+  padding-top: 240px;   /* 🔥 PLATZ für Header */
+  padding-bottom: 40px;
+
   display: flex;
   flex-direction: column;
-  align-items: center;        /* 🔥 horizontal zentriert */
-  gap: 18px;
+  align-items: center;
+  gap: 20px;
+
   position: relative;
   z-index: 1;
 }
+
 
 
 #dailyQuoteBox { order: 1; }
@@ -228,8 +232,11 @@ main {
   display: flex;
   justify-content: center;
   gap: 14px;
-  margin: 24px auto;
+
+  margin-top: 20px;
+  z-index: 2;
 }
+
 
 #dailyMotivationText {
   font-family: 'Playfair Display', serif;
