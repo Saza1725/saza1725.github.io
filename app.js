@@ -278,44 +278,45 @@ async function loadNews() {
 
   let items = [];
   try {
-    const a = await fetch("Daten/archive.json").then(r => r.json());
-    a.days.forEach(d => {
-      items.push({
-        date: d.date,
-        text: d.quote,
-        location: d.location || "–"
-      });
-    });
+    const data = await fetch("Daten/archive.json").then(r => r.json());
+
+    // Für jede Nachricht Datum, Zitat und optional Ort
+    data.days.forEach(d => items.push({
+      date: d.date,
+      text: d.quote,
+      location: d.location || "–"
+    }));
+
   } catch (err) {
     console.error("Fehler beim Laden der News:", err);
-    list.innerHTML = "<p>News konnten nicht geladen werden.</p>";
+    list.innerHTML = "<p>News können gerade nicht geladen werden.</p>";
     return;
   }
 
   // Sortieren: neueste zuerst
-  items.sort((a, b) => new Date(b.date) - new Date(a.date));
+  items.sort((a,b) => new Date(b.date) - new Date(a.date));
 
-  // Tabelle erzeugen
-  let table = `<table class="newsTable">
-    <tr>
-      <th>Datum</th>
-      <th>Ort</th>
-      <th>Neuigkeit</th>
-    </tr>`;
+  // Liste leeren (nur #newsList, nicht die ganze Seite!)
+  list.innerHTML = "";
 
-  // Nur 3 neueste
-  items.slice(0, 3).forEach(i => {
-    table += `
-      <tr>
-        <td>${i.date}</td>
-        <td>${i.location}</td>
-        <td>${i.text}</td>
-      </tr>
+  // Nur die 3 neuesten anzeigen
+  items.slice(0,3).forEach(item => {
+    const div = document.createElement("div");
+    div.className = "newsItem";
+
+    div.innerHTML = `
+      <div class="newsHeader">
+        <span class="newsDate">${item.date}</span>
+        <span class="newsLocation">${item.location}</span>
+      </div>
+      <div class="newsText">${item.text}</div>
     `;
-  });
 
-  table += "</table>";
-  list.innerHTML = table;
+    list.appendChild(div);
+  });
 }
 
-loadNews();
+// Laden der News nach DOMContentLoaded
+document.addEventListener("DOMContentLoaded", () => {
+  loadNews();
+});
