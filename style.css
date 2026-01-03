@@ -344,7 +344,7 @@ main {
   padding: 12px 16px;
   margin-bottom: 14px;
   border-radius: 14px;
-  background: rgba(0,0,0,0.05);
+  background: #000000;
   border-left: 4px solid #c40000;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   font-family: 'Libre Baskerville', serif;
@@ -355,6 +355,7 @@ main {
   justify-content: space-between;
   font-weight: 600;
   color: #f5d36a; /* Gold */
+  background: rgba(34,34,34,0.9);   /* dunkler Hintergrund wie Teilen-Button */
   margin-bottom: 4px;
   font-size: 0.95em;
 }
