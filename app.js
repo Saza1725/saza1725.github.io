@@ -20,27 +20,31 @@ document.addEventListener("DOMContentLoaded", () => {
   showMain();
 
   /* ================= MENU ================= */
-  menuButton.onclick = () => {
-    menu.style.right = menu.style.right === "0px" ? "-260px" : "0";
-  };
+menuButton.onclick = () => {
+  menu.style.right = menu.style.right === "0px" ? "-260px" : "0";
+};
 
-  document.querySelectorAll("#menu a").forEach(link => {
-    link.addEventListener("click", e => {
-      e.preventDefault();
-      const target = link.dataset.target;
 
-      menu.style.right = "-260px";
+ document.querySelectorAll("#menu a").forEach(link => {
+  link.addEventListener("click", e => {
+    e.preventDefault();
 
-      if (target === "home") {
-        showMain();
-        return;
-      }
+    const target = link.dataset.target;
 
-      document.dispatchEvent(
-        new CustomEvent("openSection", { detail: target })
-      );
-    });
+    // Menü schließen
+    menu.style.right = "-260px";
+
+    if (target === "home") {
+      showMain();
+      return;
+    }
+
+    document.dispatchEvent(
+      new CustomEvent("openSection", { detail: target })
+    );
   });
+});
+
 
   /* ================= HEADER ================= */
   const weekday = document.getElementById("weekday");
