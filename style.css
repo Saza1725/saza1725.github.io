@@ -220,9 +220,6 @@ button:hover { transform: scale(1.05); }
   box-shadow: 0 6px 18px rgba(0,0,0,0.18);
 }
 
-
-
-/* ================= NEWS ================= */
 /* ================= NEWS ================= */
 #newsContainer {
   position: fixed;
@@ -248,26 +245,32 @@ button:hover { transform: scale(1.05); }
 .newsTable {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 10px;
+  font-family: 'Libre Baskerville', serif;
 }
 
 .newsTable th,
 .newsTable td {
-  border: 1px solid #c40000;
-  padding: 6px 8px;
+  border: 1px solid rgba(0,0,0,0.2);
+  padding: 8px 12px;
   text-align: left;
-  font-size: 0.9em;
 }
 
 .newsTable th {
-  background: rgba(196,0,0,0.1);
-  font-weight: 700;
+  background-color: rgba(196,0,0,0.1);
   color: #c40000;
+  font-weight: 700;
 }
 
 .newsTable td {
-  background: rgba(255,255,255,0.9);
+  background-color: rgba(255,255,255,0.9);
   color: #111;
 }
+
+.newsTable tr:nth-child(even) td {
+  background-color: rgba(255,255,255,0.8);
+}
+
 
 
 .newsItem {
