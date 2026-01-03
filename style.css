@@ -367,6 +367,17 @@ main {
   background: rgba(34,34,34,0.9);   /* dunkler Hintergrund wie Teilen-Button */
 }
 
+.newsItem.clickable {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.newsItem.clickable:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
+
 /* ================= OVERLAYS ================= */
 .overlay {
   position: fixed;
