@@ -95,6 +95,26 @@ header {
   font-weight: 500;
   opacity: 0.85;
 }
+
+/* ================= TAGESZITAT ================= */
+#dailyQuoteBox {
+  margin-top: 12px;
+  padding: 16px 24px;
+  background: #111; /* schwarzer Hintergrund */
+  color: #FFD700;   /* goldene Schrift */
+  border-radius: 16px;
+  font-size: 1.25em;
+  font-weight: 700;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5); /* stärkerer Shadow */
+  text-align: center;
+  line-height: 1.5;
+  font-family: 'Playfair Display', serif;
+}
+
+
 /* ================= MAIN ================= */
 main {
   padding: 220px 20px 40px;  /* genug Abstand nach oben für fixed header */
@@ -115,25 +135,41 @@ main {
   margin-top: 12px; /* Abstand zum Zitat */
 }
 
-#buttons button, #shareQuoteBtn {
-  padding: 12px 22px;
-  border-radius: 16px;
-  border: 2px solid #c40000;
-  background: rgba(255,255,255,0.95);
-  color: #c40000;
+#buttons button {
+  padding: 10px 18px;
+  border-radius: 20px;
+  border: none;
   font-family: 'Libre Baskerville', serif;
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 0.95em;
+  background: rgba(34,34,34,0.9); /* dunkles Grau */
+  color: #FFD700; /* goldene Schrift */
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease, background 0.2s ease;
 }
 
-#buttons button:hover, #shareQuoteBtn:hover {
-  background: #c40000;
-  color: #fff;
+#buttons button:hover {
+  background: rgba(50,50,50,0.95); /* etwas heller beim Hover */
   transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+/* ================= TEILEN BUTTON ================= */
+#shareQuoteBtn {
+  margin-top: 12px;
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(34,34,34,0.9);
+  color: #FFD700;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+#shareQuoteBtn:hover {
+  background: rgba(50,50,50,0.95);
+  transform: translateY(-2px) scale(1.05);
 }
 
 @media (max-width: 500px) {
@@ -142,13 +178,7 @@ main {
     gap: 12px;
   }
 
-  #buttons button, #shareQuoteBtn {
-    width: 100%;
-    max-width: 300px;
-  }
-}
-
-/* ================= TAGESMOTIVATION TEXT ================= */
+  /* ================= TAGESMOTIVATION TEXT ================= */
 #dailyMotivationText {
   font-family: 'Playfair Display', serif;
   font-size: 1.5rem;
@@ -158,7 +188,6 @@ main {
   letter-spacing: 0.5px;
   margin-bottom: 12px;
 }
-
 
 /* ================= PERSONAL QUOTES ================= */
 #personalQuoteDisplay {
@@ -174,46 +203,37 @@ main {
 }
 
 }
-/* ================= FOKUSBEREICH ================= */
+
+/* ================= MEIN FOKUS ================= */
 #dailyFocusContainer {
-  margin-top: 24px;
-  padding: 18px 22px;
-  background: rgba(255, 255, 255, 0.95);
+  margin-top: 30px;
+  padding: 18px 24px;
+  background: rgba(34, 34, 34, 0.85); /* dunkles, edles Grau */
   border-radius: 16px;
-  max-width: 500px;
-  width: 100%;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+  max-width: 80%;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  color: #FFD700; /* goldene Schrift für Akzent */
   text-align: left;
   font-family: 'Libre Baskerville', serif;
 }
 
 #dailyFocusContainer p {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: #c40000;
+  font-size: 1em;
+  color: #FFD700; /* Gold für den Label-Text */
+  margin-bottom: 10px;
 }
 
 #dailyFocusInput {
   width: 100%;
-  padding: 12px 14px;
+  max-width: 360px;
+  padding: 12px 16px;
   border-radius: 12px;
-  border: 2px solid #c40000;
-  font-size: 1rem;
+  border: none;
+  font-size: 0.95em;
   font-family: 'Libre Baskerville', serif;
-  background: #fff;
-  box-shadow: inset 0 2px 6px rgba(0,0,0,0.1);
-}
-
-/* ================= TAGESMOTIVATION TEXT ================= */
-#dailyMotivationText {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.5rem;
-  font-weight: 600;
-  text-align: center;
-  color: #111;
-  letter-spacing: 0.5px;
-  margin-bottom: 12px;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
 }
 
 /* ================= NEWS ================= */
