@@ -283,6 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const div = document.createElement("div");
     div.className = "newsItem";
     div.innerHTML = `
+    <div class="newsHeader">
       <span class="newsDate">${item.date}</span>
       <span class="newsLocation">${item.location}</span>
       <div class="newsText">${item.text}</div>
