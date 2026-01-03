@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ================= MENU ================= */
   menuButton.onclick = () => {
     menu.style.right = menu.style.right === "0px" ? "-260px" : "0";
-    menu.style.zIndex = "6000";
   };
 
   document.querySelectorAll("#menu a").forEach(link => {
@@ -30,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       const target = link.dataset.target;
 
+      // Menü schließen
       menu.style.right = "-260px";
 
       if (target === "home") {
@@ -37,7 +37,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      document.dispatchEvent(new CustomEvent("openSection", { detail: target }));
+      document.dispatchEvent(
+        new CustomEvent("openSection", { detail: target })
+      );
     });
   });
 
@@ -111,7 +113,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!overlay) return;
 
     const content = overlay.querySelector(".overlayContent");
-
     content.addEventListener("click", e => e.stopPropagation());
     overlay.addEventListener("click", () => showMain());
 
@@ -130,17 +131,11 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(r => r.json())
     .then(d => {
       const grid = document.getElementById("folderGrid");
-      const overlay = document.getElementById("folderOverlay");
-      const content = overlay.querySelector(".overlayContent");
-
       let currentView = "overview";
 
       function renderOverview() {
         currentView = "overview";
         grid.innerHTML = "";
-        grid.style.display = "grid";
-        content.querySelectorAll(".folderContent").forEach(e => e.remove());
-
         Object.keys(d.folders).forEach(name => {
           const div = document.createElement("div");
           div.className = "folderFrame";
@@ -152,8 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       function renderFolder(name) {
         currentView = "folder";
-        grid.style.display = "none";
-        content.querySelectorAll(".folderContent").forEach(e => e.remove());
+        grid.innerHTML = "";
 
         const fc = document.createElement("div");
         fc.className = "folderContent";
@@ -168,12 +162,11 @@ document.addEventListener("DOMContentLoaded", () => {
         backBtn.textContent = "← Zurück";
         backBtn.className = "closeBtn";
         backBtn.onclick = e => { e.stopPropagation(); renderOverview(); };
-
         fc.appendChild(backBtn);
-        content.appendChild(fc);
+
+        grid.appendChild(fc);
       }
 
-      renderOverview();
       createOverlayHandler("folderOverlay", renderOverview);
     });
 
@@ -181,15 +174,10 @@ document.addEventListener("DOMContentLoaded", () => {
   fetch("Daten/meinezeit.json")
     .then(r => r.json())
     .then(d => {
-      const overlay = document.getElementById("meinezeitOverlay");
-      const content = overlay.querySelector(".overlayContent");
       const grid = document.getElementById("meinezeitGrid");
 
       function renderOverview() {
         grid.innerHTML = "";
-        grid.style.display = "grid";
-        content.querySelectorAll(".folderContent").forEach(e => e.remove());
-
         Object.keys(d.folders).forEach(name => {
           const div = document.createElement("div");
           div.className = "myTimeFolder";
@@ -200,27 +188,24 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       function renderFolder(name) {
-        grid.style.display = "none";
-        content.querySelectorAll(".folderContent").forEach(e => e.remove());
-
+        grid.innerHTML = "";
         const fc = document.createElement("div");
         fc.className = "folderContent";
         fc.innerHTML = `<h3>${name}</h3>`;
         d.folders[name].forEach(e => {
           fc.innerHTML += `<h4>${e.title}</h4><p>${e.text}</p>`;
-          if (e.image) fc.innerHTML += `<img src="${e.image}" class="myTimeImage">`;
+          if(e.image) fc.innerHTML += `<img src="${e.image}" class="myTimeImage">`;
         });
 
         const backBtn = document.createElement("button");
         backBtn.textContent = "← Zurück";
         backBtn.className = "closeBtn";
         backBtn.onclick = e => { e.stopPropagation(); renderOverview(); };
-
         fc.appendChild(backBtn);
-        content.appendChild(fc);
+
+        grid.appendChild(fc);
       }
 
-      renderOverview();
       createOverlayHandler("meinezeitOverlay", renderOverview);
     });
 
@@ -228,9 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
   fetch("Daten/archive.json")
     .then(r => r.json())
     .then(d => {
-      const overlay = document.getElementById("archiveOverlay");
       const monthDetail = document.getElementById("monthDetail");
-
       function renderArchive() {
         monthDetail.innerHTML = "";
         d.days.forEach(entry => {
@@ -240,8 +223,6 @@ document.addEventListener("DOMContentLoaded", () => {
           monthDetail.appendChild(box);
         });
       }
-
-      renderArchive();
       createOverlayHandler("archiveOverlay", renderArchive);
     });
 
@@ -253,69 +234,54 @@ document.addEventListener("DOMContentLoaded", () => {
     .catch(() => infoContent.innerHTML = "<p>Info nicht verfügbar</p>");
   createOverlayHandler("infoOverlay");
 
-  /* ================= ÜBER MICH ================= */
-  let aboutOverlay = document.getElementById("aboutOverlay");
-  let aboutContent;
+  /* ================= ÜBER MICH / PERSONAL SLIDES ================= */
+  const personalOverlay = document.getElementById("personalOverlay");
+  const slidesContainer = document.getElementById("personalSlidesContainer");
+  const slidesProgress = document.getElementById("personalSlidesProgress");
+  const prevSlideBtn = document.getElementById("prevSlide");
+  const nextSlideBtn = document.getElementById("nextSlide");
+  const closePersonalOverlay = document.getElementById("closePersonalOverlay");
 
-  if (!aboutOverlay) {
-    aboutOverlay = document.createElement("div");
-    aboutOverlay.id = "aboutOverlay";
-    aboutOverlay.className = "overlay";
-
-    aboutContent = document.createElement("div");
-    aboutContent.id = "aboutContent";
-    aboutContent.className = "overlayContent";
-
-    aboutContent.addEventListener("click", e => e.stopPropagation());
-
-    const closeBtn = document.createElement("button");
-    closeBtn.innerText = "← Zurück";
-    closeBtn.className = "closeBtn";
-    closeBtn.onclick = e => { e.stopPropagation(); showMain(); };
-
-    aboutContent.appendChild(closeBtn);
-    aboutOverlay.appendChild(aboutContent);
-    document.body.appendChild(aboutOverlay);
-  } else {
-    aboutContent = aboutOverlay.querySelector(".overlayContent");
-    aboutContent.addEventListener("click", e => e.stopPropagation());
-  }
+  let slides = [];
+  let currentSlide = 0;
 
   fetch("Daten/personalSlides.json")
     .then(r => r.json())
     .then(d => {
-      aboutContent.innerHTML = d.aboutText || "";
-      const closeBtn = document.createElement("button");
-      closeBtn.innerText = "← Zurück";
-      closeBtn.className = "closeBtn";
-      closeBtn.onclick = e => { e.stopPropagation(); showMain(); };
-      aboutContent.appendChild(closeBtn);
-    })
-    .catch(() => {
-      aboutContent.innerHTML = "<p>Über mich-Text nicht verfügbar.</p>";
-      const closeBtn = document.createElement("button");
-      closeBtn.innerText = "← Zurück";
-      closeBtn.className = "closeBtn";
-      closeBtn.onclick = e => { e.stopPropagation(); showMain(); };
-      aboutContent.appendChild(closeBtn);
+      // Intro anzeigen
+      slidesContainer.innerHTML = `<h3>${d.intro.title}</h3><p>${d.intro.text.replace(/\n/g,'<br>')}</p>`;
+
+      slides = d.slides;
+
+      // Slide-Buttons aktivieren
+      function renderSlide(index) {
+        slidesContainer.innerHTML = `<h3>${slides[index].title}</h3><p>${slides[index].text.replace(/\n/g,'<br>')}</p>`;
+        slidesProgress.textContent = `${index + 1} / ${slides.length}`;
+        prevSlideBtn.style.display = index === 0 ? "none" : "inline-block";
+        nextSlideBtn.style.display = index === slides.length - 1 ? "none" : "inline-block";
+      }
+
+      prevSlideBtn.onclick = () => { if(currentSlide > 0){ currentSlide--; renderSlide(currentSlide); } };
+      nextSlideBtn.onclick = () => { if(currentSlide < slides.length -1){ currentSlide++; renderSlide(currentSlide); } };
+
+      renderSlide(0);
     });
 
-  createOverlayHandler("aboutOverlay");
+  createOverlayHandler("personalOverlay");
+
+  closePersonalOverlay.onclick = () => showMain();
 
   /* ================= NEWS ================= */
   async function loadNews() {
     const list = document.getElementById("newsList");
     if (!list) return;
-
     let items = [];
     try {
       const a = await fetch("Daten/archive.json").then(r => r.json());
       a.days.forEach(d => items.push({ date:d.date, text:d.quote }));
     } catch {}
-
     items.sort((a,b)=>new Date(b.date)-new Date(a.date));
     list.innerHTML = "";
-
     items.slice(0,3).forEach(i => {
       const div = document.createElement("div");
       div.className = "newsItem";
