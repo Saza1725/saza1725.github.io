@@ -125,13 +125,12 @@ menuButton.onclick = () => {
   overlay.addEventListener("click", () => showMain());
 
   document.addEventListener("openSection", e => {
-    if (e.detail === overlayId) {
-      hideAllOverlays();
-      if (renderFn) renderFn();
-      overlay.style.display = "flex";
-      main.style.display = "none";
-    }
-  });
+  if (e.detail === "aboutOverlay") {
+    hideAllOverlays();
+    aboutOverlay.style.display = "flex";
+    main.style.display = "none";
+  }
+});
 }
 
 
@@ -285,9 +284,9 @@ if (!aboutOverlay) {
   const closeBtn = document.createElement("button");
   closeBtn.innerText = "← Zurück";
   closeBtn.className = "closeBtn";
-  closeBtn.onclick = () => {
-    aboutOverlay.style.display = "none";
-    main.style.display = "flex";
+  closeBtn.onclick = e => {
+    e.stopPropagation(); // 🔥 verhindert sofortiges Schließen
+    showMain();
   };
 
   aboutContent.appendChild(closeBtn);
@@ -297,20 +296,20 @@ if (!aboutOverlay) {
   aboutContent = aboutOverlay.querySelector(".overlayContent");
 }
 
-// Inhalt laden
+createOverlayHandler("aboutOverlay");
+
 fetch("Daten/about.json")
   .then(r => r.json())
   .then(d => {
-    // Text oben im Overlay
     aboutContent.innerHTML = d.aboutText;
 
     // Schließen-Button erneut hinzufügen, damit er immer da ist
     const closeBtn = document.createElement("button");
     closeBtn.innerText = "← Zurück";
     closeBtn.className = "closeBtn";
-    closeBtn.onclick = () => {
-      aboutOverlay.style.display = "none";
-      main.style.display = "flex";
+    closeBtn.onclick = e => {
+      e.stopPropagation();
+      showMain();
     };
     aboutContent.appendChild(closeBtn);
   })
@@ -319,12 +318,13 @@ fetch("Daten/about.json")
     const closeBtn = document.createElement("button");
     closeBtn.innerText = "← Zurück";
     closeBtn.className = "closeBtn";
-    closeBtn.onclick = () => {
-      aboutOverlay.style.display = "none";
-      main.style.display = "flex";
+    closeBtn.onclick = e => {
+      e.stopPropagation();
+      showMain();
     };
     aboutContent.appendChild(closeBtn);
   });
+
 
 // Menü-Button Integration (sichtbar über Overlay)
 menuButton.onclick = () => {
