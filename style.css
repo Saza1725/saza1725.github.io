@@ -200,21 +200,26 @@ button:hover { transform: scale(1.05); }
 
 
 #dailyMotivationText {
-  font-family: 'Playfair Display', serif;        /* elegante Serifenschrift */
-  font-size: 1.35rem;                            /* gut lesbare Größe */
-  font-weight: 600;                              /* etwas fetter */
-  text-align: center;                            /* zentriert */                        
-  color: #111;                                   /* Textfarbe */                  
-  letter-spacing: 0.4px;                        /* etwas Luft zwischen den Buchstaben */
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;          /* etwas kleiner */
+  font-weight: 600;
 
-  padding: 16px 24px;                              /* Innenabstand */
-  background: rgba(255,255,255,0.9);              /* heller Hintergrund mit Transparenz */
-  border-radius: 16px;                          /* abgerundete Ecken */
-  box-shadow: 0 6px 18px rgba(0,0,0,0.25);          /* weicher Schatten */
+  text-align: center;
+  letter-spacing: 0.4px;
 
-  max-width: 600px;                              /* maximale Breite */
-  margin: 30px auto 25px;                        /* zentriert auf der Seite */
+  color: rgba(20,20,20,0.9);
+
+  margin-top: 42px;
+  margin-bottom: 22px;
+  padding: 10px 18px;
+
+  border-radius: 14px;
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(6px);
+
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
 }
+
 
 
 /* ================= NEWS ================= */
