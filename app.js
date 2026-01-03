@@ -426,6 +426,62 @@ if(newsBell){
   });
 }
 
+  /* ================= GLOCKE AUTOMATISIERUNG ================= */
+document.addEventListener("DOMContentLoaded", () => {
+  const bell = document.getElementById("newsBell");
+  const newsContainer = document.getElementById("newsContainer");
+
+  if (!bell || !newsContainer) return;
+
+  let hasNewNews = false;
+
+  // Funktion zum Prüfen auf neue News
+  async function checkForNews() {
+    try {
+      // Alle Datenquellen abfragen
+      const [archiveRes, slidesRes, meinezeitRes] = await Promise.all([
+        fetch("Daten/archive.json"),
+        fetch("Daten/personalSlides.json"),
+        fetch("Daten/meinezeit.json")
+      ]);
+
+      const archiveData = await archiveRes.json();
+      const slidesData = await slidesRes.json();
+      const meinezeitData = await meinezeitRes.json();
+
+      // Prüfen, ob es neue News gibt (hier nur als Beispiel: letztes Datum in archive.json)
+      const latestArchiveDate = archiveData.days?.slice(-1)[0]?.date || null;
+      const lastSeen = localStorage.getItem("lastSeenNewsDate");
+
+      if (latestArchiveDate && latestArchiveDate !== lastSeen) {
+        hasNewNews = true;
+        bell.classList.add("new"); // Glocke pulsiert
+      }
+
+    } catch (err) {
+      console.error("Fehler beim Laden der News:", err);
+    }
+  }
+
+  // News prüfen beim Laden
+  checkForNews();
+
+  // Glocke anklicken → News öffnen
+  bell.addEventListener("click", () => {
+    newsContainer.style.display = "block";  // News anzeigen
+    bell.classList.remove("new");            // Pulsen stoppen
+    if (hasNewNews) {
+      // zuletzt gesehenes Datum speichern
+      localStorage.setItem("lastSeenNewsDate", new Date().toISOString());
+      hasNewNews = false;
+    }
+  });
+
+  // Optional: alle 60 Sekunden automatisch prüfen
+  setInterval(checkForNews, 60000);
+});
+
+
   /* ================= OPEN FUNCTIONS (für News & Glocke) ================= */
 
 function openMeineZeit() {
@@ -446,49 +502,7 @@ function openPersonal() {
   );
 }
 
-  /* ================= GLOCKE ================= */
-#newsBell {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  font-size: 2em;
-  cursor: pointer;
-  z-index: 31000;
-  color: #FFD700; /* Gold */
-  transition: transform 0.3s ease;
-}
-
-#newsBell:hover {
-  transform: scale(1.2);
-}
-
-/* Neue News blinkt */
-#newsBell.new {
-  animation: bellPulse 1s infinite alternate;
-}
-
-@keyframes bellPulse {
-  0% { transform: scale(1) rotate(0deg); color: #FFD700; }
-  50% { transform: scale(1.3) rotate(10deg); color: #FFEA00; }
-  100% { transform: scale(1) rotate(-10deg); color: #FFD700; }
-}
-
-/* Mobil optimiert */
-@media (max-width: 600px) {
-  #newsBell {
-    top: 15px;
-    right: 15px;
-    font-size: 1.6em;
-  }
-  #newsContainer {
-    width: 90%;
-    left: 5%;
-    top: 50%;
-    transform: translateY(-50%);
-    max-height: 60vh;
-  }
-}
-
+ 
 
 /* ================= AUTO UPDATE ================= */
 
