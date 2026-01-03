@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
     menu.style.right = "-260px";
   }
 
-  // STARTZUSTAND
   showMain();
 
   /* ================= MENU ================= */
@@ -28,27 +27,18 @@ document.addEventListener("DOMContentLoaded", () => {
     link.addEventListener("click", e => {
       e.preventDefault();
       const target = link.dataset.target;
-
-      // Menü schließen
       menu.style.right = "-260px";
-
-      if (target === "home") {
-        showMain();
-        return;
-      }
-
-      document.dispatchEvent(
-        new CustomEvent("openSection", { detail: target })
-      );
+      if (target === "home") { showMain(); return; }
+      document.dispatchEvent(new CustomEvent("openSection", { detail: target }));
     });
   });
 
- document.addEventListener("DOMContentLoaded", () => {
-  // === HEADER ===
+  /* ================= HEADER ================= */
   const weekday = document.getElementById("weekday");
   const daytime = document.getElementById("daytime");
   const dateEl = document.getElementById("date");
   const timeEl = document.getElementById("time");
+  const dailyQuoteBox = document.getElementById("dailyQuoteBox");
 
   function updateHeader() {
     const now = new Date();
@@ -61,10 +51,9 @@ document.addEventListener("DOMContentLoaded", () => {
     timeEl.textContent = now.toLocaleTimeString("de-DE");
   }
   updateHeader();
-  setInterval(updateHeader, 1000)
+  setInterval(updateHeader, 1000);
 
-  // === TAGESZITAT ===
-  const dailyQuoteBox = document.getElementById("dailyQuoteBox");
+  /* ================= TAGESZITAT ================= */
   fetch("Daten/tageszeit.json")
     .then(r => r.json())
     .then(data => {
@@ -72,7 +61,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const seed = Number(today.replaceAll("-", ""));
       dailyQuoteBox.textContent = data.quotes[seed % data.quotes.length];
     });
-
   /* ================= PERSONAL QUOTES ================= */
   const personalQuoteDisplay = document.getElementById("personalQuoteDisplay");
   fetch("Daten/dailyTexts.json")
