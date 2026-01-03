@@ -335,7 +335,7 @@ main {
 #newsContainer h3 {
   font-size: 1.2em;
   font-weight: 700;
-  color: #c40000;
+  color: #f5d36a; /* Gold */
   margin-bottom: 12px;
   text-align: center;
 }
@@ -354,15 +354,16 @@ main {
   display: flex;
   justify-content: space-between;
   font-weight: 600;
-  color: #c40000;
+  color: #f5d36a; /* Gold */
   margin-bottom: 4px;
   font-size: 0.95em;
 }
 
 .newsText {
   font-size: 0.95em;
-  color: #111;
+  1.4;color: #fff; /* weiße Schrift */
   line-height: 1.4;
+  background: rgba(34,34,34,0.9);   /* dunkler Hintergrund wie Teilen-Button */
 }
 
 /* ================= OVERLAYS ================= */
