@@ -426,30 +426,66 @@ main {
 }
 
 /* ================= INTRO OVERLAY ================= */
+/* Intro Overlay */
 #introOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.85);
+  background: rgba(0,0,0,0.7);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 99999;
-}
-
-#introCard {
-  background: rgba(20,20,20,0.95);
-  padding: 30px;
-  border-radius: 18px;
-  max-width: 520px;
-  color: white;
-  text-align: center;
-}
-
-#introSkipBtn {
-  margin-top: 20px;
   opacity: 0;
-  transition: opacity 0.5s;
+  transition: opacity 0.6s ease;
 }
+
+/* Intro Card */
+#introCard {
+  background: #111;               /* dunkler Hintergrund */
+  color: #FFD700;                 /* goldene Schrift */
+  border-radius: 18px;
+  padding: 32px 28px;
+  max-width: 600px;
+  width: 90%;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+  transform: translateY(-50px);
+  opacity: 0;
+  transition: transform 0.8s ease, opacity 0.8s ease;
+  text-align: center;
+  font-family: 'Georgia', serif;
+  line-height: 1.6;
+}
+
+/* Card einblenden */
+#introCard.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Button */
+#introButton {
+  margin-top: 22px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.15);
+  color: #FFD700;
+  border: 2px solid rgba(255, 215, 0, 0.5);
+  border-radius: 14px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
+
+#introButton.active {
+  opacity: 1;
+}
+
+#introButton:hover {
+  transform: translateY(-2px) scale(1.05);
+  background: rgba(255, 255, 255, 0.25);
+}
+
 
 /* ================= ORDNER / ARCHIV ================= */
 #meinezeitGrid,
