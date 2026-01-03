@@ -267,7 +267,7 @@ backBtn.onclick = (e) => {
 
 /* ================= ÜBER MICH OVERLAY ================= */
 let aboutOverlay = document.getElementById("aboutOverlay");
-let aboutContent;
+let aboutContent, aboutTextContainer;
 
 if (!aboutOverlay) {
   // Overlay erstellen
@@ -280,8 +280,13 @@ if (!aboutOverlay) {
   aboutContent.id = "aboutContent";
   aboutContent.className = "overlayContent";
 
-  // Klicks IM Overlay blockieren, damit Overlay nicht sofort schließt
+  // Klicks IM Overlay blockieren
   aboutContent.addEventListener("click", e => e.stopPropagation());
+
+  // Textcontainer für JSON
+  aboutTextContainer = document.createElement("div");
+  aboutTextContainer.id = "aboutTextContainer";
+  aboutContent.appendChild(aboutTextContainer);
 
   // Schließen-Button
   const closeBtn = document.createElement("button");
@@ -291,24 +296,34 @@ if (!aboutOverlay) {
     e.stopPropagation();
     showMain();
   };
-
   aboutContent.appendChild(closeBtn);
+
   aboutOverlay.appendChild(aboutContent);
   document.body.appendChild(aboutOverlay);
 } else {
   aboutContent = aboutOverlay.querySelector(".overlayContent");
-  aboutContent.addEventListener("click", e => e.stopPropagation());
+  aboutTextContainer = document.getElementById("aboutTextContainer");
 }
 
-// Overlay öffnen, wenn im Menü „Über mich“ angeklickt wird
-createOverlayHandler("aboutOverlay");
+// Overlay öffnen über Menü
+document.addEventListener("openSection", e => {
+  if (e.detail === "aboutOverlay") {
+    hideAllOverlays();
+    aboutOverlay.style.display = "flex";
+    main.style.display = "none";
+  }
+});
 
-// JSON laden und Text anzeigen
+// JSON laden
 fetch("Daten/about.json")
   .then(r => r.json())
   .then(d => {
-    // Text oben im Overlay
-    aboutContent.innerHTML = d.aboutText;
+    aboutTextContainer.innerHTML = d.aboutText;
+  })
+  .catch(() => {
+    aboutTextContainer.innerHTML = "<p>Über mich-Text nicht verfügbar.</p>";
+  });
+
 
     // Schließen-Button erneut hinzufügen, damit er immer da ist
     const closeBtn = document.createElement("button");
