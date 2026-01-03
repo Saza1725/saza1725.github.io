@@ -362,13 +362,70 @@ function renderNews(items) {
 }
 
 
-/* ================= GLOCKE ================= */
+  /* ================= GLOCKE ================= */
 
 function activateNewsBell() {
   const bell = document.getElementById("newsBell");
   if (!bell) return;
   bell.classList.add("active");
 }
+
+// === Live News & Glocke ===
+const newsContainer = document.getElementById("newsContainer");
+const newsBell = document.getElementById("newsBell");
+
+let latestNewsTimestamp = 0; // speichert letzten bekannten Eintrag
+
+async function loadNews() {
+  const files = ["Daten/archive.json", "Daten/personalSlides.json", "Daten/meinezeit.json"];
+  let allNews = [];
+
+  for (const file of files) {
+    const res = await fetch(file);
+    const data = await res.json();
+
+    if (file.includes("archive")) {
+      data.days.forEach(d => allNews.push({title: d.date, text: d.quote, time: new Date(d.date).getTime()}));
+    } else if (file.includes("personalSlides")) {
+      allNews.push({title: data.intro.title, text: data.intro.text, time: Date.now()});
+      data.slides.forEach(s => allNews.push({title: s.title, text: s.text, time: Date.now()}));
+    } else if (file.includes("meinezeit")) {
+      Object.keys(data.folders).forEach(name => {
+        data.folders[name].forEach(e => allNews.push({title: e.title, text: e.text, time: Date.now()}));
+      });
+    }
+  }
+
+  allNews.sort((a,b) => b.time - a.time);
+
+  if(allNews.length > 0 && allNews[0].time > latestNewsTimestamp) {
+    latestNewsTimestamp = allNews[0].time;
+    if(newsBell) newsBell.classList.add("new"); // Glocke blinkt
+  }
+
+  if(newsContainer){
+    newsContainer.innerHTML = "";
+    allNews.slice(0,5).forEach(n => {
+      const div = document.createElement("div");
+      div.className = "newsItem clickable";
+      div.innerHTML = `<div class="newsHeader">${n.title}</div><div class="newsText">${n.text}</div>`;
+      newsContainer.appendChild(div);
+    });
+  }
+}
+
+// initial laden
+loadNews();
+// live alle 20 Sekunden aktualisieren
+setInterval(loadNews, 20000);
+
+if(newsBell){
+  newsBell.addEventListener("click", () => {
+    newsBell.classList.remove("new");
+    if(newsContainer) newsContainer.scrollIntoView({behavior:"smooth"});
+  });
+}
+
   /* ================= OPEN FUNCTIONS (für News & Glocke) ================= */
 
 function openMeineZeit() {
@@ -387,6 +444,49 @@ function openPersonal() {
   document.dispatchEvent(
     new CustomEvent("openSection", { detail: "personalOverlay" })
   );
+}
+
+  /* ================= GLOCKE ================= */
+#newsBell {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  font-size: 2em;
+  cursor: pointer;
+  z-index: 31000;
+  color: #FFD700; /* Gold */
+  transition: transform 0.3s ease;
+}
+
+#newsBell:hover {
+  transform: scale(1.2);
+}
+
+/* Neue News blinkt */
+#newsBell.new {
+  animation: bellPulse 1s infinite alternate;
+}
+
+@keyframes bellPulse {
+  0% { transform: scale(1) rotate(0deg); color: #FFD700; }
+  50% { transform: scale(1.3) rotate(10deg); color: #FFEA00; }
+  100% { transform: scale(1) rotate(-10deg); color: #FFD700; }
+}
+
+/* Mobil optimiert */
+@media (max-width: 600px) {
+  #newsBell {
+    top: 15px;
+    right: 15px;
+    font-size: 1.6em;
+  }
+  #newsContainer {
+    width: 90%;
+    left: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    max-height: 60vh;
+  }
 }
 
 
