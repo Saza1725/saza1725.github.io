@@ -180,15 +180,28 @@ main {
   }
 
   /* ================= TAGESMOTIVATION TEXT ================= */
+/* Wrapper für Buttons + Text */
+#dailyMotivationWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* mittig */
+  gap: 12px;
+  margin-top: 20px;
+}
+
+#buttons {
+  display: flex;
+  gap: 12px;
+}
+
 #dailyMotivationText {
   font-family: 'Playfair Display', serif;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 600;
-  text-align: center;
   color: #111;
-  letter-spacing: 0.5px;
-  margin-bottom: 12px;
+  text-align: center;
 }
+
 
 /* ================= PERSONAL QUOTES ================= */
 #personalQuoteDisplay {
