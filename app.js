@@ -399,6 +399,8 @@ setInterval(collectNews, REFRESH_INTERVAL);
 // ================= INTRO JS =================
 document.addEventListener("DOMContentLoaded", () => {
   const overlay = document.getElementById("introOverlay");
+  // setTimeout(() => card.classList.add("show"), 200);
+
   const card = document.getElementById("introCard");
   const textEl = document.getElementById("introText");
   const button = document.getElementById("introButton");
