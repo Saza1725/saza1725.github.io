@@ -20,31 +20,28 @@ document.addEventListener("DOMContentLoaded", () => {
   showMain();
 
   /* ================= MENU ================= */
-menuButton.onclick = () => {
-  menu.style.right = menu.style.right === "0px" ? "-260px" : "0";
-};
+  menuButton.onclick = () => {
+    menu.style.right = menu.style.right === "0px" ? "-260px" : "0";
+  };
 
+  document.querySelectorAll("#menu a").forEach(link => {
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      const target = link.dataset.target;
 
- document.querySelectorAll("#menu a").forEach(link => {
-  link.addEventListener("click", e => {
-    e.preventDefault();
+      // Menü schließen
+      menu.style.right = "-260px";
 
-    const target = link.dataset.target;
+      if (target === "home") {
+        showMain();
+        return;
+      }
 
-    // Menü schließen
-    menu.style.right = "-260px";
-
-    if (target === "home") {
-      showMain();
-      return;
-    }
-
-    document.dispatchEvent(
-      new CustomEvent("openSection", { detail: target })
-    );
+      document.dispatchEvent(
+        new CustomEvent("openSection", { detail: target })
+      );
+    });
   });
-});
-
 
   /* ================= HEADER ================= */
   const weekday = document.getElementById("weekday");
@@ -111,58 +108,86 @@ menuButton.onclick = () => {
   focusInput.value = localStorage.getItem(focusKey) || "";
   focusInput.oninput = () => localStorage.setItem(focusKey, focusInput.value);
 
-  /* ================= OVERLAY-FUNKTION ================= */
-  function createOverlayHandler(overlayId, renderFn) {
-  const overlay = document.getElementById(overlayId);
-  if (!overlay) return;
+  /* ================= EINHEITLICHE OVERLAY-FUNKTION ================= */
+  function setupOverlay(overlayId, renderContentFn) {
+    let overlay = document.getElementById(overlayId);
+    let content, textContainer;
 
-  const content = overlay.querySelector(".overlayContent");
+    // Overlay erstellen, falls nicht vorhanden
+    if (!overlay) {
+      overlay = document.createElement("div");
+      overlay.id = overlayId;
+      overlay.className = "overlay";
 
-  // 🔒 Klicks IM Overlay blockieren
-  content.addEventListener("click", e => e.stopPropagation());
+      content = document.createElement("div");
+      content.className = "overlayContent";
+      content.addEventListener("click", e => e.stopPropagation()); // Klicks IM Overlay blockieren
 
-  // 👇 Klick AUSSERHALB schließt Overlay
-  overlay.addEventListener("click", () => showMain());
+      textContainer = document.createElement("div");
+      textContainer.className = "overlayTextContainer";
+      content.appendChild(textContainer);
 
-  document.addEventListener("openSection", e => {
-  if (e.detail === "aboutOverlay") {
-    hideAllOverlays();
-    aboutOverlay.style.display = "flex";
-    main.style.display = "none";
+      const closeBtn = document.createElement("button");
+      closeBtn.innerText = "← Zurück";
+      closeBtn.className = "closeBtn";
+      closeBtn.onclick = e => {
+        e.stopPropagation();
+        showMain();
+      };
+      content.appendChild(closeBtn);
+
+      overlay.appendChild(content);
+      document.body.appendChild(overlay);
+    } else {
+      content = overlay.querySelector(".overlayContent");
+      textContainer = content.querySelector(".overlayTextContainer");
+    }
+
+    // Klick außerhalb schließt Overlay
+    overlay.addEventListener("click", () => showMain());
+
+    // Overlay öffnen über Menü
+    document.addEventListener("openSection", e => {
+      if (e.detail === overlayId) {
+        hideAllOverlays();
+        overlay.style.display = "flex";
+        main.style.display = "none";
+
+        if (renderContentFn) renderContentFn(textContainer);
+      }
+    });
+
+    return { overlay, content, textContainer };
   }
-});
-}
 
+  /* ================= ÜBER MICH ================= */
+  setupOverlay("aboutOverlay", container => {
+    fetch("Daten/about.json")
+      .then(r => r.json())
+      .then(d => { container.innerHTML = d.aboutText; })
+      .catch(() => { container.innerHTML = "<p>Über mich-Text nicht verfügbar.</p>"; });
+  });
 
-  /* ================= ZITATE ================= */
-  fetch("Daten/folders.json")
-  .then(r => r.json())
-  .then(d => {
+  /* ================= ZITATE (FOLDERS) ================= */
+  fetch("Daten/folders.json").then(r => r.json()).then(d => {
     const grid = document.getElementById("folderGrid");
-    const overlay = document.getElementById("folderOverlay");
-    const content = overlay.querySelector(".overlayContent");
 
-    let currentView = "overview";
-
-    function renderOverview() {
-      currentView = "overview";
-      grid.innerHTML = "";
+    setupOverlay("folderOverlay", container => {
       grid.style.display = "grid";
-      content.querySelectorAll(".folderContent").forEach(e => e.remove());
+      grid.innerHTML = "";
 
       Object.keys(d.folders).forEach(name => {
         const div = document.createElement("div");
         div.className = "folderFrame";
         div.textContent = name;
-        div.onclick = () => renderFolder(name);
+        div.onclick = () => renderFolder(name, container);
         grid.appendChild(div);
       });
-    }
+    });
 
-    function renderFolder(name) {
-      currentView = "folder";
+    function renderFolder(name, container) {
       grid.style.display = "none";
-      content.querySelectorAll(".folderContent").forEach(e => e.remove());
+      container.innerHTML = "";
 
       const fc = document.createElement("div");
       fc.className = "folderContent";
@@ -175,194 +200,100 @@ menuButton.onclick = () => {
       });
 
       const backBtn = document.createElement("button");
-backBtn.textContent = "← Zurück";
-backBtn.className = "closeBtn";
-backBtn.onclick = (e) => {
-  e.stopPropagation();   // 🔥 DAS ist der Schlüssel
-  renderOverview();
-};
-
+      backBtn.textContent = "← Zurück";
+      backBtn.className = "closeBtn";
+      backBtn.onclick = e => {
+        e.stopPropagation();
+        grid.style.display = "grid";
+        container.innerHTML = "";
+        Object.keys(d.folders).forEach(name => {
+          const div = document.createElement("div");
+          div.className = "folderFrame";
+          div.textContent = name;
+          div.onclick = () => renderFolder(name, container);
+          grid.appendChild(div);
+        });
+      };
 
       fc.appendChild(backBtn);
-      content.appendChild(fc);
+      container.appendChild(fc);
     }
-
-    createOverlayHandler("folderOverlay", renderOverview);
   });
 
-
   /* ================= MEINE ZEIT ================= */
-  fetch("Daten/meinezeit.json")
-    .then(r => r.json())
-    .then(d => {
-      const overlay = document.getElementById("meinezeitOverlay");
-      const content = overlay.querySelector(".overlayContent");
-      const grid = document.getElementById("meinezeitGrid");
+  fetch("Daten/meinezeit.json").then(r => r.json()).then(d => {
+    const grid = document.getElementById("meinezeitGrid");
 
-      function renderOverview() {
-        grid.innerHTML = "";
+    setupOverlay("meinezeitOverlay", container => {
+      grid.style.display = "grid";
+      grid.innerHTML = "";
+
+      Object.keys(d.folders).forEach(name => {
+        const div = document.createElement("div");
+        div.className = "myTimeFolder";
+        div.textContent = name;
+        div.onclick = () => renderFolder(name, container);
+        grid.appendChild(div);
+      });
+    });
+
+    function renderFolder(name, container) {
+      grid.style.display = "none";
+      container.innerHTML = "";
+
+      const fc = document.createElement("div");
+      fc.className = "folderContent";
+      fc.innerHTML = `<h3>${name}</h3>`;
+
+      d.folders[name].forEach(e => {
+        fc.innerHTML += `<h4>${e.title}</h4><p>${e.text}</p>`;
+        if (e.image) fc.innerHTML += `<img src="${e.image}" class="myTimeImage">`;
+      });
+
+      const backBtn = document.createElement("button");
+      backBtn.textContent = "← Zurück";
+      backBtn.className = "closeBtn";
+      backBtn.onclick = e => {
+        e.stopPropagation();
         grid.style.display = "grid";
-        content.querySelectorAll(".folderContent").forEach(e => e.remove());
-
+        container.innerHTML = "";
         Object.keys(d.folders).forEach(name => {
           const div = document.createElement("div");
           div.className = "myTimeFolder";
           div.textContent = name;
-          div.onclick = () => renderFolder(name);
+          div.onclick = () => renderFolder(name, container);
           grid.appendChild(div);
         });
-      }
+      };
 
-      function renderFolder(name) {
-        grid.style.display = "none";
-        content.querySelectorAll(".folderContent").forEach(e => e.remove());
-
-        const fc = document.createElement("div");
-        fc.className = "folderContent";
-        fc.innerHTML = `<h3>${name}</h3>`;
-        d.folders[name].forEach(e => {
-          fc.innerHTML += `<h4>${e.title}</h4><p>${e.text}</p>`;
-          if (e.image) fc.innerHTML += `<img src="${e.image}" class="myTimeImage">`;
-        });
-
-        const backBtn = document.createElement("button");
-        backBtn.textContent = "← Zurück";
-        backBtn.className = "closeBtn";
-        backBtn.onclick = renderOverview;
-
-        fc.appendChild(backBtn);
-        content.appendChild(fc);
-      }
-
-      createOverlayHandler("meinezeitOverlay", renderOverview);
-    });
+      fc.appendChild(backBtn);
+      container.appendChild(fc);
+    }
+  });
 
   /* ================= ARCHIVE ================= */
-  fetch("Daten/archive.json")
-    .then(r => r.json())
-    .then(d => {
-      const overlay = document.getElementById("archiveOverlay");
-      const monthDetail = document.getElementById("monthDetail");
+  fetch("Daten/archive.json").then(r => r.json()).then(d => {
+    const monthDetail = document.getElementById("monthDetail");
 
-      function renderArchive() {
-        monthDetail.innerHTML = "";
-        d.days.forEach(entry => {
-          const box = document.createElement("div");
-          box.className = "archiveEntry";
-          box.innerHTML = `<h4>${entry.date}</h4><p>${entry.quote}</p>`;
-          monthDetail.appendChild(box);
-        });
-      }
-
-      createOverlayHandler("archiveOverlay", renderArchive);
+    setupOverlay("archiveOverlay", container => {
+      monthDetail.innerHTML = "";
+      d.days.forEach(entry => {
+        const box = document.createElement("div");
+        box.className = "archiveEntry";
+        box.innerHTML = `<h4>${entry.date}</h4><p>${entry.quote}</p>`;
+        monthDetail.appendChild(box);
+      });
     });
+  });
 
   /* ================= INFO ================= */
   const infoContent = document.getElementById("infoContent");
-  fetch("Daten/info.json")
-    .then(r => r.json())
-    .then(d => infoContent.innerHTML = d.infoText)
-    .catch(() => infoContent.innerHTML = "<p>Info nicht verfügbar</p>");
-  createOverlayHandler("infoOverlay");
-
-/* ================= ÜBER MICH OVERLAY ================= */
-let aboutOverlay = document.getElementById("aboutOverlay");
-let aboutContent, aboutTextContainer;
-
-if (!aboutOverlay) {
-  // Overlay erstellen
-  aboutOverlay = document.createElement("div");
-  aboutOverlay.id = "aboutOverlay";
-  aboutOverlay.className = "overlay";
-
-  // Inhalt erstellen
-  aboutContent = document.createElement("div");
-  aboutContent.id = "aboutContent";
-  aboutContent.className = "overlayContent";
-
-  // Klicks IM Overlay blockieren
-  aboutContent.addEventListener("click", e => e.stopPropagation());
-
-  // Textcontainer für JSON
-  aboutTextContainer = document.createElement("div");
-  aboutTextContainer.id = "aboutTextContainer";
-  aboutContent.appendChild(aboutTextContainer);
-
-  // Schließen-Button
-  const closeBtn = document.createElement("button");
-  closeBtn.innerText = "← Zurück";
-  closeBtn.className = "closeBtn";
-  closeBtn.onclick = e => {
-    e.stopPropagation();
-    showMain();
-  };
-  aboutContent.appendChild(closeBtn);
-
-  aboutOverlay.appendChild(aboutContent);
-  document.body.appendChild(aboutOverlay);
-} else {
-  aboutContent = aboutOverlay.querySelector(".overlayContent");
-  aboutTextContainer = document.getElementById("aboutTextContainer");
-}
-
-// Overlay öffnen über Menü
-document.addEventListener("openSection", e => {
-  if (e.detail === "aboutOverlay") {
-    hideAllOverlays();
-    aboutOverlay.style.display = "flex";
-    main.style.display = "none";
-  }
-});
-
-// JSON laden
-fetch("Daten/about.json")
-  .then(r => r.json())
-  .then(d => {
-    aboutTextContainer.innerHTML = d.aboutText;
-  })
-  .catch(() => {
-    aboutTextContainer.innerHTML = "<p>Über mich-Text nicht verfügbar.</p>";
+  setupOverlay("infoOverlay", container => {
+    fetch("Daten/info.json")
+      .then(r => r.json())
+      .then(d => container.innerHTML = d.infoText)
+      .catch(() => container.innerHTML = "<p>Info nicht verfügbar</p>");
   });
-
-
-    // Schließen-Button erneut hinzufügen, damit er immer da ist
-    const closeBtn = document.createElement("button");
-    closeBtn.innerText = "← Zurück";
-    closeBtn.className = "closeBtn";
-    closeBtn.onclick = e => {
-      e.stopPropagation();
-      showMain();
-    };
-    aboutContent.appendChild(closeBtn);
-  })
-  .catch(() => {
-    aboutContent.innerHTML = "<p>Über mich-Text nicht verfügbar.</p>";
-    const closeBtn = document.createElement("button");
-    closeBtn.innerText = "← Zurück";
-    closeBtn.className = "closeBtn";
-    closeBtn.onclick = e => {
-      e.stopPropagation();
-      showMain();
-    };
-    aboutContent.appendChild(closeBtn);
-  });
-
-
-
-// Menü-Button Integration (sichtbar über Overlay)
-menuButton.onclick = () => {
-  menu.style.right = menu.style.right === "0px" ? "-260px" : "0";
-  // Overlay bleibt sichtbar, Menü ist überlagert
-  aboutOverlay.style.zIndex = "2000"; // Overlay unter Menü
-  menu.style.zIndex = "6000";          // Menü über Overlay
-};
-
-// Funktion zum Öffnen Overlay
-function openAboutOverlay() {
-  aboutOverlay.style.display = "flex";
-  main.style.display = "none";
-}
-
 
   /* ================= NEWS ================= */
   async function loadNews() {
