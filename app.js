@@ -35,9 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      document.dispatchEvent(
-        new CustomEvent("openSection", { detail: target })
-      );
+      document.dispatchEvent(new CustomEvent("openSection", { detail: target }));
     });
   });
 
@@ -235,8 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const prevSlideBtn=document.getElementById("prevSlide");
   const nextSlideBtn=document.getElementById("nextSlide");
 
-  let slides=[];
-  let currentSlide=0;
+  let slides=[]; let currentSlide=0;
 
   fetch("Daten/personalSlides.json")
     .then(r=>r.json())
@@ -253,314 +250,109 @@ document.addEventListener("DOMContentLoaded", () => {
 
       prevSlideBtn.onclick=()=>{ if(currentSlide>0){currentSlide--; renderSlide(currentSlide);} };
       nextSlideBtn.onclick=()=>{ if(currentSlide<slides.length-1){currentSlide++; renderSlide(currentSlide);} };
-
       renderSlide(0);
     });
-
   createOverlayHandler("personalOverlay");
 
-  /* ================= NEWS ================= */
- /* ================= NEWS COLLECTOR ================= */
-
-const NEWS_KEY = "seenNewsState";
-const REFRESH_INTERVAL = 30000; // 30 Sekunden
-
-async function collectNews() {
-  const news = [];
-  const stored = JSON.parse(localStorage.getItem(NEWS_KEY)) || {};
-
-  /* -------- ARCHIVE -------- */
-  try {
-    const archive = await fetch("Daten/archive.json").then(r => r.json());
-    const newestDate = archive.days[archive.days.length - 1]?.date;
-
-    if (newestDate && stored.archive !== newestDate) {
-      news.push({
-        source: "archive",
-        title: "Neuer Tagesgedanke",
-        text: "Ein neuer Eintrag wurde hinzugefügt",
-        date: newestDate
-      });
-      stored.archive = newestDate;
-    }
-  } catch (e) {
-    console.warn("Archive News Fehler", e);
-  }
-
-  /* -------- PERSONAL SLIDES -------- */
-  try {
-    const personal = await fetch("Daten/personalSlides.json").then(r => r.json());
-    const count = personal.slides?.length || 0;
-
-    if (stored.personal !== count) {
-      news.push({
-        source: "personal",
-        title: "Neuer persönlicher Einblick",
-        text: "Ein neuer Text wurde veröffentlicht",
-        date: new Date().toISOString().split("T")[0]
-      });
-      stored.personal = count;
-    }
-  } catch (e) {
-    console.warn("Personal News Fehler", e);
-  }
-
-  /* -------- MEINE ZEIT -------- */
-  try {
-    const mz = await fetch("Daten/meinezeit.json").then(r => r.json());
-    let total = 0;
-    Object.values(mz.folders).forEach(arr => total += arr.length);
-
-    if (stored.meinezeit !== total) {
-      news.push({
-        source: "meinezeit",
-        title: "Neuer Beitrag in Meine Zeit",
-        text: "Ein neuer persönlicher Abschnitt wurde ergänzt",
-        date: new Date().toISOString().split("T")[0]
-      });
-      stored.meinezeit = total;
-    }
-  } catch (e) {
-    console.warn("MeineZeit News Fehler", e);
-  }
-
-  localStorage.setItem(NEWS_KEY, JSON.stringify(stored));
-  renderNews(news);
-}
-
-/* ================= RENDER ================= */
-function renderNews(items) {
-  const list = document.getElementById("newsList");
-  if (!list) return;
-
-  if (!items.length) {
-    list.innerHTML = "<p class='noNews'>Keine neuen Neuigkeiten</p>";
-    return;
-  }
-
-  list.innerHTML = "";
-
-  items.forEach(n => {
-    const div = document.createElement("div");
-    div.className = "newsItem clickable";
-    div.dataset.source = n.source;
-    div.dataset.target = n.date || "";
-
-    div.innerHTML = `
-      <div class="newsHeader">
-        <strong>${n.title}</strong>
-        <span>${n.date}</span>
-      </div>
-      <div class="newsText">${n.text}</div>
-    `;
-
-    div.addEventListener("click", () => openNewsTarget(n));
-    list.appendChild(div);
-  });
-
-  activateNewsBell();
-}
-
-
-  /* ================= GLOCKE ================= */
-
-function activateNewsBell() {
-  const bell = document.getElementById("newsBell");
-  if (!bell) return;
-  bell.classList.add("active");
-}
-
-// === Live News & Glocke ===
-const newsContainer = document.getElementById("newsContainer");
-const newsBell = document.getElementById("newsBell");
-
-let latestNewsTimestamp = 0; // speichert letzten bekannten Eintrag
-
-async function loadNews() {
-  const files = ["Daten/archive.json", "Daten/personalSlides.json", "Daten/meinezeit.json"];
-  let allNews = [];
-
-  for (const file of files) {
-    const res = await fetch(file);
-    const data = await res.json();
-
-    if (file.includes("archive")) {
-      data.days.forEach(d => allNews.push({title: d.date, text: d.quote, time: new Date(d.date).getTime()}));
-    } else if (file.includes("personalSlides")) {
-      allNews.push({title: data.intro.title, text: data.intro.text, time: Date.now()});
-      data.slides.forEach(s => allNews.push({title: s.title, text: s.text, time: Date.now()}));
-    } else if (file.includes("meinezeit")) {
-      Object.keys(data.folders).forEach(name => {
-        data.folders[name].forEach(e => allNews.push({title: e.title, text: e.text, time: Date.now()}));
-      });
-    }
-  }
-
-  allNews.sort((a,b) => b.time - a.time);
-
-  if(allNews.length > 0 && allNews[0].time > latestNewsTimestamp) {
-    latestNewsTimestamp = allNews[0].time;
-    if(newsBell) newsBell.classList.add("new"); // Glocke blinkt
-  }
-
-  if(newsContainer){
-    newsContainer.innerHTML = "";
-    allNews.slice(0,5).forEach(n => {
-      const div = document.createElement("div");
-      div.className = "newsItem clickable";
-      div.innerHTML = `<div class="newsHeader">${n.title}</div><div class="newsText">${n.text}</div>`;
-      newsContainer.appendChild(div);
-    });
-  }
-}
-
-// initial laden
-loadNews();
-// live alle 20 Sekunden aktualisieren
-setInterval(loadNews, 20000);
-
-if(newsBell){
-  newsBell.addEventListener("click", () => {
-    newsBell.classList.remove("new");
-    if(newsContainer) newsContainer.scrollIntoView({behavior:"smooth"});
-  });
-}
-
-  /* ================= GLOCKE AUTOMATISIERUNG ================= */
-document.addEventListener("DOMContentLoaded", () => {
-  const bell = document.getElementById("newsBell");
+  /* ================= NEWS + GLOCKE ================= */
+  const NEWS_KEY = "lastSeenNewsDate";
   const newsContainer = document.getElementById("newsContainer");
-
-  if (!bell || !newsContainer) return;
-
+  const newsBell = document.getElementById("newsBell");
   let hasNewNews = false;
 
-  // Funktion zum Prüfen auf neue News
-  async function checkForNews() {
+  async function loadNews() {
     try {
-      // Alle Datenquellen abfragen
       const [archiveRes, slidesRes, meinezeitRes] = await Promise.all([
         fetch("Daten/archive.json"),
         fetch("Daten/personalSlides.json"),
         fetch("Daten/meinezeit.json")
       ]);
+      const archive = await archiveRes.json();
+      const slides = await slidesRes.json();
+      const mz = await meinezeitRes.json();
 
-      const archiveData = await archiveRes.json();
-      const slidesData = await slidesRes.json();
-      const meinezeitData = await meinezeitRes.json();
+      const allNews = [];
 
-      // Prüfen, ob es neue News gibt (hier nur als Beispiel: letztes Datum in archive.json)
-      const latestArchiveDate = archiveData.days?.slice(-1)[0]?.date || null;
-      const lastSeen = localStorage.getItem("lastSeenNewsDate");
+      archive.days.forEach(d=>allNews.push({title:d.date,text:d.quote,time:new Date(d.date).getTime()}));
+      allNews.push({title:slides.intro.title,text:slides.intro.text,time:Date.now()});
+      slides.slides.forEach(s=>allNews.push({title:s.title,text:s.text,time:Date.now()}));
+      Object.values(mz.folders).forEach(arr=>arr.forEach(e=>allNews.push({title:e.title,text:e.text,time:Date.now()})));
 
-      if (latestArchiveDate && latestArchiveDate !== lastSeen) {
+      allNews.sort((a,b)=>b.time-a.time);
+
+      const latestTime = allNews[0]?.time || 0;
+      const lastSeen = Number(localStorage.getItem(NEWS_KEY)) || 0;
+
+      if(latestTime > lastSeen){
         hasNewNews = true;
-        bell.classList.add("new"); // Glocke pulsiert
+        newsBell?.classList.add("new");
       }
 
-    } catch (err) {
-      console.error("Fehler beim Laden der News:", err);
+      newsContainer.innerHTML="";
+      allNews.slice(0,5).forEach(n=>{
+        const div = document.createElement("div");
+        div.className="newsItem clickable";
+        div.innerHTML=`<div class="newsHeader">${n.title}</div><div class="newsText">${n.text}</div>`;
+        newsContainer.appendChild(div);
+      });
+    } catch(e){
+      console.error("Fehler beim Laden der News:",e);
     }
   }
 
-  // News prüfen beim Laden
-  checkForNews();
+  loadNews();
+  setInterval(loadNews, 20000);
 
-  // Glocke anklicken → News öffnen
-  bell.addEventListener("click", () => {
-    newsContainer.style.display = "block";  // News anzeigen
-    bell.classList.remove("new");            // Pulsen stoppen
-    if (hasNewNews) {
-      // zuletzt gesehenes Datum speichern
-      localStorage.setItem("lastSeenNewsDate", new Date().toISOString());
-      hasNewNews = false;
-    }
+  newsBell?.addEventListener("click", ()=>{
+    newsBell.classList.remove("new");
+    hasNewNews=false;
+    localStorage.setItem(NEWS_KEY, Date.now());
+    newsContainer.scrollIntoView({behavior:"smooth"});
   });
 
-  // Optional: alle 60 Sekunden automatisch prüfen
-  setInterval(checkForNews, 60000);
-});
-
-
-  /* ================= OPEN FUNCTIONS (für News & Glocke) ================= */
-
-function openMeineZeit() {
-  document.dispatchEvent(
-    new CustomEvent("openSection", { detail: "meinezeitOverlay" })
-  );
-}
-
-function openArchive() {
-  document.dispatchEvent(
-    new CustomEvent("openSection", { detail: "archiveOverlay" })
-  );
-}
-
-function openPersonal() {
-  document.dispatchEvent(
-    new CustomEvent("openSection", { detail: "personalOverlay" })
-  );
-}
-
- 
-
-/* ================= AUTO UPDATE ================= */
-
-collectNews();
-setInterval(collectNews, REFRESH_INTERVAL);
-
-
-document.addEventListener("DOMContentLoaded", () => {
+  /* ================= INTRO ================= */
   const overlay = document.getElementById("introOverlay");
   const card = document.getElementById("introCard");
   const textEl = document.getElementById("introText");
   const button = document.getElementById("introButton");
-  const playBtn = document.getElementById("playIntroBtn"); // optionaler Play-Button
+  const playBtn = document.getElementById("playIntroBtn");
 
-  // DEV_MODE nur für Entwicklung
-  const DEV_MODE = false; 
-  if (DEV_MODE) {
-    overlay.style.display = "none";
-    return;
-  }
+  const DEV_MODE = false;
+  if(DEV_MODE){ overlay.style.display="none"; }
 
   const audio = new Audio("introMusic.mp3");
   audio.volume = 0.4;
 
-  const introText = textEl.textContent; // Text aus HTML
-  textEl.textContent = "";
-  textEl.style.whiteSpace = "pre-line";
-  let i = 0;
+  const introText = textEl.textContent;
+  textEl.textContent="";
+  textEl.style.whiteSpace="pre-line";
+  let i=0;
 
-  function typeWriter() {
-    if (i < introText.length) {
-      textEl.textContent += introText.charAt(i);
+  function typeWriter(){
+    if(i<introText.length){
+      textEl.textContent+=introText.charAt(i);
       i++;
-      setTimeout(typeWriter, 50); // Geschwindigkeit anpassen
+      setTimeout(typeWriter,50);
     } else {
-      button.disabled = false;
+      button.disabled=false;
       button.classList.add("active");
     }
   }
 
-  function startIntro() {
-    overlay.style.display = "flex";
-    setTimeout(() => card.classList.add("show"), 200); // Einfliegen
-    audio.play().catch(()=>{}); // Musik starten
+  function startIntro(){
+    overlay.style.display="flex";
+    setTimeout(()=>card.classList.add("show"),200);
+    audio.play().catch(()=>{});
     typeWriter();
   }
 
-  // Play-Button nur sichtbar, wenn man aktiv starten will
-  if (playBtn) {
-    playBtn.addEventListener("click", startIntro);
-  } else {
-    // Ohne Play-Button automatisch starten (funktioniert nur, wenn Browser Autoplay erlaubt)
-    startIntro();
-  }
+  if(playBtn){ playBtn.addEventListener("click", startIntro); }
+  else { startIntro(); }
 
-  button.onclick = () => {
-    overlay.style.opacity = 0;
-    setTimeout(() => overlay.style.display = "none", 800);
+  button.onclick=()=>{
+    overlay.style.opacity=0;
+    setTimeout(()=>overlay.style.display="none",800);
     audio.pause();
   };
+
 });
