@@ -301,67 +301,49 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // ================= INTRO JS =================
 document.addEventListener("DOMContentLoaded", () => {
-  const overlay = document.getElementById("introOverlay");
-  const card = document.getElementById("introCard");
-  const textEl = document.getElementById("introText");
-  const button = document.getElementById("introButton");
+ const playBtn = document.getElementById("playIntroBtn");
+const overlay = document.getElementById("introOverlay");
+const card = document.getElementById("introCard");
+const textEl = document.getElementById("introText");
+const button = document.getElementById("introButton");
 
-  // Text für Intro
-  const introText = 
-    Diese Seite ist ein Ort für Gedanken, Zitate
-und Momente der Ruhe.
+// Musik vorbereiten
+const audio = new Audio("introMusic.mp3");
+audio.volume = 0.4;
 
+// Text vorbereiten
+const introText = "Willkommen. Diese Seite ist ein Ort für Gedanken, Zitate und Momente der Ruhe. Wenn du bereit bist, nimm dir Zeit. Wenn nicht – komm später zurück.";
+let i = 0;
 
-Einfach mal nachdenken, vieles anders sehen
-und bedacht an manche Dinge herangehen.
-
-
-Ich habe dies zu meinem persönlichen Projekt
-gemacht und bin gespannt, was das Jahr
-2026 mit sich bringt.
-
-
-Wenn du bereit bist,
-nimm dir Zeit.
-
-
-Wenn nicht – komm später zurück.
-`;
-
-  // Musik vorbereiten (nicht automatisch)
-  const audio = new Audio("introMusic.mp3");
-  audio.volume = 0.4;
-
-  // Einblenden Overlay + Card
-  setTimeout(() => overlay.classList.add("show"), 200);
-  setTimeout(() => card.classList.add("show"), 500);
-
-  // Schreibmaschinen-Effekt
-  let i = 0;
-  function typeWriter() {
-    if (i < introText.length) {
-      textEl.textContent += introText.charAt(i);
-      i++;
-      setTimeout(typeWriter, 50); // Schreibgeschwindigkeit (50ms pro Zeichen)
-    } else {
-      // Text fertig → Button aktivieren
-      button.disabled = false;
-      button.classList.add("active");
-    }
+function typeWriter() {
+  if (i < introText.length) {
+    textEl.textContent += introText.charAt(i);
+    i++;
+    setTimeout(typeWriter, 50); // Geschwindigkeit
+  } else {
+    button.disabled = false;
+    button.classList.add("active");
   }
+}
 
-  // Musik erst nach Klick starten (Browser erlaubt Autoplay nicht)
-  overlay.addEventListener("click", () => {
-    if (audio.paused) audio.play().catch(()=>{});
-  });
+// Klick auf Play-Button
+playBtn.onclick = () => {
+  // Musik starten
+  audio.play().catch(()=>{});
+  
+  // Button verschwinden lassen
+  playBtn.style.display = "none";
 
-  // Starte Schreibmaschinen-Text
+  // Card einblenden
+  card.classList.add("show");
+
+  // Schreibmaschinen-Text starten
   typeWriter();
+};
 
-  // Button klick → Overlay weg + Musik stoppen
-  button.onclick = () => {
-    overlay.style.opacity = "0";
-    setTimeout(() => overlay.style.display = "none", 800);
-    audio.pause();
-  };
-});
+// Klick auf Weiter-Button
+button.onclick = () => {
+  overlay.style.opacity = "0";
+  setTimeout(() => overlay.style.display = "none", 800);
+  audio.pause();
+};
