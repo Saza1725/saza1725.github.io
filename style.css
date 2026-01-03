@@ -425,64 +425,58 @@ main {
   border-radius: 4px;
 }
 
-/* ================= INTRO OVERLAY ================= */
-/* Overlay: dunkler Hintergrund */
+/* ================= INTRO STYLE ================= */
 #introOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.95); /* fast schwarz */
+  background: rgba(0,0,0,0.95);
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 1;
-  transition: opacity 1s ease;
   z-index: 100000;
-}
-
-/* Card: Einfliegen von oben */
-#introCard {
-  background: #111;
-  color: #FFD700;
-  padding: 40px 50px;
-  border-radius: 24px;
-  max-width: 700px;
-  width: 90%;
   opacity: 0;
-  transform: translateY(-150px) scale(0.8);
-  transition: transform 1s cubic-bezier(0.68,-0.55,0.265,1.55), opacity 1s ease;
-  font-family: 'Playfair Display', serif;
-  font-size: 1.8rem;
-  line-height: 1.6;
-  text-align: center;
-  box-shadow: 0 12px 36px rgba(0,0,0,0.8);
+  transition: opacity 0.8s ease;
 }
 
-/* Card aktiv: einfliegen + leichtes Bounce */
-#introCard.show {
+#introOverlay.show {
   opacity: 1;
-  transform: translateY(0) scale(1);
 }
 
-/* Button */
+#introCard {
+  background: rgba(20,20,20,0.95);
+  border-radius: 18px;
+  padding: 40px 30px;
+  max-width: 700px;
+  text-align: center;
+  color: #FFD700;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  line-height: 1.5;
+  transform: translateY(-100px) scale(0.8);
+  opacity: 0;
+  transition: transform 1s ease, opacity 1s ease;
+}
+
 #introButton {
   margin-top: 30px;
   padding: 14px 28px;
-  border: 2px solid #FFD700;
-  border-radius: 16px;
-  background: transparent;
-  color: #FFD700;
-  font-weight: 700;
   font-size: 1.2rem;
-  cursor: not-allowed;
-  opacity: 0.6;
-  transition: all 0.3s ease;
+  border-radius: 14px;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: #FFD700;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.2s ease, background 0.2s ease;
 }
 
 #introButton.active {
-  cursor: pointer;
-  opacity: 1;
-  background: #222;
-  box-shadow: 0 4px 12px rgba(255,215,0,0.4);
+  background: rgba(255,255,255,0.35);
+}
+
+#introButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* Schreibmaschinen-Effekt: optional blinkender Cursor */
@@ -494,8 +488,6 @@ main {
 
 @keyframes blink {
   50% { opacity: 0; }
-}
-
 
 /* ================= ORDNER / ARCHIV ================= */
 #meinezeitGrid,
