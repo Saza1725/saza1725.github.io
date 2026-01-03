@@ -14,10 +14,9 @@
   <!-- MENU BUTTON -->
   <div id="menuButton">☰</div>
 
-
   <!-- SEITENMENÜ -->
   <nav id="menu">
-    <a href="#" data-target="personalOverlay">🙇🏻 Über mich</a>
+    <a href="#" data-target="aboutOverlay">🙇🏻 Über mich</a>
     <a href="#" data-target="infoOverlay">ℹ️ Information</a>
     <a href="#" data-target="meinezeitOverlay">🕒 Meine Zeit</a>
     <a href="#" data-target="folderOverlay">📁 Zitate</a>
@@ -33,7 +32,6 @@
     <div id="time"></div>
     <div id="dailyQuoteBox"></div>
   </header>
-
 
   <!-- MAIN CONTENT -->
   <main>
@@ -51,9 +49,6 @@
 
     <div id="personalQuoteDisplay"></div>
 
-
-
-
     <div id="dailyFocusContainer">
       <p>Mein Fokus heute:</p>
       <input type="text" id="dailyFocusInput" placeholder="Schreibe hier deinen Fokus..." maxlength="100">
@@ -66,20 +61,12 @@
     </section>
   </main>
 
-  <!-- PERSONAL OVERLAY -->
-  <div id="personalOverlay" class="overlay">
+  <!-- ÜBER MICH OVERLAY -->
+  <div id="aboutOverlay" class="overlay">
     <div class="overlayContent">
-      <h2>Persönlich</h2>
-      <div id="mainPersonalSlide" class="personalSlide">
-        <div id="mainPersonalText"></div>
-        <button id="startSlidesBtn">Weiter</button>
-      </div>
-      <div id="personalSlidesContainer"></div>
-      <div id="personalSlidesProgress"></div>
-      <div id="personalSlidesWrapper">
-        <button id="prevSlide">← Zurück</button>
-        <button id="nextSlide">Weiter →</button>
-      </div>
+      <!-- Inhalt wird dynamisch aus personalSlides.json geladen -->
+      <button class="closeBtn">← Zurück</button>
+      <div id="aboutContent"></div>
     </div>
   </div>
 
@@ -99,7 +86,6 @@
     </div>
   </div>
 
-
   <!-- ARCHIV OVERLAY -->
   <div id="archiveOverlay" class="overlay">
     <div class="overlayContent">
@@ -108,13 +94,10 @@
     </div>
   </div>
 
-
   <!-- INFO OVERLAY -->
   <div id="infoOverlay" class="overlay">
     <div class="overlayContent" id="infoContent"></div>
-
   </div>
-
 
   <script src="app.js"></script>
 </body>
