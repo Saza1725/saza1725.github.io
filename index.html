@@ -11,25 +11,40 @@
 </head>
 <body>
 
-<-- ================= INTRO OVERLAY ================= -->
-  
-<div id="introOverlay">
-  <div id="introCard">
-    <div id="introText">
-      Willkommen. Diese Seite ist ein Ort für Gedanken, Zitate und Momente der Ruhe.
-      Wenn du bereit bist, nimm dir Zeit. Wenn nicht – komm später zurück.
+  <!-- ================= INTRO ================= -->
+  <div id="introOverlay">
+    <div id="introCard">
+      <div id="introText">
+        Willkommen. Diese Seite ist ein Ort für Gedanken, Zitate und Momente der Ruhe.
+        Wenn du bereit bist, nimm dir Zeit. Wenn nicht – komm später zurück.
+      </div>
+      <button id="introButton" disabled>Weiter</button>
     </div>
-    <button id="introButton" disabled>Weiter</button>
   </div>
-</div>
 
-<button id="playIntroBtn">Play Intro</button> <!-- Optional, für Start -->
-  
+  <!-- Optionaler Play-Intro-Button -->
+  <button id="playIntroBtn" style="
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border-radius: 12px;
+      border: none;
+      background: #FFD700;
+      color: #222;
+      cursor: pointer;
+      z-index: 50001;
+  ">Intro starten</button>
 
-  <!-- MENU BUTTON -->
+  <!-- ================= NEWS GLOCKE ================= -->
+  <div id="newsBell">🔔</div>
+  <div id="newsContainer"></div>
+
+  <!-- ================= MENU BUTTON ================= -->
   <div id="menuButton">☰</div>
 
-  <!-- SEITENMENÜ -->
+  <!-- ================= SEITENMENÜ ================= -->
   <nav id="menu">
     <a href="#" data-target="personalOverlay">🙇🏻 Über mich</a>
     <a href="#" data-target="infoOverlay">ℹ️ Information</a>
@@ -39,7 +54,7 @@
     <a href="#" data-target="home">🏠 Home</a>
   </nav>
 
-  <!-- HEADER -->
+  <!-- ================= HEADER ================= -->
   <header>
     <div id="weekday"></div>
     <div id="daytime"></div>
@@ -48,40 +63,29 @@
     <div id="dailyQuoteBox"></div>
   </header>
 
-  <!-- MAIN CONTENT -->
-<main>
-  <!-- TAGESFOKUS zuerst -->
-  <div id="dailyFocusContainer">
-    <p>Mein Fokus heute:</p>
-    <input type="text" id="dailyFocusInput" placeholder="Schreibe hier deinen Fokus..." maxlength="100">
-  </div>
-
-  <!-- DANN DIE BUTTONS MIT TEXT -->
-  <div id="dailyMotivationWrapper">
-    <div id="buttons">
-      <button id="morningBtn">Morgen</button>
-      <button id="noonBtn">Mittag</button>
-      <button id="eveningBtn">Abend</button>
+  <!-- ================= MAIN ================= -->
+  <main>
+    <div id="dailyFocusContainer">
+      <p>Mein Fokus heute:</p>
+      <input type="text" id="dailyFocusInput" placeholder="Schreibe hier deinen Fokus..." maxlength="100">
     </div>
 
-  
+    <div id="dailyMotivationWrapper">
+      <div id="buttons">
+        <button id="morningBtn">Morgen</button>
+        <button id="noonBtn">Mittag</button>
+        <button id="eveningBtn">Abend</button>
+      </div>
 
-  <!-- PERSONAL QUOTE -->
-  <div id="personalQuoteDisplay"></div>
+      <div id="personalQuoteDisplay"></div>
+      <div id="dailyQuoteActions">
+        <button id="shareQuoteBtn">📤 Teilen</button>
+      </div>
+    </div>
 
-  <!-- TEILEN BUTTON -->
-  <div id="dailyQuoteActions">
-    <button id="shareQuoteBtn">📤 Teilen</button>
-  </div>
+  </main>
 
-  <!-- NEWS -->
-  <section id="newsContainer">
-    <h3>Neuigkeiten</h3>
-    <div id="newsList"></div>
-  </section>
-</main>
-
-  <!-- PERSONAL / ÜBER MICH -->
+  <!-- ================= OVERLAYS ================= -->
   <div id="personalOverlay" class="overlay">
     <div class="overlayContent">
       <h2>Über mich</h2>
@@ -94,7 +98,6 @@
     </div>
   </div>
 
-  <!-- ZITATE -->
   <div id="folderOverlay" class="overlay">
     <div class="overlayContent">
       <h2>Zitate-Ordner</h2>
@@ -102,7 +105,6 @@
     </div>
   </div>
 
-  <!-- MEINE ZEIT -->
   <div id="meinezeitOverlay" class="overlay">
     <div class="overlayContent">
       <h2>Meine Zeit</h2>
@@ -110,21 +112,20 @@
     </div>
   </div>
 
-  <!-- ARCHIV OVERLAY -->
-<div id="archiveOverlay" class="overlay">
-  <div class="overlayContent">
-    <h2>Archiv</h2>
-    <div id="monthDetail"></div>
-    <button class="closeBtn" onclick="document.dispatchEvent(new CustomEvent('openSection', {detail:'home'}))">← Zurück</button>
+  <div id="archiveOverlay" class="overlay">
+    <div class="overlayContent">
+      <h2>Archiv</h2>
+      <div id="monthDetail"></div>
+      <button class="closeBtn" onclick="document.dispatchEvent(new CustomEvent('openSection', {detail:'home'}))">← Zurück</button>
+    </div>
   </div>
-</div>
 
-
-  <!-- INFO -->
   <div id="infoOverlay" class="overlay">
     <div class="overlayContent" id="infoContent"></div>
   </div>
 
+  <!-- ================= SCRIPTS ================= -->
   <script src="app.js"></script>
+
 </body>
 </html>
