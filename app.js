@@ -301,49 +301,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // ================= INTRO JS =================
 document.addEventListener("DOMContentLoaded", () => {
- const playBtn = document.getElementById("playIntroBtn");
-const overlay = document.getElementById("introOverlay");
-const card = document.getElementById("introCard");
-const textEl = document.getElementById("introText");
-const button = document.getElementById("introButton");
+  
+const playBtn = document.getElementById("playIntroBtn");
+  const overlay = document.getElementById("introOverlay");
+  const card = document.getElementById("introCard");
+  const textEl = document.getElementById("introText");
+  const button = document.getElementById("introButton");
 
-// Musik vorbereiten
-const audio = new Audio("introMusic.mp3");
-audio.volume = 0.4;
 
-// Text vorbereiten
-const introText = "Willkommen. Diese Seite ist ein Ort für Gedanken, Zitate und Momente der Ruhe. Wenn du bereit bist, nimm dir Zeit. Wenn nicht – komm später zurück.";
-let i = 0;
+ // Musik vorbereiten (Pfad korrekt prüfen!)
+  const audio = new Audio("introMusic.mp3");
+  audio.volume = 0.4;
+  
+/ Text
+  const introText = "Willkommen. Diese Seite ist ein Ort für Gedanken, Zitate und Momente der Ruhe. Wenn du bereit bist, nimm dir Zeit. Wenn nicht – komm später zurück.";
+  let i = 0;
 
 function typeWriter() {
-  if (i < introText.length) {
-    textEl.textContent += introText.charAt(i);
-    i++;
-    setTimeout(typeWriter, 50); // Geschwindigkeit
-  } else {
-    button.disabled = false;
-    button.classList.add("active");
+    if (i < introText.length) {
+      textEl.textContent += introText.charAt(i);
+      i++;
+      setTimeout(typeWriter, 50);
+    } else {
+      button.disabled = false;
+      button.classList.add("active");
+    }
   }
-}
 
-// Klick auf Play-Button
-playBtn.onclick = () => {
-  // Musik starten
-  audio.play().catch(()=>{});
-  
-  // Button verschwinden lassen
-  playBtn.style.display = "none";
+ // Play-Button klick
+  playBtn.onclick = () => {
+    audio.play().catch(()=>{});
+    playBtn.style.display = "none";
+    card.classList.add("show");
+    typeWriter();
+  };
 
-  // Card einblenden
-  card.classList.add("show");
 
-  // Schreibmaschinen-Text starten
-  typeWriter();
-};
-
-// Klick auf Weiter-Button
-button.onclick = () => {
-  overlay.style.opacity = "0";
-  setTimeout(() => overlay.style.display = "none", 800);
-  audio.pause();
-};
+// Weiter-Button klick
+  button.onclick = () => {
+    overlay.style.opacity = "0";
+    setTimeout(() => overlay.style.display = "none", 800);
+    audio.pause();
+  };
+});
