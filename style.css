@@ -279,29 +279,7 @@ main {
 
 /* ================= TAGESFOKUS ================= */
 #dailyFocusContainer {
-  margin-top: 30px;
-  padding: 18px 24px;
-  background: rgba(255,255,255,0.95);
-  border-radius: 16px;
-  max-width: 400px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-  color: #111;
-  text-align: center;
-  font-family: 'Libre Baskerville', serif;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-  #dailyFocusContainer p {
-  font-size: 1rem;
-  color: #555;
-}
-
-#dailyFocusInput {
-  width: 100%;
-
-  font-family: 'Libre Baskerville', serif;
+   font-family: 'Libre Baskerville', serif;
   font-size: 1rem;
   font-weight: 600;
   color: #fff; /* weiße Schrift */
@@ -315,6 +293,23 @@ main {
   backdrop-filter: blur(6px);
   transition: transform 0.2s ease, background 0.2s ease;
 
+}
+
+  #dailyFocusContainer p {
+  font-size: 1rem;
+  color: #555;
+}
+
+#dailyFocusInput {
+  width: 100%;
+
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
 #dailyFocusInput:focus {
   outline: none;
   border-color: #c40000;
