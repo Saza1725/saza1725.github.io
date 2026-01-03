@@ -226,11 +226,12 @@ button:hover { transform: scale(1.05); }
   left: 20px;
   top: 50%;
   transform: translateY(-50%);
-  width: 320px;
-  background: rgba(255,255,255,0.95);
-  border-radius: 12px;
-  border: 2px solid #c40000;
-  padding: 12px;
+  width: 300px;
+  padding: 16px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 18px;
+  border: 1px solid rgba(0,0,0,0.1);
+  backdrop-filter: blur(6px);
   box-shadow: 0 6px 18px rgba(0,0,0,0.25);
   z-index: 900;
   font-family: 'Libre Baskerville', serif;
@@ -239,72 +240,40 @@ button:hover { transform: scale(1.05); }
 #newsContainer h3 {
   text-align: center;
   margin-bottom: 12px;
-  color: #c40000;
-}
-
-.newsTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-  font-family: 'Libre Baskerville', serif;
-}
-
-.newsTable th,
-.newsTable td {
-  border: 1px solid rgba(0,0,0,0.2);
-  padding: 8px 12px;
-  text-align: left;
-}
-
-.newsTable th {
-  background-color: rgba(196,0,0,0.1);
-  color: #c40000;
   font-weight: 700;
+  color: #c40000;
 }
-
-.newsTable td {
-  background-color: rgba(255,255,255,0.9);
-  color: #111;
-}
-
-.newsTable tr:nth-child(even) td {
-  background-color: rgba(255,255,255,0.8);
-}
-
-
 
 .newsItem {
-  background: rgba(255,255,255,0.95);
-  padding: 14px 18px;
-  margin-bottom: 16px;
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-  backdrop-filter: blur(6px);
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  font-family: 'Libre Baskerville', serif;
+  gap: 6px;
+  background: rgba(255,255,255,0.95);
+  padding: 10px 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .newsHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  font-size: 0.95em;
+  font-size: 0.9em;
   font-weight: 600;
+  color: #111;
+}
+
+.newsDate {
+  font-style: italic;
+}
+
+.newsLocation {
   color: #c40000;
 }
 
 .newsText {
-  font-size: 1em;
-  line-height: 1.5;
+  font-size: 0.95em;
   color: #111;
-}
-
-.newsMeta {
-  font-size: 0.85em;
-  color: rgba(0,0,0,0.55);
-  text-align: right;
+  line-height: 1.4;
 }
 
 /* ================= OVERLAYS ================= */
