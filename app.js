@@ -113,21 +113,27 @@ menuButton.onclick = () => {
 
   /* ================= OVERLAY-FUNKTION ================= */
   function createOverlayHandler(overlayId, renderFn) {
-    const overlay = document.getElementById(overlayId);
-    if (!overlay) return;
-    overlay.addEventListener("click", e => {
-      if (!overlay.querySelector(".overlayContent").contains(e.target)) showMain();
-    });
+  const overlay = document.getElementById(overlayId);
+  if (!overlay) return;
 
-    document.addEventListener("openSection", e => {
-      if (e.detail === overlayId) {
-        hideAllOverlays();
-        if (renderFn) renderFn();
-        overlay.style.display = "flex";
-        main.style.display = "none";
-      }
-    });
-  }
+  const content = overlay.querySelector(".overlayContent");
+
+  // 🔒 Klicks IM Overlay blockieren
+  content.addEventListener("click", e => e.stopPropagation());
+
+  // 👇 Klick AUSSERHALB schließt Overlay
+  overlay.addEventListener("click", () => showMain());
+
+  document.addEventListener("openSection", e => {
+    if (e.detail === overlayId) {
+      hideAllOverlays();
+      if (renderFn) renderFn();
+      overlay.style.display = "flex";
+      main.style.display = "none";
+    }
+  });
+}
+
 
   /* ================= ZITATE ================= */
   fetch("Daten/folders.json")
@@ -170,9 +176,13 @@ menuButton.onclick = () => {
       });
 
       const backBtn = document.createElement("button");
-      backBtn.textContent = "← Zurück";
-      backBtn.className = "closeBtn";
-      backBtn.onclick = renderOverview;
+backBtn.textContent = "← Zurück";
+backBtn.className = "closeBtn";
+backBtn.onclick = (e) => {
+  e.stopPropagation();   // 🔥 DAS ist der Schlüssel
+  renderOverview();
+};
+
 
       fc.appendChild(backBtn);
       content.appendChild(fc);
