@@ -341,11 +341,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Play-Button klick → Musik starten + Card einfliegen + Text starten
   playBtn.onclick = () => {
-    audio.play().catch(() => {});
-    card.classList.add("show");
-    typeWriter();
-    playBtn.style.display = "none"; // Play-Button verschwinden
-  };
+  playBtn.disabled = true;
+
+  audio.play().catch(() => {});
+  card.classList.add("show");
+
+  textEl.textContent = "";
+  i = 0;
+  typeWriter();
+
+  playBtn.style.display = "none";
+};
+
 
   // Weiter-Button klick → Overlay weg
   button.onclick = () => {
