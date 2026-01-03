@@ -299,18 +299,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-/* ================= INTRO ================= */
+// ================= INTRO JS =================
 document.addEventListener("DOMContentLoaded", () => {
-
   const overlay = document.getElementById("introOverlay");
   const card = document.getElementById("introCard");
   const textEl = document.getElementById("introText");
   const button = document.getElementById("introButton");
-
-  // 🎵 Musik optional
-  const audio = new Audio("introMusic.mp3");
-  audio.volume = 0.9;
-  audio.play().catch(()=>{}); // kann im Browser blockiert werden
 
   // Text
   const introText = `
@@ -336,48 +330,31 @@ nimm dir Zeit.
 Wenn nicht – komm später zurück.
 `;
 
-  let i = 0;
+  // Musik vorbereiten (nicht automatisch)
+  const audio = new Audio("introMusic.mp3");
+  audio.volume = 1.0;
 
-  // Einblenden Card
-  setTimeout(() => card.classList.add("show"), 300);
-
+  
+ // Einblenden Overlay + Card
+  setTimeout(() => overlay.classList.add("show"), 200);
+  setTimeout(() => card.classList.add("show"), 500);
+  
   // Tippen-Effekt über 20 Sekunden
   const totalDuration = 20000; // 20 Sekunden
   const charDelay = totalDuration / introText.length;
 
+ // Schreibmaschinen-Effekt
+  let i = 0;
   function typeWriter() {
     if (i < introText.length) {
       textEl.textContent += introText.charAt(i);
       i++;
-      setTimeout(typeWriter, charDelay);
+      setTimeout(typeWriter, 50); // Schreibgeschwindigkeit (50ms pro Zeichen)
     } else {
+      // Text fertig → Button aktivieren
       button.disabled = false;
       button.classList.add("active");
     }
   }
 
-  typeWriter();
-
-  // Button klick → Overlay weg
-  button.onclick = () => {
-    overlay.style.opacity = 0;
-    setTimeout(() => overlay.style.display = "none", 1000);
-    audio.pause();
-
-    let audioStarted = false;
-const audio = new Audio("introMusic.mp3");
-audio.volume = 0.4;
-
-function startAudio() {
-  if (!audioStarted) {
-    audio.play().catch(()=>{});
-    audioStarted = true;
-  }
-}
-
-// Nutzer muss einmal klicken, damit Browser Audio erlaubt
-overlay.addEventListener("click", startAudio);
-card.addEventListener("click", startAudio);
-
-  };
-});
+  // Musik erst nach Klick starten (Browser erlaubt Autoplay nicht)
