@@ -306,44 +306,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const textEl = document.getElementById("introText");
   const button = document.getElementById("introButton");
 
-  // Text
-  const introText = `
-Willkommen.
-
-Diese Seite ist ein Ort für Gedanken, Zitate
-und Momente der Ruhe.
-
-
-Einfach mal nachdenken, vieles anders sehen
-und bedacht an manche Dinge herangehen.
-
-
-Ich habe dies zu meinem persönlichen Projekt
-gemacht und bin gespannt, was das Jahr
-2026 mit sich bringt.
-
-
-Wenn du bereit bist,
-nimm dir Zeit.
-
-
-Wenn nicht – komm später zurück.
-`;
+  // Text für Intro
+  const introText = "Willkommen.\n\nDiese Seite ist ein Ort für Gedanken, Zitate\nund Momente der Ruhe.\n\nWenn du bereit bist,\nnimm dir Zeit.\n\nWenn nicht – komm später zurück.";
 
   // Musik vorbereiten (nicht automatisch)
   const audio = new Audio("introMusic.mp3");
-  audio.volume = 1.0;
+  audio.volume = 0.4;
 
-  
- // Einblenden Overlay + Card
+  // Einblenden Overlay + Card
   setTimeout(() => overlay.classList.add("show"), 200);
   setTimeout(() => card.classList.add("show"), 500);
-  
-  // Tippen-Effekt über 20 Sekunden
-  const totalDuration = 20000; // 20 Sekunden
-  const charDelay = totalDuration / introText.length;
 
- // Schreibmaschinen-Effekt
+  // Schreibmaschinen-Effekt
   let i = 0;
   function typeWriter() {
     if (i < introText.length) {
@@ -358,3 +332,17 @@ Wenn nicht – komm später zurück.
   }
 
   // Musik erst nach Klick starten (Browser erlaubt Autoplay nicht)
+  overlay.addEventListener("click", () => {
+    if (audio.paused) audio.play().catch(()=>{});
+  });
+
+  // Starte Schreibmaschinen-Text
+  typeWriter();
+
+  // Button klick → Overlay weg + Musik stoppen
+  button.onclick = () => {
+    overlay.style.opacity = "0";
+    setTimeout(() => overlay.style.display = "none", 800);
+    audio.pause();
+  };
+});
