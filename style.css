@@ -108,43 +108,49 @@ main {
   z-index: 1;
 }
 
-/* ================= BUTTONS ================= */
-#buttons button,
-#buttons {
-  margin-top: 24px;   /* schiebt Button-Gruppe nach unten */
+/* ================= BUTTONS UNTER FOKUS ================= */
+#buttons, #dailyQuoteActions {
+  margin-top: 20px;              /* Abstand zum Fokusbereich */
+  display: flex;
+  justify-content: center;        /* zentriert */
+  gap: 14px;                      /* Abstand zwischen Buttons */
+  flex-wrap: wrap;                /* für kleine Bildschirme */
 }
 
-button {
-  padding: 10px 16px;
-  border-radius: 12px;
-  border: none;
+#buttons button, #shareQuoteBtn {
+  padding: 12px 22px;
+  border-radius: 16px;
+  border: 2px solid #c40000;
+  background: rgba(255,255,255,0.95);
+  color: #c40000;
   font-family: 'Libre Baskerville', serif;
-  font-size: 0.95em;
-  background: #1e1e1e;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+#buttons button:hover, #shareQuoteBtn:hover {
+  background: #c40000;
   color: #fff;
-  cursor: pointer;
-  transition: transform 0.2s ease;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
 }
 
-#buttons button:hover,
-button:hover { transform: scale(1.05); }
+/* Für responsive kleine Geräte */
+@media (max-width: 500px) {
+  #buttons, #dailyQuoteActions {
+    flex-direction: column;
+    gap: 12px;
+  }
 
-#shareQuoteBtn {
-  margin-top: 18px;
-  padding: 6px 12px;
-  border-radius: 10px;
-  border: none;
-  background: rgba(0,0,0,0.45);
-  cursor: pointer;
-  font-size: 0.9em;
-  font-weight: 600;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  coler: #c40000;
-  font-family: 'Libre Baskerville', serif; /* neue Schrift */
-  font-size: 0.85rem;                      /* etwas feiner */
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  #buttons button, #shareQuoteBtn {
+    width: 100%;
+    max-width: 300px;
+  }
 }
+
 
 /* ================= PERSONAL QUOTES ================= */
 #personalQuoteDisplay {
