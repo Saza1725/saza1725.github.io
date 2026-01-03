@@ -301,55 +301,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /* ================= INTRO ================= */
 document.addEventListener("DOMContentLoaded", () => {
-
   const overlay = document.getElementById("introOverlay");
+  const card = document.getElementById("introCard");
   const textEl = document.getElementById("introText");
-  const button = document.getElementById("introSkipBtn");
-  const audio = document.getElementById("introMusic");
+  const button = document.getElementById("introButton");
 
-  if (!overlay || !textEl || !button) return;
+  // 🎵 Musik
+  const audio = new Audio("introMusic.mp3");
+  audio.volume = 0.4;
+  audio.play().catch(()=>{}); // kann blockiert werden
 
-  const introText = `Willkommen.
-
-Diese Seite ist ein Ort für Gedanken, Zitate
-und Momente der Ruhe.
-
-Wenn du bereit bist,
-nimm dir Zeit.
-
-Wenn nicht – komm später zurück.`;
-
+  // ✍️ Schreibmaschinen-Text
+  const introText = "Willkommen.\n\nDiese Seite ist ein Ort für Gedanken, Zitate\nund Momente der Ruhe.\n\nWenn du bereit bist, nimm dir Zeit.\nWenn nicht – komm später zurück.";
   let i = 0;
-  textEl.textContent = "";
-  textEl.style.whiteSpace = "pre-line";
-
-  audio.volume = 0.35;
-  audio.play().catch(()=>{});
 
   function typeWriter() {
-    if (i < introText.length) {
+    if(i < introText.length){
       textEl.textContent += introText.charAt(i);
       i++;
-      setTimeout(typeWriter, 35);
+      setTimeout(typeWriter, 40); // Geschwindigkeit anpassen
     } else {
-      button.style.opacity = "1";
+      button.disabled = false;
+      button.classList.add("active");
     }
   }
 
+  // Intro Overlay + Card einblenden
+  overlay.style.opacity = 1;
+  setTimeout(() => card.classList.add("show"), 200);
   typeWriter();
 
+  // Button klick → Overlay weg
   button.onclick = () => {
-    overlay.style.opacity = "0";
+    card.classList.remove("show");
+    overlay.style.opacity = 0;
+    setTimeout(() => overlay.style.display = "none", 800);
+    audio.pause();
 
-    const fade = setInterval(() => {
-      if (audio.volume > 0.05) audio.volume -= 0.05;
-      else {
-        audio.pause();
-        clearInterval(fade);
-      }
-    }, 80);
-
-    setTimeout(() => overlay.style.display = "none", 600);
+    // Jetzt Hauptseite anzeigen
+    showMain();
   };
-
 });
+
