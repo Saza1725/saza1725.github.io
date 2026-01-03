@@ -301,46 +301,60 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /* ================= INTRO ================= */
 document.addEventListener("DOMContentLoaded", () => {
+
   const overlay = document.getElementById("introOverlay");
   const card = document.getElementById("introCard");
   const textEl = document.getElementById("introText");
   const button = document.getElementById("introButton");
 
-  // Musik
+  // 🎵 Musik optional
   const audio = new Audio("introMusic.mp3");
-  audio.volume = 0.4;
-  audio.play().catch(()=>{});
+  audio.volume = 0.6;
+  audio.play().catch(()=>{}); // kann im Browser blockiert werden
 
-  const introText = "Willkommen.\n\nDiese Seite ist ein Ort für Gedanken, Zitate\nund Momente der Ruhe.\n\nWenn du bereit bist, nimm dir Zeit.\nWenn nicht – komm später zurück.";
+  // Text
+  const introText = `
+Willkommen.
 
-  // Overlay + Card einblenden
-  overlay.style.opacity = 1;
-  setTimeout(() => card.classList.add("show"), 200);
+Diese Seite ist ein Ort für Gedanken, Zitate
+und Momente der Ruhe.
 
-  // Text in Buchstaben splitten
-  let letters = introText.split("");
-  letters.forEach((char, idx) => {
-    let span = document.createElement("span");
-    span.textContent = char;
-    span.style.animationDelay = `${idx * 0.04}s`;
-    textEl.appendChild(span);
-  });
+Ich habe dies zu meinem persönlichen Projekt
+gemacht und bin gespannt, was das Jahr
+2026 mit sich bringt.
 
-  // Button aktivieren, wenn Animation durch
-  const totalDuration = letters.length * 40 + 200; // ms
-  setTimeout(() => {
-    button.disabled = false;
-    button.classList.add("active");
-  }, totalDuration);
+Wenn du bereit bist,
+nimm dir Zeit.
+
+Wenn nicht – komm später zurück.
+`;
+
+  let i = 0;
+
+  // Einblenden Card
+  setTimeout(() => card.classList.add("show"), 300);
+
+  // Tippen-Effekt über 20 Sekunden
+  const totalDuration = 20000; // 20 Sekunden
+  const charDelay = totalDuration / introText.length;
+
+  function typeWriter() {
+    if (i < introText.length) {
+      textEl.textContent += introText.charAt(i);
+      i++;
+      setTimeout(typeWriter, charDelay);
+    } else {
+      button.disabled = false;
+      button.classList.add("active");
+    }
+  }
+
+  typeWriter();
 
   // Button klick → Overlay weg
   button.onclick = () => {
-    card.classList.remove("show");
     overlay.style.opacity = 0;
-    setTimeout(() => overlay.style.display = "none", 800);
+    setTimeout(() => overlay.style.display = "none", 1000);
     audio.pause();
-   
-     // Jetzt Hauptseite anzeigen
-    showMain();
   };
 });
