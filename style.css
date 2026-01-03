@@ -325,7 +325,7 @@ main {
   transform: none;
   width: 300px;
   padding: 16px;
-  background: rgba(255,255,255,0.9);
+  background: rgba(34,34,34,0.9);   /* dunkler Hintergrund wie Teilen-Button */
   border-radius: 16px;
   border: 1px solid rgba(0,0,0,0.15);
   box-shadow: 0 8px 24px rgba(0,0,0,0.2);
