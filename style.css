@@ -148,13 +148,11 @@ button:hover { transform: scale(1.05); }
 
 /* ================= PERSONAL QUOTES ================= */
 #personalQuoteDisplay {
-  margin-top: 26px;      /* Abstand zu den Buttons */
-  margin-bottom: 36px;  /* Abstand zu „Mein Fokus heute“ */
-
+  margin-top: 18px;
   padding: 14px 20px;
   background: rgba(255,255,255,0.88);
   border-radius: 16px;
-  font-size: 1.15em;
+  font-size: 1.2em;
   font-weight: 700;
   text-align: left;
   max-width: 80%;
