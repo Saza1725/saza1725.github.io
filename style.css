@@ -138,10 +138,10 @@ main {
 
 
 #dailyQuoteBox { order: 1; }
-#buttons { order: 2; }
 #dailyMotivationText { order: 3; }
 #dailyFocusContainer { order: 4; }
-#dailyQuoteActions { order: 5; }
+#buttons { order: 5; }
+#dailyQuoteActions { order: 6; }
 
 
 /* ================= TAGESINSPIRATION BUTTONS ================= */
