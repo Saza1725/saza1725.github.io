@@ -239,23 +239,28 @@ main {
 
 
 #dailyMotivationText {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.45rem;
-  font-weight: 600;
+  margin: 36px auto 18px;        /* Abstand: oben ruhig, unten zu Buttons */
+  padding: 14px 26px;
+
+  max-width: 520px;              /* NICHT zu breit */
+  width: fit-content;
+
   text-align: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+
   color: #ffffff;
-  backdrop-filter: blur(6px);
-  color: rgba(255,255,255,0.9);
- background: rgba(0, 0, 0, 0.35);
+
+  background: rgba(0, 0, 0, 0.45);
   border: 2px solid rgba(255, 255, 255, 0.35);
   border-radius: 18px;
 
-  padding: 10px 22px;
-  margin: 26px auto;
-
-  max-width: 520px;        /* 🔥 vorher ~680 → deutlich schmaler */
-  line-height: 1.45;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
+
 
 /* ================= PERSONAL QUOTES ================= */
 #personalQuoteDisplay {
