@@ -229,6 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
   createOverlayHandler("infoOverlay");
 
   /* ================= PERSONAL SLIDES ================= */
+document.addEventListener("DOMContentLoaded", () => {
   const personalOverlay = document.getElementById("personalOverlay");
   const slidesContainer = document.getElementById("personalSlidesContainer");
   const slidesProgress = document.getElementById("personalSlidesProgress");
@@ -238,27 +239,87 @@ document.addEventListener("DOMContentLoaded", () => {
   let slides = [];
   let currentSlide = 0;
 
-  function renderSlide(index){
-    if(!slides.length) return;
-    currentSlide = index;
-    const slide = slides[index];
-    slidesContainer.innerHTML = `<h3>${slide.title}</h3><p>${slide.text.replace(/\n/g,'<br>')}</p>`;
-    slidesProgress.textContent = `${index + 1} / ${slides.length}`;
-    prevSlideBtn.style.display = index === 0 ? "none" : "inline-block";
-    nextSlideBtn.style.display = index === slides.length - 1 ? "none" : "inline-block";
+  // Daten laden
+  fetch("Daten/personalSlides.json")
+    .then(r => r.json())
+    .then(data => {
+      // Intro anzeigen
+      slidesContainer.innerHTML = `
+        <div class="personalSlide active">
+          <h3>${data.intro.title}</h3>
+          <p>${data.intro.text.replace(/\n/g,'<br>')}</p>
+        </div>
+      `;
+
+      slides = data.slides.map(s => `
+        <div class="personalSlide">
+          <h3>${s.title}</h3>
+          <p>${s.text.replace(/\n/g,'<br>')}</p>
+        </div>
+      `);
+
+      slides.forEach(html => slidesContainer.insertAdjacentHTML("beforeend", html));
+      currentSlide = 0;
+      updateSlides();
+    })
+    .catch(() => {
+      slidesContainer.innerHTML = `<p>Keine persönlichen Folien verfügbar.</p>`;
+      prevSlideBtn.style.display = "none";
+      nextSlideBtn.style.display = "none";
+    });
+
+  function updateSlides() {
+    const allSlides = slidesContainer.querySelectorAll(".personalSlide");
+    allSlides.forEach((slide, i) => {
+      slide.classList.remove("active");
+      slide.style.opacity = "0";
+      slide.style.transform = "translateX(50px)";
+      if (i === currentSlide) {
+        slide.classList.add("active");
+        slide.style.opacity = "1";
+        slide.style.transform = "translateX(0)";
+      }
+    });
+
+    // Fortschritt aktualisieren
+    slidesProgress.textContent = `${currentSlide + 1} / ${slides.length + 1}`;
+
+    // Buttons ein-/ausblenden
+    prevSlideBtn.style.display = currentSlide === 0 ? "none" : "inline-block";
+    nextSlideBtn.style.display = currentSlide === slides.length ? "none" : "inline-block";
   }
 
-  prevSlideBtn.onclick = () => { if(currentSlide > 0) renderSlide(currentSlide - 1); };
-  nextSlideBtn.onclick = () => { if(currentSlide < slides.length -1) renderSlide(currentSlide + 1); };
+  prevSlideBtn.onclick = () => {
+    if (currentSlide > 0) {
+      currentSlide--;
+      updateSlides();
+    }
+  };
 
-  createOverlayHandler("personalOverlay", async () => {
-    try {
-      const data = await fetch("Daten/personalSlides.json").then(r=>r.json());
-      slides = data.slides || [];
-      slides.unshift({ title: data.intro.title, text: data.intro.text });
-      renderSlide(0);
-    } catch(e){ console.error("Fehler Personal Slides", e); }
+  nextSlideBtn.onclick = () => {
+    if (currentSlide < slides.length) {
+      currentSlide++;
+      updateSlides();
+    }
+  };
+
+  // Overlay schließen beim Klick außerhalb
+  personalOverlay.addEventListener("click", e => {
+    if (e.target === personalOverlay) {
+      personalOverlay.style.display = "none";
+    }
   });
+
+  // Event Listener für Öffnen
+  document.addEventListener("openSection", e => {
+    if (e.detail === "personalOverlay") {
+      personalOverlay.style.display = "flex";
+      currentSlide = 0;
+      updateSlides();
+    }
+  });
+});
+
 
   /* ================= NEWS + GLOCKE ================= */
   const newsContainer = document.getElementById("newsContainer");
