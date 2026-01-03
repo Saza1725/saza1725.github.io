@@ -131,50 +131,56 @@ menuButton.onclick = () => {
 
   /* ================= ZITATE ================= */
   fetch("Daten/folders.json")
-    .then(r => r.json())
-    .then(d => {
-      const grid = document.getElementById("folderGrid");
-      const overlay = document.getElementById("folderOverlay");
-      const content = overlay.querySelector(".overlayContent");
+  .then(r => r.json())
+  .then(d => {
+    const grid = document.getElementById("folderGrid");
+    const overlay = document.getElementById("folderOverlay");
+    const content = overlay.querySelector(".overlayContent");
 
-      function renderOverview() {
-        grid.innerHTML = "";
-        grid.style.display = "grid";
-        content.querySelectorAll(".folderContent").forEach(e => e.remove());
+    let currentView = "overview";
 
-        Object.keys(d.folders).forEach(name => {
-          const div = document.createElement("div");
-          div.className = "folderFrame";
-          div.textContent = name;
-          div.onclick = () => renderFolder(name);
-          grid.appendChild(div);
-        });
-      }
+    function renderOverview() {
+      currentView = "overview";
+      grid.innerHTML = "";
+      grid.style.display = "grid";
+      content.querySelectorAll(".folderContent").forEach(e => e.remove());
 
-      function renderFolder(name) {
-        grid.style.display = "none";
-        content.querySelectorAll(".folderContent").forEach(e => e.remove());
+      Object.keys(d.folders).forEach(name => {
+        const div = document.createElement("div");
+        div.className = "folderFrame";
+        div.textContent = name;
+        div.onclick = () => renderFolder(name);
+        grid.appendChild(div);
+      });
+    }
 
-        const fc = document.createElement("div");
-        fc.className = "folderContent";
-        fc.innerHTML = `<h3>${name}</h3>`;
-        d.folders[name].forEach(q => {
-          const p = document.createElement("p");
-          p.textContent = q;
-          fc.appendChild(p);
-        });
+    function renderFolder(name) {
+      currentView = "folder";
+      grid.style.display = "none";
+      content.querySelectorAll(".folderContent").forEach(e => e.remove());
 
-        const backBtn = document.createElement("button");
-        backBtn.textContent = "← Zurück";
-        backBtn.className = "closeBtn";
-        backBtn.onclick = renderOverview;
+      const fc = document.createElement("div");
+      fc.className = "folderContent";
+      fc.innerHTML = `<h3>${name}</h3>`;
 
-        fc.appendChild(backBtn);
-        content.appendChild(fc);
-      }
+      d.folders[name].forEach(q => {
+        const p = document.createElement("p");
+        p.textContent = q;
+        fc.appendChild(p);
+      });
 
-      createOverlayHandler("folderOverlay", renderOverview);
-    });
+      const backBtn = document.createElement("button");
+      backBtn.textContent = "← Zurück";
+      backBtn.className = "closeBtn";
+      backBtn.onclick = renderOverview;
+
+      fc.appendChild(backBtn);
+      content.appendChild(fc);
+    }
+
+    createOverlayHandler("folderOverlay", renderOverview);
+  });
+
 
   /* ================= MEINE ZEIT ================= */
   fetch("Daten/meinezeit.json")
