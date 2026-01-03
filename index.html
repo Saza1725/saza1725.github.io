@@ -34,25 +34,31 @@
   </header>
 
   <!-- MAIN CONTENT -->
- <main>
-  <!-- Tageszitat -->
-  <div id="dailyQuoteBox">Hol dir deine Tagesinspiration!</div>
-
-  <!-- Tagesinspiration Buttons -->
-  <div id="dailyQuoteActions">
-    <button id="morningBtn">Morgen</button>
-    <button id="noonBtn">Mittag</button>
-    <button id="eveningBtn">Abend</button>
-    <button id="shareQuoteBtn">📤 Teilen</button>
-  </div>
-
-  <!-- Mein Fokus -->
+<main>
+  <!-- TAGESFOKUS zuerst -->
   <div id="dailyFocusContainer">
-    <p>🎯 Mein Fokus heute:</p>
+    <p>Mein Fokus heute:</p>
     <input type="text" id="dailyFocusInput" placeholder="Schreibe hier deinen Fokus..." maxlength="100">
   </div>
-</main>
 
+  <!-- DANN DIE BUTTONS MIT TEXT -->
+  <div id="dailyMotivationWrapper">
+    <div id="buttons">
+      <button id="morningBtn">Morgen</button>
+      <button id="noonBtn">Mittag</button>
+      <button id="eveningBtn">Abend</button>
+    </div>
+
+    <div id="dailyMotivationText">Hol dir deine Tages-Inspiration!</div>
+  </div>
+
+  <!-- PERSONAL QUOTE -->
+  <div id="personalQuoteDisplay"></div>
+
+  <!-- TEILEN BUTTON -->
+  <div id="dailyQuoteActions">
+    <button id="shareQuoteBtn">📤 Teilen</button>
+  </div>
 
   <!-- NEWS -->
   <section id="newsContainer">
@@ -60,7 +66,6 @@
     <div id="newsList"></div>
   </section>
 </main>
-
 
   <!-- PERSONAL / ÜBER MICH -->
   <div id="personalOverlay" class="overlay">
