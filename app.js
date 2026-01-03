@@ -396,36 +396,30 @@ collectNews();
 setInterval(collectNews, REFRESH_INTERVAL);
 
 
-// ================= INTRO JS =================
+/* ================= INTRO ================= */
 document.addEventListener("DOMContentLoaded", () => {
- 
-  // setTimeout(() => card.classList.add("show"), 200);
-
+  const overlay = document.getElementById("introOverlay");
   const card = document.getElementById("introCard");
   const textEl = document.getElementById("introText");
   const button = document.getElementById("introButton");
-  const playBtn = document.getElementById("playIntroBtn");
+
+  // 🎛️ Entwicklungsmodus
+  const DEV_MODE = true; // auf true setzen, damit Overlay nicht blockiert
+
+  if (DEV_MODE) {
+    overlay.style.display = "none"; // Overlay direkt ausblenden
+    return; // Rest des Intros wird nicht ausgeführt
+  }
 
   // Musik vorbereiten
   const audio = new Audio("introMusic.mp3");
   audio.volume = 0.4;
 
-  // Text
-  const introText = `
-  Diese Seite ist ein Ort für Gedanken, Zitate
-  und Momente der Ruhe.
-
-
-  Einfach mal nachdenken, vieles anders sehen
-  und bedacht an manche Dinge herangehen.
-
-
-  Ich habe dies zu meinem persönlichen Projekt
-  gemacht und bin gespannt, was das Jahr
-  2026 mit sich bringt.`;
-
-  // Schreibmaschinen-Effekt
+  // Text vorbereiten
+  const introText = "Willkommen. Diese Seite ist ein Ort für Gedanken, Zitate und Momente der Ruhe. Wenn du bereit bist, nimm dir Zeit. Wenn nicht – komm später zurück.";
   let i = 0;
+  textEl.textContent = "";
+  textEl.style.whiteSpace = "pre-line";
 
   function typeWriter() {
     if (i < introText.length) {
@@ -438,25 +432,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Play-Button klick → Musik starten + Card einfliegen + Text starten
-  playBtn.onclick = () => {
-  playBtn.disabled = true;
+  // Overlay und Karte einblenden
+  overlay.style.display = "flex";
+  setTimeout(() => card.classList.add("show"), 200);
 
-  audio.play().catch(() => {});
-  card.classList.add("show");
-
-  textEl.textContent = "";
-  i = 0;
+  // Start Text
   typeWriter();
 
-  playBtn.style.display = "none";
-};
-
-
-  // Weiter-Button klick → Overlay weg
+  // Button klick → Overlay weg
   button.onclick = () => {
     overlay.style.opacity = "0";
     setTimeout(() => overlay.style.display = "none", 800);
     audio.pause();
   };
+
+  // Musik starten beim Einblenden
+  audio.play().catch(() => {});
 });
