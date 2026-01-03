@@ -426,7 +426,7 @@ main {
 }
 
 /* ================= INTRO OVERLAY ================= */
-/* Intro Overlay */
+/* Overlay */
 #introOverlay {
   position: fixed;
   inset: 0;
@@ -437,18 +437,19 @@ main {
   z-index: 99999;
   opacity: 0;
   transition: opacity 0.6s ease;
+  overflow: hidden;
 }
 
-/* Intro Card */
+/* Card */
 #introCard {
-  background: #111;               /* dunkler Hintergrund */
-  color: #FFD700;                 /* goldene Schrift */
+  background: #111;
+  color: #FFD700;
   border-radius: 18px;
   padding: 32px 28px;
   max-width: 600px;
   width: 90%;
   box-shadow: 0 12px 32px rgba(0,0,0,0.6);
-  transform: translateY(-50px);
+  transform: translateY(-60px);
   opacity: 0;
   transition: transform 0.8s ease, opacity 0.8s ease;
   text-align: center;
@@ -456,10 +457,22 @@ main {
   line-height: 1.6;
 }
 
-/* Card einblenden */
+/* Card einfliegen */
 #introCard.show {
   transform: translateY(0);
   opacity: 1;
+}
+
+/* Intro Text */
+#introText span {
+  opacity: 0;
+  display: inline-block;
+  transform: translateY(8px);
+  animation: letterAppear 0.4s forwards;
+}
+
+@keyframes letterAppear {
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Button */
