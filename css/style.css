@@ -1,3 +1,25 @@
+/* ================= BUTTON BASIS ================= */
+.btn {
+  background: linear-gradient(
+    to bottom,
+    rgba(50,50,50,0.9),
+    rgba(20,20,20,0.9)
+  );
+  color: var(--gold);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 999px;
+  padding: 10px 22px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  background: rgba(60,60,60,0.95);
+}
+
+
 /* 1. Reset */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -9,6 +31,23 @@
   --glass: rgba(255,255,255,0.15);
 }
 
+:root {
+  --bg-dark: rgba(0,0,0,0.65);
+  --bg-glass: rgba(255,255,255,0.15);
+  --gold: #f5d36a;
+  --red: #c40000;
+  --text-light: #ffffff;
+}
+
+/* Card Variablen */
+.card {
+  background: var(--bg-dark);
+  border-radius: 18px;
+  padding: 18px 22px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+
+
 /* 3. Body & Global */
 body {
   font-family: 'Georgia', serif;
@@ -17,14 +56,28 @@ body {
   line-height: 1.5;
 }
 
+#heroImage img {
+  filter: grayscale(30%) contrast(1.1);
+  opacity: 0.85;
+}
+
+
 /* 4. Header */
+header {
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.55),
+    rgba(0,0,0,0.25)
+  );
+  backdrop-filter: blur(8px);
+}
+
 header {
   position: fixed;
   top: 0;
   width: 100%;
   min-height: 140px;
   padding: 16px 0;
-  background: rgba(0,0,0,0.35);
   backdrop-filter: blur(6px);
   color: #fff;
   text-align: center;
@@ -93,13 +146,6 @@ main {
   justify-content: center;
 }
 
-#buttons button {
-  background: var(--dark);
-  color: #fff;
-  border-radius: 12px;
-  padding: 10px 18px;
-}
-
 /* 8. News */
 #newsContainer {
   position: fixed;
@@ -132,6 +178,7 @@ main {
   background: rgba(0,0,0,0.95);
   z-index: 1000;
 }
+
 
 @media (max-width: 900px) {
   #newsContainer {
