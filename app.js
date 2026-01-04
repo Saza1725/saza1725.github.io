@@ -6,8 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const main = document.querySelector("main");
   const overlays = document.querySelectorAll(".overlay");
 
-  function hideAllOverlays() {
-    overlays.forEach(o => o.style.display = "none");
+
   }
 
   function showMain() {
