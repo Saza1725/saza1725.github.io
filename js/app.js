@@ -268,7 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let items=[];
     try{
-      const data=await fetch("Daten/archive.json").then(r=>r.json());
+      const data=await fetch("data/archive.json").then(r=>r.json());
       data.days.forEach(d=>items.push({
         date:d.date,
         text:d.quote,
@@ -363,3 +363,4 @@ document.addEventListener("DOMContentLoaded", () => {
     audio.pause();
   };
 });
+
