@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const menu = document.getElementById("menu");
   const menuButton = document.getElementById("menuButton");
   const main = document.querySelector("main");
-  const overlays = document.querySelectorAll(".overlay");
+ 
 
   function hideAllOverlays() {
     overlays.forEach(o => o.style.display = "none");
