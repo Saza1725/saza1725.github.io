@@ -236,6 +236,43 @@ function initInfo() {
 }
 
 /* ==================================================
+MEINE ZEIT
+================================================== */
+function initMeineZeit() {
+  fetch("data/meinezeit.json")
+    .then(r => r.json())
+    .then(d => {
+      const grid = document.getElementById("meinezeitGrid");
+      if (!grid) return;
+
+      function renderOverview(){
+        grid.innerHTML="";
+        Object.keys(d.folders).forEach(name=>{
+          const div=document.createElement("div");
+          div.className="myTimeFolder";
+          div.textContent=name;
+          div.onclick=()=>renderFolder(name);
+          grid.appendChild(div);
+        });
+      }
+
+      function renderFolder(name){
+        grid.innerHTML="";
+        const fc=document.createElement("div");
+        fc.className="folderContent";
+        fc.innerHTML=`<h3>${name}</h3>`;
+        d.folders[name].forEach(e=>{
+          fc.innerHTML+=`<h4>${e.title}</h4><p>${e.text}</p>`;
+          if(e.image) fc.innerHTML+=`<img src="${e.image}" class="myTimeImage">`;
+        });
+        grid.appendChild(fc);
+      }
+
+      createOverlayHandler("meinezeitOverlay", renderOverview);
+    });
+}
+
+/* ==================================================
    NEWS
 ================================================== */
 function initNews() {
