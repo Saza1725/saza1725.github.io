@@ -8,7 +8,7 @@
 /* ================= BASIS ================= */
 body {
   font-family: 'Georgia', serif;
-  background: url('Polar.jpg') center / cover no-repeat fixed;
+  background: url('assets/images/Polar.jpg') center / cover no-repeat fixed;
   color: #111;
   overflow-y: auto;
   line-height: 1.5;
@@ -100,6 +100,20 @@ header {
   letter-spacing: 0.5px;
   text-shadow: 0 2px 6px rgba(0,0,0,0.6);
 }
+
+#heroImage {
+  width: 100%;
+  margin: 20px 0;
+}
+
+#heroImage img {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+
 
 /* ================= TAGESZITAT ================= */
 #dailyQuoteBox {
@@ -362,10 +376,24 @@ main {
 
 .newsText {
   font-size: 0.95em;
-  1.4;color: #fff; /* weiße Schrift */
+  color: #fff;
   line-height: 1.4;
-  background: rgba(34,34,34,0.9);   /* dunkler Hintergrund wie Teilen-Button */
+  background: rgba(34,34,34,0.9);
 }
+
+
+#heroImage {
+  width: 100%;
+  margin: 20px 0;
+}
+
+#heroImage img {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
 
 /* ================= OVERLAYS ================= */
 .overlay {
