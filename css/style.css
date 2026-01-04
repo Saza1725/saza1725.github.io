@@ -11,13 +11,32 @@
   padding: 10px 22px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s ease, background 0.2s ease;
+
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .btn:hover {
   transform: translateY(-2px);
   background: rgba(60,60,60,0.95);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.35);
 }
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* ================= BUTTON FOCUS=========== */
+.btn:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(245,211,106,0.4),
+    0 6px 16px rgba(0,0,0,0.35);
+}
+
 
 
 /* 1. Reset */
@@ -179,6 +198,7 @@ main {
   z-index: 1000;
 }
 
+/* =================MEDIA================== */
 
 @media (max-width: 900px) {
   #newsContainer {
@@ -190,6 +210,16 @@ main {
     max-width: 90%;
   }
 }
+
+@media (max-width: 600px) {
+  .btn {
+    width: 100%;
+    max-width: 280px;
+    padding: 14px 0;
+    font-size: 1.05rem;
+  }
+}
+
 
 @media (max-width: 600px) {
 
