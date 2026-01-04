@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+  const overlays = document.querySelectorAll(".overlay");
+
   /* ================= BASIS ================= */
   const menu = document.getElementById("menu");
   const menuButton = document.getElementById("menuButton");
