@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  /* ================= BASIS ================= */ 
+  /* ================= BASIS ================= */
   const menu = document.getElementById("menu");
   const menuButton = document.getElementById("menuButton");
   const main = document.querySelector("main");
