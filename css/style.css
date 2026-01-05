@@ -16,6 +16,7 @@ body {
     linear-gradient(180deg, #0f1115 0%, #0c0e12 60%, #090b0f 100%);
 }
 
+
 /* =====================================
 HEADER
 ===================================== */
@@ -24,6 +25,26 @@ header {
   text-align: center;
 }
 
+#weekday {
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+#daytime {
+  font-size: 0.9rem;
+  opacity: 0.75;
+}
+
+#date {
+  font-size: 0.9rem;
+  opacity: 0.75;
+}
+
+#time {
+  margin-top: 4px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
 /* =====================================
 MAIN
 ===================================== */
@@ -46,7 +67,6 @@ FOKUS CARD
   background: rgba(255,255,255,0.05);
   border-radius: 18px;
   border: 1px solid rgba(245,211,106,0.2);
-  transition: box-shadow 0.3s ease;
 }
 
 .card.active {
@@ -66,9 +86,9 @@ FOKUS CARD
 /* =====================================
 TAGESZEIT BUTTONS
 ===================================== */
-.buttons {
-  display: flex;
-  gap: 14px;
+.buttons button.active {
+  background: rgba(245,211,106,0.3);
+  color: #fff;
 }
 
 .buttons button {
@@ -130,15 +150,22 @@ OVERLAY
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
 /* =====================================
-ORDNER / SLIDES
+ORDNER 
 ===================================== */
 .folder-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 16px;
   margin-top: 20px;
+}
+.folder-card {
+  position: relative;
+}
+
+.folder-progress {
+  font-size: 0.75rem;
+  opacity: 0.7;
 }
 
 .folder-card {
@@ -156,4 +183,17 @@ ORDNER / SLIDES
 
 .slide {
   animation: fadeSlide 0.25s ease;
+}
+
+/* =====================================
+SLIDES
+===================================== */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.nav button:disabled {
+  opacity: 0.3;
 }
