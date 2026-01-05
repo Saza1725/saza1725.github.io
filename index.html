@@ -2,79 +2,16 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Motivation App</title>
+  <title>Motivation</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
-
-  <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
 </head>
-
-<<!-- ===== MENU DEMO ===== -->
-<button id="openLibrary" class="menu-btn">📁 Ordner X</button>
-
-<!-- ===== OVERLAY ===== -->
-<div id="libraryOverlay" class="overlay">
-  <div class="overlay-inner">
-
-    <button id="closeLibrary" class="close-btn">✕</button>
-
-    <!-- ===== ÜBERSICHT ===== -->
-    <div id="folderOverview" class="folder-grid">
-      <div class="folder-card" data-folder="0">Gedanken</div>
-      <div class="folder-card large" data-folder="1">Reflexion</div>
-      <div class="folder-card" data-folder="2">Der Tag</div>
-      <div class="folder-card wide" data-folder="3">Umfeld</div>
-      <div class="folder-card" data-folder="4">Ich</div>
-    </div>
-
-    <!-- ===== STORY VIEW ===== -->
-    <div id="storyView" class="story-view hidden">
-      <button id="backToFolders" class="back-btn">← Alle Ordner</button>
-
-      <h2 id="storyTitle"></h2>
-
-      <div id="storyCard" class="story-card hidden"></div>
-
-      <div class="story-nav">
-        <button id="prevStory">←</button>
-        <button id="toggleText">Text anzeigen</button>
-        <button id="nextStory">→</button>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-
 
 <body>
 
-<!-- ================= INTRO ================= -->
-<div id="introOverlay">
-  <div id="introCard">
-    <p id="introText"></p>
-    <button id="introButton" disabled>Weiter</button>
-  </div>
-  <button id="playIntroBtn">Play</button>
-</div>
-
-<!-- ================= MENU BUTTON ================= -->
-<div id="menuButton">☰</div>
-
-<!-- ================= MENU ================= -->
-<nav id="menu">
-  <a href="#" data-target="personalOverlay">🙇🏻 Über mich</a>
-  <a href="#" data-target="infoOverlay">ℹ️ Information</a>
-  <a href="#" data-target="meinezeitOverlay">🕒 Meine Zeit</a>
-  <a href="#" data-target="folderOverlay">📁 Zitate</a>
-  <a href="#" data-target="archiveOverlay">🏛️ Archiv</a>
-  <a href="#" data-target="home">🏠 Home</a>
-</nav>
-
-<!-- ================= HEADER ================= -->
+<!-- ===== HEADER ===== -->
 <header>
   <div id="weekday"></div>
   <div id="daytime"></div>
@@ -83,94 +20,42 @@
   <div id="dailyQuoteBox"></div>
 </header>
 
-<!-- ================= MAIN ================= -->
-<main>
+<!-- ===== MENU BUTTON ===== -->
+<button id="menuButton">☰</button>
 
-  <!-- Fokus -->
-  <section id="dailyFocusContainer" class="card">
-    <p>Mein Fokus heute:</p>
-    <input
-      type="text"
-      id="dailyFocusInput"
-      placeholder="Schreibe hier deinen Fokus…"
-      maxlength="100"
-    >
+<!-- ===== MENU ===== -->
+<nav id="menu">
+  <button data-overlay="about">Über mich</button>
+  <button data-overlay="info">Information</button>
+  <button data-overlay="time">Meine Zeit</button>
+  <button data-overlay="quotes">Zitate</button>
+  <button data-overlay="archive">Vergangene Tage</button>
+</nav>
+
+<!-- ===== MAIN ===== -->
+<main>
+  <section class="card">
+    <p>Mein Fokus heute</p>
+    <input id="dailyFocusInput" placeholder="Dein Fokus …">
   </section>
 
-  <!-- Tageszeiten Buttons -->
-  <section id="buttons">
+  <div class="buttons">
     <button id="morningBtn">Morgen</button>
     <button id="noonBtn">Mittag</button>
     <button id="eveningBtn">Abend</button>
-  </section>
+  </div>
 
-  <!-- Persönlicher Text -->
-  <section id="personalQuoteDisplay"></section>
-
-  <!-- Teilen -->
-  <section id="dailyQuoteActions">
-    <button id="shareQuoteBtn">📤 Teilen</button>
-  </section>
-
-  <!-- News -->
-  <section id="newsContainer">
-    <h3>Neuigkeiten</h3>
-    <div id="newsList"></div>
-  </section>
-
+  <div id="personalQuoteDisplay"></div>
 </main>
 
-<!-- ================= OVERLAYS ================= -->
-
-<!-- Über mich -->
-<div id="personalOverlay" class="overlay">
-  <div class="overlayContent">
-    <h2>Über mich</h2>
-    <div id="personalSlidesContainer"></div>
-    <div id="personalSlidesProgress"></div>
-    <div id="personalSlidesWrapper">
-      <button id="prevSlide">← Zurück</button>
-      <button id="nextSlide">Weiter →</button>
-    </div>
+<!-- ===== OVERLAY (EIN SYSTEM FÜR ALLE) ===== -->
+<div id="overlay" class="overlay">
+  <div class="overlayBox">
+    <button id="closeOverlay">✕</button>
+    <div id="overlayContent"></div>
   </div>
 </div>
 
-<!-- Info -->
-<div id="infoOverlay" class="overlay">
-  <div class="overlayContent" id="infoContent"></div>
-</div>
-
-<!-- Meine Zeit -->
-<div id="meinezeitOverlay" class="overlay">
-  <div class="overlayContent">
-    <h2>Meine Zeit</h2>
-    <div id="meinezeitGrid"></div>
-  </div>
-</div>
-
-<!-- Zitate -->
-<div id="folderOverlay" class="overlay">
-  <div class="overlayContent">
-    <h2>Zitate</h2>
-    <div id="folderGrid"></div>
-  </div>
-</div>
-
-<!-- Archiv -->
-<div id="archiveOverlay" class="overlay">
-  <div class="overlayContent">
-    <h2>Archiv</h2>
-    <div id="monthDetail"></div>
-  </div>
-</div>
-
-<!-- ================= FOOTER ================= -->
-<footer>
-  <p>© 2026 · Persönliches Projekt</p>
-</footer>
-
-<!-- ================= JS ================= -->
 <script src="js/app.js"></script>
-
 </body>
 </html>
