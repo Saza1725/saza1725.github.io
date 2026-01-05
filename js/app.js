@@ -436,4 +436,17 @@ function initNews() {
 ================================================== */
 function initShare() {
   const btn = document.getElementById("shareQuoteBtn");
-  if (!b
+  if (!btn) return;
+
+  btn.onclick = () => {
+    const quote = dailyQuoteBox?.textContent;
+    if (!quote) return;
+
+    if (navigator.share) {
+      navigator.share({ title: "Tageszitat", text: quote });
+    } else {
+      navigator.clipboard.writeText(quote);
+      alert("Zitat kopiert");
+    }
+  };
+}
