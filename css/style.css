@@ -315,3 +315,36 @@ FOKUS – LOCKER NACH UNTEN
 .card {
   margin-top: 60px;
 }
+
+#dailyTextBox {
+  max-width: 520px;
+  margin: 20px auto 0;
+  font-size: 0.9rem;
+  opacity: 0.75;
+  line-height: 1.6;
+  text-align: center;
+}
+.daily-text-btn {
+  margin: 24px auto 0;
+  padding: 8px 18px;
+  background: transparent;
+  border: 1px solid rgba(245,211,106,0.35);
+  border-radius: 20px;
+  color: #f5d36a;
+  font-size: 0.85rem;
+  cursor: pointer;
+  opacity: 0.75;
+}
+
+.daily-text-btn:hover {
+  opacity: 1;
+}
+
+#dailyTextBox {
+  max-width: 520px;
+  margin: 20px auto 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+  line-height: 1.6;
+  text-align: center;
+}
