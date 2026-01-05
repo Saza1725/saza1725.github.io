@@ -243,3 +243,7 @@ footer {
 .myTimeEntry + .myTimeEntry {
   margin-top: 6px;
 }
+
+.myTimeEntry p {
+  white-space: pre-line;
+}
