@@ -14,282 +14,31 @@ body {
   background:
     radial-gradient(circle at top, rgba(245,211,106,0.06), transparent 60%),
     linear-gradient(180deg, #0f1115 0%, #0c0e12 60%, #090b0f 100%);
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
+/* ===== LIGHT MODE ===== */
+body.light {
+  color: #1b1b1b;
+  background:
+    radial-gradient(circle at top, rgba(245,211,106,0.25), transparent 60%),
+    linear-gradient(180deg, #fafafa 0%, #f2f2f2 100%);
+}
 
 /* =====================================
-HEADER
+HEADER / HERO
 ===================================== */
-header {
+.hero {
   padding: 60px 20px 40px;
   text-align: center;
 }
 
-#weekday,
-#daytime,
-#date,
-#time {
-  color: #f2f2f2;
-  display: block;
-}
-
-#weekday {
-  font-size: 0.9rem;
-  opacity: 0.85;
-}
-
-#daytime {
-  font-size: 0.85rem;
-  opacity: 0.7;
-}
-
-#date {
-  font-size: 0.9rem;
-  opacity: 0.75;
-}
-
-#time {
-  margin-top: 6px;
-  font-size: 1.4rem;
-  font-weight: bold;
-}
-
-/* =====================================
-MAIN
-===================================== */
-main {
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 40px 20px 80px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 28px;
-}
-main,
-main * {
-  position: relative;
-  z-index: 10;
-  pointer-events: auto;
-}
-
-
-/* =====================================
-FOKUS CARD
-===================================== */
-.card {
-  width: 100%;
-  padding: 24px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 18px;
-  border: 1px solid rgba(245,211,106,0.2);
-}
-
-.card.active {
-  box-shadow: 0 0 20px rgba(245,211,106,0.35);
-}
-
-#dailyFocusInput {
-  width: 100%;
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 10px;
-  background: rgba(0,0,0,0.35);
-  border: none;
-  color: #fff;
-}
-
-/* =====================================
-TAGESZEIT BUTTONS
-===================================== */
-.buttons {
-  display: flex;
-  gap: 14px;
-}
-.buttons button.active {
-  background: rgba(245,211,106,0.3);
-  color: #fff;
-}
-
-.buttons button {
-  padding: 10px 16px;
-  border-radius: 14px;
-  border: 1px solid rgba(245,211,106,0.35);
-  background: rgba(0,0,0,0.35);
-  color: #f5d36a;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-/* =====================================
-MENÜ
-===================================== */
-#menu {
-  position: fixed;
-  right: -240px;
-  top: 0;
-  width: 240px;
-  height: 100%;
-  background: rgba(15,17,21,0.96);
-  backdrop-filter: blur(12px);
-  padding: 80px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  transition: right 0.35s ease;
-  z-index: 50;
-}
-#menuButton {
-  position: fixed;
-  top: 16px;
-  right: 20px;
-  z-index: 10000; /* WICHTIG */
-  pointer-events: auto;
-
-  font-size: 1.8rem;
-  background: rgba(0,0,0,0.4);
-  color: #f5d36a;
-  border: 1px solid rgba(245,211,106,0.4);
-  border-radius: 12px;
-  padding: 6px 10px;
-  cursor: pointer;
-}
-
-
-/* =====================================
-OVERLAY
-===================================== */
-#overlay {
-  display: none;
-  pointer-events: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  display: none;
-  z-index: 100;
-}
-
-#overlay[style*="display: block"] {
-  pointer-events: auto;
-}
-
-#overlayContent {
-  max-width: 620px;
-  margin: 60px auto;
-  padding: 28px;
-  background: #111;
-  border-radius: 18px;
-  animation: fadeSlide 0.25s ease;
-}
-
-@keyframes fadeSlide {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-/* =====================================
-ORDNER 
-===================================== */
-.folder-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 16px;
-  margin-top: 20px;
-}
-.folder-card {
-  position: relative;
-}
-
-.folder-progress {
-  font-size: 0.75rem;
-  opacity: 0.7;
-}
-
-.folder-card {
-  padding: 18px;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.05);
-  border-left: 4px solid var(--accent, #f5d36a);
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.folder-card:hover {
-  transform: translateY(-4px);
-}
-
-.slide {
-  animation: fadeSlide 0.25s ease;
-}
-
-/* =====================================
-SLIDES
-===================================== */
-.nav {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-.nav button:disabled {
-  opacity: 0.3;
-}
-
-/* =====================================
-UNTERORDNER (THEMEN)
-===================================== */
-.folder-card {
-  position: relative;
-  padding: 20px;
-  border-radius: 18px;
-  background: rgba(255,255,255,0.06);
-  border-left: 5px solid #f5d36a;
-}
-
-.folder-card h3 {
-  margin-bottom: 6px;
-  font-size: 1rem;
-}
-
-.folder-progress {
-  font-size: 0.75rem;
-  opacity: 0.7;
-}
-
-/* =====================================
-SLIDES / CARDS
-===================================== */
-.slide {
-  animation: fadeSlide 0.25s ease;
-}
-
-.slide.empty {
-  opacity: 0.55;
-  font-style: italic;
-}
-
-/* Platzhalter-Hinweis */
-.slide.empty::after {
-  content: "Text folgt";
-  display: block;
-  margin-top: 12px;
-  font-size: 0.75rem;
-  opacity: 0.6;
-}
-
-/* =====================================
-HERO / UHR / DATUM
-===================================== */
-.hero {
-  position: relative;
-  z-index: 1;
-  pointer-events: none;   /* DAS ist der Schlüssel */
-}
-.hero * {
+.time-block,
+.time-block * {
   pointer-events: none;
 }
 
-
-.time-block #time {
+#time {
   font-size: 3.2rem;
   font-weight: 600;
   letter-spacing: 2px;
@@ -317,47 +66,203 @@ TAGESZITAT
 }
 
 /* =====================================
-STATISTIK – DEZENT
+MAIN
 ===================================== */
-#personalQuoteDisplay {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  font-size: 0.75rem;
-  opacity: 0.5;
+main {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  position: relative;
+  z-index: 10;
 }
 
 /* =====================================
-FOKUS – LOCKER NACH UNTEN
+FOKUS CARD
 ===================================== */
 .card {
+  width: 100%;
+  padding: 24px;
   margin-top: 60px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 18px;
+  border: 1px solid rgba(245,211,106,0.2);
 }
 
-#dailyTextBox {
-  max-width: 520px;
-  margin: 20px auto 0;
-  font-size: 0.9rem;
-  opacity: 0.75;
-  line-height: 1.6;
-  text-align: center;
+.card.active {
+  box-shadow: 0 0 20px rgba(245,211,106,0.35);
 }
-.daily-text-btn {
-  margin: 24px auto 0;
-  padding: 8px 18px;
-  background: transparent;
+
+#dailyFocusInput {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.35);
+  border: none;
+  color: #fff;
+}
+
+/* =====================================
+BUTTONS (TAGESZEIT)
+===================================== */
+.buttons {
+  display: flex;
+  gap: 14px;
+}
+
+.buttons button {
+  padding: 10px 16px;
+  border-radius: 14px;
   border: 1px solid rgba(245,211,106,0.35);
-  border-radius: 20px;
+  background: rgba(0,0,0,0.35);
   color: #f5d36a;
-  font-size: 0.85rem;
   cursor: pointer;
-  opacity: 0.75;
 }
 
-.daily-text-btn:hover {
-  opacity: 1;
+.buttons button.active {
+  background: rgba(245,211,106,0.3);
+  color: #fff;
 }
 
+/* =====================================
+MENU BUTTON
+===================================== */
+#menuButton {
+  position: fixed;
+  top: 18px;
+  right: 20px;
+  z-index: 1000;
+  font-size: 1.6rem;
+  padding: 8px 12px;
+  background: rgba(15,17,21,0.85);
+  backdrop-filter: blur(8px);
+  color: #f5d36a;
+  border: 1px solid rgba(245,211,106,0.35);
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  cursor: pointer;
+}
+
+/* =====================================
+MENU (DESKTOP – SLIDE IN)
+===================================== */
+#menu {
+  position: fixed;
+  top: 0;
+  right: -260px;
+  width: 260px;
+  height: 100vh;
+  padding: 90px 22px 30px;
+  background: linear-gradient(180deg, rgba(22,24,30,0.98), rgba(14,16,22,0.96));
+  backdrop-filter: blur(14px);
+  box-shadow: -10px 0 40px rgba(0,0,0,0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: right 0.35s cubic-bezier(.4,0,.2,1);
+  z-index: 50;
+}
+
+/* ===== MENU TITLE ===== */
+#menu::before {
+  content: "Navigation";
+  position: absolute;
+  top: 38px;
+  left: 22px;
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  opacity: 0.4;
+}
+
+/* =====================================
+MENU BUTTONS + ICONS
+===================================== */
+#menu button {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-size: 0.9rem;
+  color: rgba(245,211,106,0.85);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(245,211,106,0.15);
+  transition: all 0.2s ease;
+}
+
+/* SVG ICON (inline via mask) */
+#menu button::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: currentColor;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  opacity: 0.8;
+}
+
+/* ICON MAPPING */
+#menu button[data-target="about"]::before {
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5Z'/%3E%3C/svg%3E");
+}
+#menu button[data-target="thoughts"]::before {
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 4h16v12H5.2L4 17.2V4Z'/%3E%3C/svg%3E");
+}
+
+/* STATES */
+#menu button:hover {
+  background: rgba(245,211,106,0.12);
+  transform: translateX(-2px);
+}
+#menu button.active {
+  background: rgba(245,211,106,0.2);
+  box-shadow: inset 0 0 0 1px rgba(245,211,106,0.4);
+}
+
+/* =====================================
+MOBILE – SLIDE UP
+===================================== */
+@media (max-width: 720px) {
+  #menu {
+    top: auto;
+    bottom: -100%;
+    right: 0;
+    width: 100%;
+    height: 70vh;
+    border-radius: 20px 20px 0 0;
+    transition: bottom 0.35s ease;
+  }
+}
+
+/* =====================================
+OVERLAY
+===================================== */
+#overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 100;
+}
+
+#overlayContent {
+  max-width: 620px;
+  margin: 60px auto;
+  padding: 28px;
+  background: #111;
+  border-radius: 18px;
+}
+
+/* =====================================
+DAILY TEXT
+===================================== */
 #dailyTextBox {
   max-width: 520px;
   margin: 20px auto 0;
@@ -366,14 +271,24 @@ FOKUS – LOCKER NACH UNTEN
   line-height: 1.6;
   text-align: center;
 }
-/* === HEADER DARF KEINE KLICKS BLOCKIEREN === */
-.hero {
-  position: relative;
-  z-index: 1;
-  pointer-events: none;
+
+.daily-text-btn {
+  margin: 24px auto 0;
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(245,211,106,0.35);
+  background: transparent;
+  color: #f5d36a;
+  cursor: pointer;
 }
 
-/* Inhalt sichtbar, aber nicht klickbar */
-.hero * {
-  pointer-events: none;
+/* =====================================
+STATISTIK
+===================================== */
+#personalQuoteDisplay {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 0.75rem;
+  opacity: 0.5;
 }
