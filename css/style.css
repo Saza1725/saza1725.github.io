@@ -1,90 +1,48 @@
-/* ================= BUTTON BASIS ================= */
-.button {
-  font-family: 'Libre Baskerville', serif;
-  background: var(--bg-glass);
-  color: var(--text-main);
-
-  border: 1px solid var(--border-soft);
-  border-radius: 14px;
-
-  padding: 12px 22px;
-  cursor: pointer;
-
-  transition: transform 0.2s ease, background 0.2s ease;
+/* ==================================================
+   RESET & ROOT
+================================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-button:hover {
-  transform: translateY(-2px);
-  background: rgba(255,255,255,0.14);
-}
-
-.btn:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-}
-
-/* ================= BUTTON FOCUS=========== */
-.btn:focus-visible {
-  outline: none;
-  box-shadow:
-    0 0 0 3px rgba(245,211,106,0.4),
-    0 6px 16px rgba(0,0,0,0.35);
-}
-
-
-
-/* 1. Reset */
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-/* 2. Root Variablen */
 :root {
-  --bg-main: #0f1115;        /* sehr dunkles Grau (statt schwarz) */
+  --bg-main: #0f1115;
   --bg-glass: rgba(255,255,255,0.08);
   --bg-card: rgba(255,255,255,0.92);
 
   --text-main: #f2f2f2;
   --text-muted: #b5b5b5;
 
-  --accent: #f5d36a;        /* dein Gold */
+  --accent: #f5d36a;
   --accent-soft: rgba(245,211,106,0.4);
 
   --border-soft: rgba(255,255,255,0.15);
 }
 
-
-/* Card Variablen */
-.card {
-  background: var(--bg-dark);
-  border-radius: 18px;
-  padding: 18px 22px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
-}
-
-
-/* 3. Body & Global */
+/* ==================================================
+   BASE
+================================================== */
 body {
   font-family: 'Libre Baskerville', serif;
   background: var(--bg-main);
   color: var(--text-main);
   line-height: 1.6;
 }
+
 h1, h2, h3 {
   font-family: 'Playfair Display', serif;
   letter-spacing: 0.4px;
 }
 
-#heroImage img {
-  filter: grayscale(30%) contrast(1.1);
-  opacity: 0.85;
-}
-
-
-/* 4. Header */
+/* ==================================================
+   HEADER
+================================================== */
 header {
   position: fixed;
   top: 0;
   width: 100%;
-
   padding: 20px 0 26px;
   background: linear-gradient(
     to bottom,
@@ -92,52 +50,39 @@ header {
     rgba(15,17,21,0.6),
     transparent
   );
-
   backdrop-filter: blur(12px);
   text-align: center;
   z-index: 1000;
 }
-#weekday {
-  font-size: 2rem;
-  font-weight: 700;
-}
 
-#daytime {
-  font-size: 1.2rem;
-  color: var(--text-muted);
-}
+#weekday { font-size: 2rem; font-weight: 700; }
+#daytime, #date, #time { color: var(--text-muted); }
 
-#date, #time {
-  font-size: 1rem;
-  color: var(--text-muted);
-}
 #dailyQuoteBox {
-  margin-top: 18px;
+  margin: 18px auto 0;
   max-width: 640px;
-
-  font-size: 1.35rem;
-  color: var(--accent);
-
+  padding: 20px 26px;
   background: var(--bg-glass);
   border: 1px solid var(--accent-soft);
   border-radius: 20px;
-  padding: 20px 26px;
+  color: var(--accent);
+  font-size: 1.35rem;
 }
 
-
-/* 5. Menü */
+/* ==================================================
+   MENU
+================================================== */
 #menuButton {
   position: fixed;
-  top: 15px;
+  top: 16px;
   right: 20px;
-  font-size: 2.4em;
-  color: var(--red);
-  cursor: pointer;
-  z-index: 800;
-  border: 2px solid rgba(196,0,0,0.6);
+  font-size: 2.2rem;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-soft);
   border-radius: 12px;
   padding: 6px 10px;
-  background: var(--glass);
+  cursor: pointer;
+  z-index: 1100;
 }
 
 #menu {
@@ -148,67 +93,64 @@ header {
   height: 100%;
   background: rgba(255,255,255,0.95);
   transition: right 0.4s ease;
-  z-index: 900;
-}
-#menu {
   box-shadow: -8px 0 20px rgba(0,0,0,0.25);
+  z-index: 1200;
 }
 
+#menu a {
+  display: block;
+  padding: 18px;
+  color: #111;
+  text-decoration: none;
+  font-weight: 600;
+}
 
-/* 6. Main Layout */
+/* ==================================================
+   MAIN
+================================================== */
 main {
   padding-top: 220px;
   padding-bottom: 80px;
-
   max-width: 1100px;
   margin: 0 auto;
-
   display: flex;
   flex-direction: column;
   gap: 48px;
 }
 
-
-/* 7. Inhalte */
-#dailyQuoteBox {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.45rem;
-  color: var(--gold);
-  background: rgba(0,0,0,0.65);
+/* ==================================================
+   CARD
+================================================== */
+.card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-soft);
   border-radius: 18px;
-  padding: 16px 22px;
-  max-width: 620px;
-  text-align: center;
+  padding: 24px 28px;
+  backdrop-filter: blur(10px);
 }
 
-#dailyFocusContainer {
-  background: var(--dark);
-  color: #fff;
-  border-radius: 12px;
-  padding: 14px 18px;
-  max-width: 420px;
-  width: 90%;
+/* ==================================================
+   BUTTONS (EIN System)
+================================================== */
+button {
+  font-family: 'Libre Baskerville', serif;
+  background: var(--bg-glass);
+  color: var(--text-main);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  padding: 12px 22px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
 }
 
-#buttons {
-  display: flex;
-  gap: 14px;
-  justify-content: center;
+button:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.14);
 }
 
-/* 8. News */
-#newsContainer {
-  position: fixed;
-  left: 20px;
-  top: 40%;
-  width: 300px;
-  background: var(--dark);
-  border-radius: 16px;
-  padding: 16px;
-  z-index: 600;
-}
-
-/* 9. Overlays */
+/* ==================================================
+   OVERLAYS
+================================================== */
 .overlay {
   position: fixed;
   inset: 0;
@@ -218,102 +160,36 @@ main {
   justify-content: center;
   align-items: flex-start;
   padding: 40px 20px;
-  z-index: 900;
+  z-index: 1300;
 }
 
-.overlay {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
-}
-
-.overlay[style*="display: flex"] {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-
-/* 10. Intro */
-#introOverlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.95);
-  z-index: 1000;
-}
-
-#introCard {
-  transition:
-    opacity 0.8s ease,
-    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* =================MEDIA================== */
-
-@media (max-width: 900px) {
-  #newsContainer {
-    display: none;
-  }
-
-  #dailyQuoteBox,
-  #dailyFocusContainer {
-    max-width: 90%;
-  }
-}
-
-@media (max-width: 600px) {
-  .btn {
-    width: 100%;
-    max-width: 280px;
-    padding: 14px 0;
-    font-size: 1.05rem;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation: none !important;
-    transition: none !important;
-  }
-}
-
-
-@media (max-width: 600px) {
-
-  header {
-    min-height: 120px;
-  }
-
-  #buttons {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  #dailyQuoteBox {
-    font-size: 1.2rem;
-  }
-
-  #introCard {
-    font-size: 1.3rem;
-    padding: 24px;
-  }
-}
-
-/* =================KEYFRAMES================= */
-
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.card {
-  background: var(--bg-glass);
-  border: 1px solid var(--border-soft);
+.overlayContent {
+  background: var(--bg-card);
   border-radius: 18px;
-  padding: 24px 28px;
-  backdrop-filter: blur(10px);
+  padding: 26px;
+  max-width: 800px;
+  width: 100%;
+}
+
+/* ==================================================
+   FOOTER
+================================================== */
+footer {
+  text-align: center;
+  padding: 40px 0 30px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* ==================================================
+   RESPONSIVE
+================================================== */
+@media (max-width: 900px) {
+  #newsContainer { display: none; }
+  #dailyQuoteBox { max-width: 90%; }
+}
+
+@media (max-width: 600px) {
+  header { padding-bottom: 20px; }
+  #dailyQuoteBox { font-size: 1.2rem; }
 }
