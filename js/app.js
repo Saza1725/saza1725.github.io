@@ -9,6 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const overlayContent = document.getElementById("overlayContent");
   const closeOverlay = document.getElementById("closeOverlay");
 
+  if (!overlay || !overlayContent) return;
+
   /* =====================================
   MENÜ
   ===================================== */
@@ -43,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function closeOverlayFn() {
     overlay.style.display = "none";
     document.body.style.overflow = "";
+    if (menu) menu.style.right = "-240px";
   }
 
   if (closeOverlay) {
@@ -50,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =====================================
-  ÜBER MICH – 3 EBENEN
+  ÜBER MICH – ORDNER / FOLIEN / CARDS
   ===================================== */
   async function loadAbout() {
     try {

@@ -1,25 +1,189 @@
-/* ==================================== 
-SEITEN MENÜ* 
+/* =====================================
+RESET / BASIS
 ===================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
+body {
+  font-family: 'Libre Baskerville', serif;
+  color: #f2f2f2;
+  min-height: 100vh;
+
+  background:
+    radial-gradient(
+      circle at top,
+      rgba(245,211,106,0.06),
+      transparent 60%
+    ),
+    linear-gradient(
+      180deg,
+      #0f1115 0%,
+      #0c0e12 60%,
+      #090b0f 100%
+    );
+}
+
+/* =====================================
+HEADER
+===================================== */
+header {
+  position: relative;
+  padding: 60px 20px 40px;
+  text-align: center;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(15,17,21,0.92),
+      rgba(15,17,21,0.7),
+      rgba(15,17,21,0)
+    );
+}
+
+header > div {
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+#dailyQuoteBox {
+  margin-top: 14px;
+  font-style: italic;
+  opacity: 0.9;
+}
+
+/* =====================================
+MAIN LAYOUT
+===================================== */
+main {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+/* =====================================
+FOKUS CARD
+===================================== */
+.card {
+  width: 100%;
+  padding: 24px 22px;
+
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(245,211,106,0.18);
+  border-radius: 18px;
+
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.card p {
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+#dailyFocusInput {
+  width: 100%;
+  padding: 10px 12px;
+
+  border-radius: 10px;
+  border: none;
+  outline: none;
+
+  background: rgba(0,0,0,0.35);
+  color: #f2f2f2;
+  font-size: 0.95rem;
+}
+
+/* =====================================
+TAGESZEIT BUTTONS
+===================================== */
+.buttons {
+  display: flex;
+  gap: 14px;
+}
+
+.buttons button {
+  padding: 10px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(245,211,106,0.35);
+
+  background: rgba(0,0,0,0.35);
+  color: #f5d36a;
+  font-size: 0.9rem;
+  cursor: pointer;
+
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.buttons button:hover {
+  background: rgba(245,211,106,0.12);
+  transform: translateY(-2px);
+}
+
+/* =====================================
+PERSÖNLICHES ZITAT
+===================================== */
+#personalQuoteDisplay {
+  font-style: italic;
+  opacity: 0.85;
+  text-align: center;
+}
+
+/* =====================================
+SEITEN MENÜ
+===================================== */
 #menu {
   position: fixed;
   right: -240px;
   top: 0;
   width: 240px;
   height: 100%;
-  background: rgba(15,17,21,0.96); /* 🔥 dunkel */
+
+  background: rgba(15,17,21,0.96);
   backdrop-filter: blur(12px);
+
   display: flex;
   flex-direction: column;
   padding: 80px 20px;
   gap: 14px;
+
   transition: right 0.35s ease;
   z-index: 50;
   box-shadow: -12px 0 30px rgba(0,0,0,0.45);
 }
 
-/* Menü-Buttons */
+#menu button {
+  background: none;
+  border: none;
+  color: #f5d36a;
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+  padding: 8px 6px;
+  border-radius: 8px;
+
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+#menu button:hover {
+  background: rgba(245,211,106,0.12);
+  transform: translateX(-4px);
+}
+
+#menu button:active {
+  background: rgba(245,211,106,0.25);
+}
+
+/* MENU BUTTON */
 #menuButton {
   position: fixed;
   top: 16px;
@@ -35,50 +199,61 @@ SEITEN MENÜ*
   cursor: pointer;
 }
 
+/* =====================================
+OVERLAY
+===================================== */
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.82);
+  display: none;
+  z-index: 100;
 
-
-/* Hover */
-#menu button:hover {
-  background: rgba(245,211,106,0.12); /* Gold-Hauch */
-  transform: translateX(-4px);
+  overflow-y: auto;
 }
 
-/* Aktiver Klick */
-#menu button:active {
-  background: rgba(245,211,106,0.25);
+#overlayContent {
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 28px;
+
+  background: #111;
+  border-radius: 18px;
+}
+
+#closeOverlay {
+  position: fixed;
+  top: 16px;
+  right: 20px;
+  z-index: 110;
+
+  background: none;
+  border: none;
+  color: #f5d36a;
+  font-size: 1.4rem;
+  cursor: pointer;
 }
 
 /* =====================================
-HAUPTSEITE
-======================================== */
-body {
-  font-family: 'Libre Baskerville', serif;
-
-  background:
-    radial-gradient(
-      circle at top,
-      rgba(245,211,106,0.06),
-      transparent 60%
-    ),
-    linear-gradient(
-      180deg,
-      #0f1115 0%,
-      #0c0e12 60%,
-      #090b0f 100%
-    );
-
-  color: #f2f2f2;
-  min-height: 100vh;
+ORDNER / CARDS
+===================================== */
+.folder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
 }
-/* =====================================
-HEADER
-======================================== */
-header {
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(15,17,21,0.92),
-      rgba(15,17,21,0.7),
-      rgba(15,17,21,0)
-    );
+
+.folder-card {
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(245,211,106,0.2);
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+
+.folder-card:hover {
+  background: rgba(245,211,106,0.12);
+  transform: translateY(-4px);
 }
