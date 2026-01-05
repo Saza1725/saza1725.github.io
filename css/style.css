@@ -150,6 +150,23 @@ MENU BUTTON
 }
 
 /* =====================================
+MENU – HAUPTSEITE BUTTON
+===================================== */
+#menu .menu-home {
+  margin-bottom: 18px;
+
+  background: rgba(245,211,106,0.15);
+  border: 1px solid rgba(245,211,106,0.4);
+
+  font-weight: 600;
+  color: #f5d36a;
+}
+
+#menu .menu-home:hover {
+  background: rgba(245,211,106,0.25);
+}
+
+/* =====================================
 MENU (DESKTOP SLIDE-IN)
 ===================================== */
 #menu {
@@ -158,26 +175,40 @@ MENU (DESKTOP SLIDE-IN)
   right: -260px;
   width: 260px;
   height: 100vh;
-  padding: 90px 22px 30px;
-  background: linear-gradient(180deg, rgba(22,24,30,0.98), rgba(14,16,22,0.96));
+
+  /* ⬇️ MEHR LUFT NACH OBEN */
+  padding: 120px 22px 30px;
+
+  background: linear-gradient(
+    180deg,
+    rgba(22,24,30,0.98),
+    rgba(14,16,22,0.96)
+  );
+
   backdrop-filter: blur(14px);
   box-shadow: -10px 0 40px rgba(0,0,0,0.6);
+
   display: flex;
   flex-direction: column;
   gap: 14px;
+
   transition: right 0.35s cubic-bezier(.4,0,.2,1);
   z-index: 1000;
 }
 
+/* MENU ÜBERSCHRIFT */
 #menu::before {
   content: "Navigation";
   position: absolute;
-  top: 38px;
+  top: 60px;          /* ⬅️ tiefer */
   left: 22px;
+
   font-size: 0.7rem;
   letter-spacing: 1.5px;
+  text-transform: uppercase;
   opacity: 0.4;
 }
+
 
 /* =====================================
 MENU BUTTONS + ICONS

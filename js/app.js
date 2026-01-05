@@ -189,6 +189,35 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+const homeBtn = document.getElementById("homeBtn");
+
+if (homeBtn) {
+  homeBtn.addEventListener("click", () => {
+
+    // Overlay schließen
+    if (overlay) {
+      overlay.style.display = "none";
+    }
+
+    // Overlay-Inhalt leeren
+    if (overlayContent) {
+      overlayContent.innerHTML = "";
+    }
+
+    // Active-State im Menü entfernen
+    document
+      .querySelectorAll("#menu button")
+      .forEach(b => b.classList.remove("active"));
+
+    // Menü schließen
+    if (window.innerWidth <= 720) {
+      menu.style.bottom = "-100%";
+    } else {
+      menu.style.right = "-260px";
+    }
+  });
+}
+
 
   /* ==================================================
      OVERLAY
