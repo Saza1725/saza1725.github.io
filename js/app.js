@@ -276,11 +276,15 @@ function initMeineZeit() {
         fc.innerHTML = `<h3>${name}</h3>`;
 
         d.folders[name].forEach(e => {
-          fc.innerHTML += `<h4>${e.title}</h4><p>${e.text}</p>`;
-          if (e.image) {
-            fc.innerHTML += `<img src="${e.image}" class="myTimeImage">`;
-          }
-        });
+  fc.innerHTML += `
+    <div class="myTimeEntry">
+      <h4>${e.title}</h4>
+      <p>${e.text}</p>
+      ${e.image ? `<img src="${e.image}" class="myTimeImage">` : ""}
+    </div>
+  `;
+});
+
 
         const backBtn = document.createElement("button");
         backBtn.textContent = "← Zurück";
