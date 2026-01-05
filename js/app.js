@@ -455,53 +455,95 @@ function initShare() {
   };
 }
 
-/* ===== STORY DATA (DEMO) ===== */
-const folderXStories = [
-  "Manchmal ist ein Gedanke alles, was man braucht.\n\nNicht um zu handeln – sondern um zu verstehen.",
-  "Es gibt Tage, an denen nichts passiert.\n\nUnd genau das ist der Fortschritt.",
-  "Wer innehält, verliert keine Zeit.\n\nEr gewinnt Übersicht."
+const data = [
+  {
+    title: "Gedanken",
+    slides: [
+      "Manchmal reicht ein Gedanke.",
+      "Nicht um zu handeln – sondern um zu verstehen."
+    ]
+  },
+  {
+    title: "Reflexion",
+    slides: [
+      "Reflexion beginnt in der Stille.",
+      "Erst schauen, dann urteilen."
+    ]
+  },
+  {
+    title: "Der Tag",
+    slides: [
+      "Jeder Tag ist neutral.",
+      "Du gibst ihm Bedeutung."
+    ]
+  },
+  {
+    title: "Umfeld",
+    slides: [
+      "Nicht alles, was laut ist, ist wichtig.",
+      "Nicht alles, was still ist, ist leer."
+    ]
+  },
+  {
+    title: "Ich",
+    slides: [
+      "Ich bin nicht fertig.",
+      "Und das ist gut so."
+    ]
+  }
 ];
 
-/* ===== ELEMENTE ===== */
-const openBtn = document.getElementById("openFolderX");
-const closeBtn = document.getElementById("closeFolderX");
-const overlay = document.getElementById("folderXOverlay");
-const card = document.getElementById("storyCard");
-const prevBtn = document.getElementById("prevStory");
-const nextBtn = document.getElementById("nextStory");
-const counter = document.getElementById("storyCounter");
+const overlay = document.getElementById("libraryOverlay");
+const overview = document.getElementById("folderOverview");
+const storyView = document.getElementById("storyView");
+const titleEl = document.getElementById("storyTitle");
+const cardEl = document.getElementById("storyCard");
 
-let currentIndex = 0;
+let currentFolder = 0;
+let currentSlide = 0;
+let textVisible = false;
 
-/* ===== RENDER ===== */
-function renderStory() {
-  card.textContent = folderXStories[currentIndex];
-  counter.textContent = `${currentIndex + 1} / ${folderXStories.length}`;
-  prevBtn.disabled = currentIndex === 0;
-  nextBtn.disabled = currentIndex === folderXStories.length - 1;
-}
-
-/* ===== EVENTS ===== */
-openBtn.onclick = () => {
+document.getElementById("openLibrary").onclick = () =>
   overlay.classList.add("active");
-  currentIndex = 0;
+
+document.getElementById("closeLibrary").onclick = () =>
+  overlay.classList.remove("active");
+
+document.querySelectorAll(".folder-card").forEach(card => {
+  card.onclick = () => {
+    currentFolder = +card.dataset.folder;
+    currentSlide = 0;
+    textVisible = false;
+    overview.style.display = "none";
+    storyView.classList.remove("hidden");
+    renderStory();
+  };
+});
+
+document.getElementById("backToFolders").onclick = () => {
+  storyView.classList.add("hidden");
+  overview.style.display = "grid";
+};
+
+document.getElementById("toggleText").onclick = () => {
+  textVisible = !textVisible;
+  cardEl.classList.toggle("hidden", !textVisible);
+};
+
+document.getElementById("prevStory").onclick = () => {
+  if (currentSlide > 0) currentSlide--;
+  textVisible = false;
   renderStory();
 };
 
-closeBtn.onclick = () => {
-  overlay.classList.remove("active");
+document.getElementById("nextStory").onclick = () => {
+  if (currentSlide < data[currentFolder].slides.length - 1) currentSlide++;
+  textVisible = false;
+  renderStory();
 };
 
-prevBtn.onclick = () => {
-  if (currentIndex > 0) {
-    currentIndex--;
-    renderStory();
-  }
-};
-
-nextBtn.onclick = () => {
-  if (currentIndex < folderXStories.length - 1) {
-    currentIndex++;
-    renderStory();
-  }
-};
+function renderStory() {
+  titleEl.textContent = data[currentFolder].title;
+  cardEl.textContent = data[currentFolder].slides[currentSlide];
+  cardEl.classList.toggle("hidden", !textVisible);
+}

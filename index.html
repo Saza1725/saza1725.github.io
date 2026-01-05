@@ -12,29 +12,42 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 
-<!-- ===== MENU BUTTON (DEMO) ===== -->
-<button id="openFolderX" class="menu-demo-btn">📘 Ordner X</button>
+<<!-- ===== MENU DEMO ===== -->
+<button id="openLibrary" class="menu-btn">📁 Ordner X</button>
 
 <!-- ===== OVERLAY ===== -->
-<div id="folderXOverlay" class="story-overlay">
-  <div class="story-wrapper">
+<div id="libraryOverlay" class="overlay">
+  <div class="overlay-inner">
 
-    <button class="story-close" id="closeFolderX">✕</button>
+    <button id="closeLibrary" class="close-btn">✕</button>
 
-    <h2 class="story-title">Ordner X – Gedanken</h2>
-
-    <div class="story-card" id="storyCard">
-      <!-- Inhalt wird per JS gesetzt -->
+    <!-- ===== ÜBERSICHT ===== -->
+    <div id="folderOverview" class="folder-grid">
+      <div class="folder-card" data-folder="0">Gedanken</div>
+      <div class="folder-card large" data-folder="1">Reflexion</div>
+      <div class="folder-card" data-folder="2">Der Tag</div>
+      <div class="folder-card wide" data-folder="3">Umfeld</div>
+      <div class="folder-card" data-folder="4">Ich</div>
     </div>
 
-    <div class="story-nav">
-      <button id="prevStory">← Zurück</button>
-      <span id="storyCounter"></span>
-      <button id="nextStory">Weiter →</button>
+    <!-- ===== STORY VIEW ===== -->
+    <div id="storyView" class="story-view hidden">
+      <button id="backToFolders" class="back-btn">← Alle Ordner</button>
+
+      <h2 id="storyTitle"></h2>
+
+      <div id="storyCard" class="story-card hidden"></div>
+
+      <div class="story-nav">
+        <button id="prevStory">←</button>
+        <button id="toggleText">Text anzeigen</button>
+        <button id="nextStory">→</button>
+      </div>
     </div>
 
   </div>
 </div>
+
 
 
 <body>
