@@ -42,6 +42,10 @@ function openOverlay(type) {
     `;
   }
 
+  if (type === "ordnerX") {
+  loadOrdnerX();
+}
+
   if (type === "time") {
     overlayContent.innerHTML = `
       <h2>Meine Zeit</h2>
@@ -143,9 +147,6 @@ async function loadOrdnerX() {
   }
 }
 
-if (type === "ordnerX") {
-  loadOrdnerX();
-}
 
 
 /* ===== HEADER TIME ===== */
