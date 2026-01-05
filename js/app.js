@@ -9,6 +9,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const overlayContent = document.getElementById("overlayContent");
   const closeOverlay = document.getElementById("closeOverlay");
 
+  const timeEl = document.getElementById("time");
+  const weekdayEl = document.getElementById("weekday");
+  const dateEl = document.getElementById("date");
+  const daytimeEl = document.getElementById("daytime");
+
   const dailyQuoteBox = document.getElementById("dailyQuoteBox");
   const dailyTextBox = document.getElementById("dailyTextBox");
   const dailyTextBtn = document.getElementById("dailyTextBtn");
@@ -17,17 +22,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const focusCard = document.querySelector(".card");
   const statsBox = document.getElementById("personalQuoteDisplay");
 
-  const weekdayEl = document.getElementById("weekday");
-  const dateEl = document.getElementById("date");
-  const timeEl = document.getElementById("time");
-  const daytimeEl = document.getElementById("daytime");
-
   /* =========================
   HELFER
   ========================= */
-  function todayKey() {
-    return new Date().toISOString().split("T")[0];
-  }
+  const todayKey = () =>
+    new Date().toISOString().split("T")[0];
 
   /* =========================
   UHR / DATUM
@@ -52,7 +51,8 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
     const h = now.getHours();
-    daytimeEl.textContent = h < 11 ? "Morgen" : h < 17 ? "Mittag" : "Abend";
+    daytimeEl.textContent =
+      h < 11 ? "Morgen" : h < 17 ? "Mittag" : "Abend";
   }
 
   updateTime();
@@ -62,8 +62,6 @@ document.addEventListener("DOMContentLoaded", () => {
   TAGESZITAT (24h)
   ========================= */
   async function loadDailyQuote() {
-    if (!dailyQuoteBox) return;
-
     const today = todayKey();
     const savedDay = localStorage.getItem("dailyQuoteDay");
     const savedQuote = localStorage.getItem("dailyQuoteText");
@@ -85,40 +83,28 @@ document.addEventListener("DOMContentLoaded", () => {
   loadDailyQuote();
 
   /* =========================
-  DAILY IMPULS (BUTTON)
+  DAILY IMPULS
   ========================= */
   async function loadDailyText() {
-    if (!dailyTextBox) return;
-
     const res = await fetch("./data/dailyTexts.json");
     const texts = await res.json();
-    const text = texts[Math.floor(Math.random() * texts.length)];
-
-    dailyTextBox.textContent = text;
+    dailyTextBox.textContent =
+      texts[Math.floor(Math.random() * texts.length)];
   }
 
-  dailyTextBtn?.addEventListener("click", loadDailyText);
+  dailyTextBtn.addEventListener("click", loadDailyText);
 
   /* =========================
-  TAGESRESET
+  TAGESZEIT BUTTONS
   ========================= */
-  if (localStorage.getItem("lastDay") !== todayKey()) {
-    localStorage.removeItem("focus");
-    localStorage.removeItem("slidesToday");
-    localStorage.setItem("lastDay", todayKey());
-  }
-
-  /* =========================
-  MENÜ
-  ========================= */
-  menuButton.onclick = () => {
-    menu.style.right = menu.style.right === "0px" ? "-240px" : "0px";
-  };
-
-  document.querySelectorAll("#menu button").forEach(btn => {
+  document.querySelectorAll(".buttons button").forEach(btn => {
     btn.onclick = () => {
-      menu.style.right = "-240px";
-      openOverlay(btn.dataset.target);
+      document
+        .querySelectorAll(".buttons button")
+        .forEach(b => b.classList.remove("active"));
+
+      btn.classList.add("active");
+      localStorage.setItem("daytimeManual", btn.dataset.time);
     };
   });
 
@@ -133,7 +119,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   focusInput.oninput = () => {
     localStorage.setItem("focus", focusInput.value);
-    focusCard.classList.toggle("active", focusInput.value.trim() !== "");
+    focusCard.classList.toggle(
+      "active",
+      focusInput.value.trim() !== ""
+    );
   };
 
   /* =========================
@@ -144,6 +133,21 @@ document.addEventListener("DOMContentLoaded", () => {
     statsBox.textContent = `Heute ${count} Folien gelesen`;
   }
   updateStats();
+
+  /* =========================
+  MENÜ
+  ========================= */
+  menuButton.onclick = () => {
+    menu.style.right =
+      menu.style.right === "0px" ? "-240px" : "0px";
+  };
+
+  document.querySelectorAll("#menu button").forEach(btn => {
+    btn.onclick = () => {
+      menu.style.right = "-240px";
+      openOverlay(btn.dataset.target);
+    };
+  });
 
   /* =========================
   OVERLAY
@@ -199,7 +203,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const slides = data.sections[section].slides;
       const s = slides[slide];
 
-      localStorage.setItem("slidesToday",
+      localStorage.setItem(
+        "slidesToday",
         +(localStorage.getItem("slidesToday") || 0) + 1
       );
       updateStats();
@@ -218,8 +223,8 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
 
       overlayContent.querySelector(".back").onclick = showSections;
-      document.getElementById("prev").onclick = () => slide-- >= 0 && showSlide();
-      document.getElementById("next").onclick = () => slide++ < slides.length && showSlide();
+      document.getElementById("prev").onclick = () => slide-- > 0 && showSlide();
+      document.getElementById("next").onclick = () => slide++ < slides.length - 1 && showSlide();
     }
   }
 
@@ -275,8 +280,8 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
 
       overlayContent.querySelector(".back").onclick = showSections;
-      document.getElementById("prev").onclick = () => slide-- >= 0 && showSlide();
-      document.getElementById("next").onclick = () => slide++ < slides.length && showSlide();
+      document.getElementById("prev").onclick = () => slide-- > 0 && showSlide();
+      document.getElementById("next").onclick = () => slide++ < slides.length - 1 && showSlide();
     }
   }
 

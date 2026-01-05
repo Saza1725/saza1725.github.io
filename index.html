@@ -71,3 +71,72 @@
 <script src="js/app.js" defer></script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Motivation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- ===== HEADER / HERO ===== -->
+<header class="hero">
+  <div class="time-block">
+    <div id="time"></div>
+    <div class="date-line">
+      <span id="weekday"></span> ·
+      <span id="date"></span> ·
+      <span id="daytime"></span>
+    </div>
+  </div>
+
+  <div id="dailyQuoteBox" class="daily-quote"></div>
+</header>
+
+<!-- MENU BUTTON -->
+<button id="menuButton">☰ Menü</button>
+
+<!-- ===== MENU ===== -->
+<nav id="menu">
+  <button data-target="about">Über mich</button>
+  <button data-target="thoughts">Gedanken</button>
+</nav>
+
+<!-- ===== MAIN ===== -->
+<main>
+
+  <!-- Fokus -->
+  <section class="card">
+    <p>Mein Fokus heute</p>
+    <input id="dailyFocusInput" placeholder="Dein Fokus …">
+  </section>
+
+  <!-- Daily Impuls -->
+  <div id="dailyTextBox"></div>
+  <button id="dailyTextBtn" class="daily-text-btn">Tagesimpuls</button>
+
+  <!-- Tageszeit -->
+  <div class="buttons">
+    <button data-time="morning">🌅 Morgen</button>
+    <button data-time="noon">☀️ Mittag</button>
+    <button data-time="evening">🌙 Abend</button>
+  </div>
+
+  <!-- Statistik -->
+  <div id="personalQuoteDisplay"></div>
+</main>
+
+<!-- ===== OVERLAY ===== -->
+<div id="overlay">
+  <div id="overlayContent"></div>
+  <button id="closeOverlay">✕</button>
+</div>
+
+<script src="js/app.js" defer></script>
+</body>
+</html>
