@@ -262,3 +262,56 @@ SLIDES / CARDS
   font-size: 0.75rem;
   opacity: 0.6;
 }
+
+/* =====================================
+HERO / UHR / DATUM
+===================================== */
+.hero {
+  padding: 80px 20px 40px;
+  text-align: center;
+}
+
+.time-block #time {
+  font-size: 3.2rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+.date-line {
+  margin-top: 6px;
+  font-size: 0.95rem;
+  opacity: 0.75;
+}
+
+/* =====================================
+TAGESZITAT
+===================================== */
+.daily-quote {
+  margin: 40px auto 0;
+  max-width: 520px;
+  padding: 26px 28px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(245,211,106,0.25);
+  box-shadow: 0 0 40px rgba(245,211,106,0.08);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* =====================================
+STATISTIK – DEZENT
+===================================== */
+#personalQuoteDisplay {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 0.75rem;
+  opacity: 0.5;
+}
+
+/* =====================================
+FOKUS – LOCKER NACH UNTEN
+===================================== */
+.card {
+  margin-top: 60px;
+}

@@ -30,31 +30,50 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateTime() {
-    const now = new Date();
+  const now = new Date();
 
-    weekdayEl.textContent =
-      now.toLocaleDateString("de-DE", { weekday: "long" });
+  timeEl.textContent = now.toLocaleTimeString("de-DE", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  });
 
-    dateEl.textContent =
-      now.toLocaleDateString("de-DE", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric"
-      });
+  weekdayEl.textContent =
+    now.toLocaleDateString("de-DE", { weekday: "long" });
 
-    timeEl.textContent =
-      now.toLocaleTimeString("de-DE", {
-        hour: "2-digit",
-        minute: "2-digit"
-      });
+  dateEl.textContent =
+    now.toLocaleDateString("de-DE", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    });
+}
+setInterval(updateTime, 1000);
 
-    const h = now.getHours();
-    daytimeEl.textContent =
-      h < 11 ? "Morgen" : h < 17 ? "Mittag" : "Abend";
+async function loadDailyQuote() {
+  const today = new Date().toISOString().split("T")[0];
+  const savedDay = localStorage.getItem("dailyQuoteDay");
+
+  if (savedDay === today) {
+    dailyQuoteBox.textContent =
+      localStorage.getItem("dailyQuoteText");
+    return;
   }
 
-  updateTime();
-  setInterval(updateTime, 60000);
+  const res = await fetch("./data/tageszeit.json");
+  const quotes = await res.json();
+
+  const quote =
+    quotes[Math.floor(Math.random() * quotes.length)];
+
+  dailyQuoteBox.textContent = quote;
+
+  localStorage.setItem("dailyQuoteDay", today);
+  localStorage.setItem("dailyQuoteText", quote);
+}
+
+loadDailyQuote();
+
 
   /* =========================
   TAGESRESET
@@ -135,6 +154,71 @@ document.addEventListener("DOMContentLoaded", () => {
 
   closeOverlay.onclick = closeOverlayFn;
 
+  async function loadAbout() {
+  const res = await fetch("./data/personalSlides.json");
+  const data = await res.json();
+
+  let currentSection = null;
+  let currentSlide = 0;
+
+  showSections();
+
+  function showSections() {
+    overlayContent.innerHTML = `
+      <h2>${data.title}</h2>
+      <div class="folder-grid">
+        ${data.sections.map((section, i) => `
+          <div class="folder-card" data-index="${i}">
+            <h3>${section.title}</h3>
+          </div>
+        `).join("")}
+      </div>
+    `;
+
+    overlayContent.querySelectorAll(".folder-card").forEach(card => {
+      card.onclick = () => {
+        currentSection = +card.dataset.index;
+        currentSlide = 0;
+        showSlide();
+      };
+    });
+  }
+
+  function showSlide() {
+    const slides = data.sections[currentSection].slides;
+    const slide = slides[currentSlide];
+
+    overlayContent.innerHTML = `
+      <button class="back">← Themen</button>
+      <div class="slide">
+        <h3>${slide.title}</h3>
+        <p>${slide.text.replace(/\n/g, "<br>")}</p>
+      </div>
+      <div class="nav">
+        <button id="prev" ${currentSlide === 0 ? "disabled" : ""}>←</button>
+        <span>${currentSlide + 1} / ${slides.length}</span>
+        <button id="next" ${currentSlide === slides.length - 1 ? "disabled" : ""}>→</button>
+      </div>
+    `;
+
+    overlayContent.querySelector(".back").onclick = showSections;
+
+    document.getElementById("prev").onclick = () => {
+      if (currentSlide > 0) {
+        currentSlide--;
+        showSlide();
+      }
+    };
+
+    document.getElementById("next").onclick = () => {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        showSlide();
+      }
+    };
+  }
+}
+
   /* =========================
   ORDNER / SLIDES
   ========================= */
@@ -176,7 +260,7 @@ document.addEventListener("DOMContentLoaded", () => {
           currentSlide = 0;
           showSlide();
         };
-      });
+   });
   }
 
   /* ========= EBENE 2: CARDS ========= */

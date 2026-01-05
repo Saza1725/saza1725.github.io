@@ -12,13 +12,17 @@
 <body>
 
 <!-- ===== HEADER ===== -->
-<header>
-  <div id="weekday"></div>
-  <div id="daytime"></div>
-  <div id="date"></div>
-  <div id="time"></div>
-  <div id="dailyQuoteBox"></div>
+<header class="hero">
+  <div class="time-block">
+    <div id="time"></div>
+    <div class="date-line">
+      <span id="weekday"></span> · <span id="date"></span>
+    </div>
+  </div>
+
+  <div id="dailyQuoteBox" class="daily-quote"></div>
 </header>
+
 
 <!-- MENU BUTTON -->
 <button id="menuButton">☰ Menü</button>
@@ -31,6 +35,8 @@
   <button data-target="quotes">Zitate</button>
   <button data-target="archive">Vergangene Tage</button>
   <button data-target="ordnerX">Ordner X</button>
+  <button data-target="thoughts">Gedanken</button>
+
 </nav>
 
 <!-- ===== MAIN ===== -->
