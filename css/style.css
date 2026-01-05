@@ -68,10 +68,11 @@ main {
 }
 main,
 main * {
-  pointer-events: auto;
   position: relative;
-  z-index: 5;
+  z-index: 10;
+  pointer-events: auto;
 }
+
 
 /* =====================================
 FOKUS CARD
@@ -142,7 +143,7 @@ MENÜ
   position: fixed;
   top: 16px;
   right: 20px;
-  z-index: 1000; /* WICHTIG */
+  z-index: 10000; /* WICHTIG */
   pointer-events: auto;
 
   font-size: 1.8rem;
@@ -159,15 +160,13 @@ MENÜ
 OVERLAY
 ===================================== */
 #overlay {
+  display: none;
+  pointer-events: none;
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.85);
   display: none;
   z-index: 100;
-}
-#overlay {
-  display: none;
-  pointer-events: none;
 }
 
 #overlay[style*="display: block"] {
@@ -366,4 +365,15 @@ FOKUS – LOCKER NACH UNTEN
   opacity: 0.8;
   line-height: 1.6;
   text-align: center;
+}
+/* === HEADER DARF KEINE KLICKS BLOCKIEREN === */
+.hero {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Inhalt sichtbar, aber nicht klickbar */
+.hero * {
+  pointer-events: none;
 }
