@@ -169,11 +169,26 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.querySelectorAll("#menu button").forEach(btn => {
-    btn.addEventListener("click", () => {
-      if (menu) menu.style.right = "-240px";
-      openOverlay(btn.dataset.target);
-    });
+  btn.addEventListener("click", () => {
+
+    document
+      .querySelectorAll("#menu button")
+      .forEach(b => b.classList.remove("active"));
+
+    btn.classList.add("active");
+
+    // Menü schließen (mobil / desktop)
+    if (window.innerWidth <= 720) {
+      menu.style.bottom = "-100%";
+    } else {
+      menu.style.right = "-260px";
+    }
+
+    // Overlay bleibt offen – Inhalt wechselt
+    openOverlay(btn.dataset.target);
   });
+});
+
 
   /* ==================================================
      OVERLAY
@@ -182,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!overlay || !overlayContent) return;
 
     overlay.style.display = "block";
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = "";
     overlayContent.innerHTML = "";
 
     if (type === "about") loadAbout();
