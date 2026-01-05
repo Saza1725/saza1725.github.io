@@ -115,11 +115,18 @@ document.addEventListener("DOMContentLoaded", () => {
   OVERLAY
   ========================= */
   function openOverlay(type) {
-    overlay.style.display = "block";
-    document.body.style.overflow = "hidden";
-    overlayContent.innerHTML = "";
-    if (type === "about") loadAbout();
+  overlay.style.display = "block";
+  document.body.style.overflow = "hidden";
+  overlayContent.innerHTML = "";
+
+  if (type === "about") {
+    loadAbout();
   }
+
+  if (type === "thoughts") {
+    loadThoughts();
+  }
+}
 
   function closeOverlayFn() {
     overlay.style.display = "none";
@@ -131,91 +138,97 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =========================
   ORDNER / SLIDES
   ========================= */
-  async function loadAbout() {
-    const res = await fetch("./data/personalSlides.json");
-    const data = await res.json();
+ async function loadThoughts() {
+  const res = await fetch("./data/thoughtsSlides.json");
+  const data = await res.json();
 
-    let currentFolder = null;
-    let currentSlide = 0;
+  let currentSection = null;
+  let currentSlide = 0;
 
-    showFolders();
+  showSections();
 
-    function showFolders() {
-      overlayContent.innerHTML = `
-        <h2>${data.title}</h2>
-        <div class="folder-grid">
-          ${data.folders.map((f, i) => `
+  /* ========= EBENE 1: UNTERORDNER ========= */
+  function showSections() {
+    overlayContent.innerHTML = `
+      <h2>${data.title}</h2>
+      <div class="folder-grid">
+        ${data.sections.map((section, i) => {
+          const readCount =
+            +(localStorage.getItem("thoughts_read_" + i) || 0);
+          const total = section.slides.length;
+
+          return `
             <div class="folder-card" data-index="${i}">
-              ${f.name}
+              <h3>${section.title}</h3>
+              <div class="folder-progress">
+                ${readCount} / ${total} gelesen
+              </div>
             </div>
-          `).join("")}
-        </div>
-      `;
+          `;
+        }).join("")}
+      </div>
+    `;
 
-      overlayContent.querySelectorAll(".folder-card")
-        .forEach(card => {
-          card.onclick = () => {
-            currentFolder = +card.dataset.index;
-            currentSlide =
-              +(localStorage.getItem(
-                "slide_" + currentFolder
-              ) || 0);
-            showSlide();
-          };
-        });
+    overlayContent.querySelectorAll(".folder-card")
+      .forEach(card => {
+        card.onclick = () => {
+          currentSection = +card.dataset.index;
+          currentSlide = 0;
+          showSlide();
+        };
+      });
+  }
+
+  /* ========= EBENE 2: CARDS ========= */
+  function showSlide() {
+    const slides = data.sections[currentSection].slides;
+    const slide = slides[currentSlide];
+
+    const key = "thoughts_read_" + currentSection;
+    const alreadyRead = +(localStorage.getItem(key) || 0);
+    if (currentSlide + 1 > alreadyRead) {
+      localStorage.setItem(key, currentSlide + 1);
     }
 
-    function showSlide() {
-      const slides =
-        data.folders[currentFolder].slides;
-      const slide = slides[currentSlide];
+    const isEmpty = !slide.text || slide.text.trim() === "";
 
-      localStorage.setItem(
-        "slide_" + currentFolder,
-        currentSlide
-      );
-      localStorage.setItem(
-        "slidesToday",
-        +(localStorage.getItem(
-          "slidesToday"
-        ) || 0) + 1
-      );
-      updateStats();
+    overlayContent.innerHTML = `
+      <button class="back">← Themen</button>
 
-      overlayContent.innerHTML = `
-        <button class="back">← Ordner</button>
+      <div class="slide ${isEmpty ? "empty" : ""}">
         <h3>${slide.title}</h3>
-        <p>${slide.text}</p>
+        <p>${slide.text ? slide.text.replace(/\n/g, "<br>") : ""}</p>
+      </div>
 
-        <div class="nav">
-          <button id="prev"
-            ${currentSlide === 0 ? "disabled" : ""}>←</button>
-          <span>${currentSlide + 1} / ${slides.length}</span>
-          <button id="next"
-            ${currentSlide === slides.length - 1 ? "disabled" : ""}>→</button>
-        </div>
-      `;
+      <div class="nav">
+        <button id="prev" ${currentSlide === 0 ? "disabled" : ""}>←</button>
+        <span>${currentSlide + 1} / ${slides.length}</span>
+        <button id="next" ${currentSlide === slides.length - 1 ? "disabled" : ""}>→</button>
+      </div>
+    `;
 
-      overlayContent.querySelector(".back")
-        .onclick = showFolders;
+    overlayContent.querySelector(".back").onclick = showSections;
 
     const prevBtn = document.getElementById("prev");
-const nextBtn = document.getElementById("next");
+    const nextBtn = document.getElementById("next");
 
-if (prevBtn) {
-  prevBtn.onclick = () => {
-    if (currentSlide > 0) {
-      currentSlide--;
-      showSlide();
+    if (prevBtn) {
+      prevBtn.onclick = () => {
+        if (currentSlide > 0) {
+          currentSlide--;
+          showSlide();
+        }
+      };
     }
-  };
-}
 
-if (nextBtn) {
-  nextBtn.onclick = () => {
-    if (currentSlide < slides.length - 1) {
-      currentSlide++;
-      showSlide();
+    if (nextBtn) {
+      nextBtn.onclick = () => {
+        if (currentSlide < slides.length - 1) {
+          currentSlide++;
+          showSlide();
+        }
+      };
     }
-  };
-}
+  }
+}});
+
