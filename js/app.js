@@ -454,3 +454,54 @@ function initShare() {
     }
   };
 }
+
+/* ===== STORY DATA (DEMO) ===== */
+const folderXStories = [
+  "Manchmal ist ein Gedanke alles, was man braucht.\n\nNicht um zu handeln – sondern um zu verstehen.",
+  "Es gibt Tage, an denen nichts passiert.\n\nUnd genau das ist der Fortschritt.",
+  "Wer innehält, verliert keine Zeit.\n\nEr gewinnt Übersicht."
+];
+
+/* ===== ELEMENTE ===== */
+const openBtn = document.getElementById("openFolderX");
+const closeBtn = document.getElementById("closeFolderX");
+const overlay = document.getElementById("folderXOverlay");
+const card = document.getElementById("storyCard");
+const prevBtn = document.getElementById("prevStory");
+const nextBtn = document.getElementById("nextStory");
+const counter = document.getElementById("storyCounter");
+
+let currentIndex = 0;
+
+/* ===== RENDER ===== */
+function renderStory() {
+  card.textContent = folderXStories[currentIndex];
+  counter.textContent = `${currentIndex + 1} / ${folderXStories.length}`;
+  prevBtn.disabled = currentIndex === 0;
+  nextBtn.disabled = currentIndex === folderXStories.length - 1;
+}
+
+/* ===== EVENTS ===== */
+openBtn.onclick = () => {
+  overlay.classList.add("active");
+  currentIndex = 0;
+  renderStory();
+};
+
+closeBtn.onclick = () => {
+  overlay.classList.remove("active");
+};
+
+prevBtn.onclick = () => {
+  if (currentIndex > 0) {
+    currentIndex--;
+    renderStory();
+  }
+};
+
+nextBtn.onclick = () => {
+  if (currentIndex < folderXStories.length - 1) {
+    currentIndex++;
+    renderStory();
+  }
+};
