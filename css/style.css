@@ -11,7 +11,6 @@ body {
   font-family: 'Libre Baskerville', serif;
   color: #f2f2f2;
   min-height: 100vh;
-
   background:
     radial-gradient(circle at top, rgba(245,211,106,0.06), transparent 60%),
     linear-gradient(180deg, #0f1115 0%, #0c0e12 60%, #090b0f 100%);
@@ -23,12 +22,6 @@ HEADER
 header {
   padding: 60px 20px 40px;
   text-align: center;
-  background: linear-gradient(
-    to bottom,
-    rgba(15,17,21,0.92),
-    rgba(15,17,21,0.7),
-    rgba(15,17,21,0)
-  );
 }
 
 /* =====================================
@@ -50,19 +43,23 @@ FOKUS CARD
 .card {
   width: 100%;
   padding: 24px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(245,211,106,0.18);
+  background: rgba(255,255,255,0.05);
   border-radius: 18px;
-  text-align: center;
+  border: 1px solid rgba(245,211,106,0.2);
+  transition: box-shadow 0.3s ease;
+}
+
+.card.active {
+  box-shadow: 0 0 20px rgba(245,211,106,0.35);
 }
 
 #dailyFocusInput {
   width: 100%;
   margin-top: 10px;
   padding: 10px;
+  border-radius: 10px;
   background: rgba(0,0,0,0.35);
   border: none;
-  border-radius: 10px;
   color: #fff;
 }
 
@@ -85,9 +82,9 @@ TAGESZEIT BUTTONS
 }
 
 .buttons button.active {
-  background: rgba(245,211,106,0.25);
-  border-color: #f5d36a;
+  background: rgba(245,211,106,0.3);
   color: #fff;
+  transform: translateY(-2px);
 }
 
 /* =====================================
@@ -101,9 +98,9 @@ MENÜ
   height: 100%;
   background: rgba(15,17,21,0.96);
   backdrop-filter: blur(12px);
+  padding: 80px 20px;
   display: flex;
   flex-direction: column;
-  padding: 80px 20px;
   gap: 14px;
   transition: right 0.35s ease;
   z-index: 50;
@@ -126,10 +123,16 @@ OVERLAY
   padding: 28px;
   background: #111;
   border-radius: 18px;
+  animation: fadeSlide 0.25s ease;
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* =====================================
-ORDNER CARDS
+ORDNER / SLIDES
 ===================================== */
 .folder-grid {
   display: grid;
@@ -144,28 +147,13 @@ ORDNER CARDS
   background: rgba(255,255,255,0.05);
   border-left: 4px solid var(--accent, #f5d36a);
   cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
-.folder-card .icon {
-  font-size: 1.6rem;
-  margin-bottom: 6px;
+.folder-card:hover {
+  transform: translateY(-4px);
 }
 
-/* =====================================
-SLIDE TYPEN
-===================================== */
-.slide-text {
-  border-left: 4px solid #f5d36a;
-  padding-left: 14px;
-}
-
-.slide-quote {
-  font-style: italic;
-  border-left: 4px solid #7aa2f7;
-  padding-left: 14px;
-}
-
-.slide-info {
-  border-left: 4px solid #7af7c2;
-  padding-left: 14px;
+.slide {
+  animation: fadeSlide 0.25s ease;
 }

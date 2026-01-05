@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const overlay = document.getElementById("overlay");
   const overlayContent = document.getElementById("overlayContent");
   const closeOverlay = document.getElementById("closeOverlay");
+  const focusInput = document.getElementById("dailyFocusInput");
+  const focusCard = document.querySelector(".card");
 
   /* =========================
   MENÜ
@@ -21,12 +23,25 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* =========================
-  TAGESZEIT
+  FOKUS (PERSISTENT)
+  ========================= */
+  const savedFocus = localStorage.getItem("dailyFocus");
+  if (savedFocus) {
+    focusInput.value = savedFocus;
+    focusCard.classList.add("active");
+  }
+
+  focusInput.oninput = () => {
+    localStorage.setItem("dailyFocus", focusInput.value);
+    focusCard.classList.toggle("active", focusInput.value.trim() !== "");
+  };
+
+  /* =========================
+  TAGESZEIT (PERSISTENT)
   ========================= */
   document.querySelectorAll(".buttons button").forEach(btn => {
     btn.onclick = () => {
-      document
-        .querySelectorAll(".buttons button")
+      document.querySelectorAll(".buttons button")
         .forEach(b => b.classList.remove("active"));
 
       btn.classList.add("active");
@@ -58,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   /* =========================
-  ORDNER / SLIDES
+  ORDNER / SLIDES + NAV
   ========================= */
   async function loadAbout() {
     const res = await fetch("./data/personalSlides.json");
@@ -75,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="folder-grid">
           ${data.folders.map((f, i) => `
             <div class="folder-card" data-index="${i}" style="--accent:${f.color || "#f5d36a"}">
-              <div class="icon">${f.icon || "📁"}</div>
+              <div>${f.icon || "📁"}</div>
               <strong>${f.name}</strong>
             </div>
           `).join("")}
@@ -92,18 +107,38 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function showSlide() {
-      const slide = data.folders[currentFolder].slides[currentSlide];
-      const typeClass = `slide-${slide.type || "text"}`;
+      const slides = data.folders[currentFolder].slides;
+      const slide = slides[currentSlide];
 
       overlayContent.innerHTML = `
         <button class="back">← Ordner</button>
-        <div class="${typeClass}">
+        <div class="slide">
           <h3>${slide.title}</h3>
           <p>${slide.text}</p>
+        </div>
+
+        <div class="nav">
+          <button ${currentSlide === 0 ? "disabled" : ""} id="prev">←</button>
+          <span>${currentSlide + 1} / ${slides.length}</span>
+          <button ${currentSlide === slides.length - 1 ? "disabled" : ""} id="next">→</button>
         </div>
       `;
 
       overlayContent.querySelector(".back").onclick = showFolders;
+
+      document.getElementById("prev")?.addEventListener("click", () => {
+        if (currentSlide > 0) {
+          currentSlide--;
+          showSlide();
+        }
+      });
+
+      document.getElementById("next")?.addEventListener("click", () => {
+        if (currentSlide < slides.length - 1) {
+          currentSlide++;
+          showSlide();
+        }
+      });
     }
   }
 
