@@ -199,20 +199,23 @@ document.addEventListener("DOMContentLoaded", () => {
       overlayContent.querySelector(".back")
         .onclick = showFolders;
 
-      document.getElementById("prev")?.onclick = () => {
-        if (currentSlide > 0) {
-          currentSlide--;
-          showSlide();
-        }
-      };
+    const prevBtn = document.getElementById("prev");
+const nextBtn = document.getElementById("next");
 
-      document.getElementById("next")?.onclick = () => {
-        if (currentSlide < slides.length - 1) {
-          currentSlide++;
-          showSlide();
-        }
-      };
+if (prevBtn) {
+  prevBtn.onclick = () => {
+    if (currentSlide > 0) {
+      currentSlide--;
+      showSlide();
     }
-  }
+  };
+}
 
-});
+if (nextBtn) {
+  nextBtn.onclick = () => {
+    if (currentSlide < slides.length - 1) {
+      currentSlide++;
+      showSlide();
+    }
+  };
+}
