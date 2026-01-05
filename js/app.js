@@ -1,5 +1,5 @@
 /* ==================================================
-   GLOBAL ELEMENT CACHE
+   GLOBAL CACHE
 ================================================== */
 let menu, menuButton, main, overlays;
 let weekday, daytime, dateEl, timeEl;
@@ -74,7 +74,7 @@ gemacht und bin gespannt, was das Jahr
   function typeWriter() {
     if (i < introText.length) {
       textEl.textContent += introText.charAt(i++);
-      setTimeout(typeWriter, 50);
+      setTimeout(typeWriter, 45);
     } else {
       button.disabled = false;
       button.classList.add("active");
@@ -202,7 +202,7 @@ function initFocus() {
 }
 
 /* ==================================================
-   OVERLAYS (BASIS)
+   OVERLAYS (CORE)
 ================================================== */
 function initOverlays() {
   showMain();
@@ -284,7 +284,6 @@ function initMeineZeit() {
 
         const backBtn = document.createElement("button");
         backBtn.textContent = "← Zurück";
-        backBtn.className = "closeBtn";
         backBtn.onclick = e => {
           e.stopPropagation();
           renderOverview();
@@ -333,7 +332,6 @@ function initZitate() {
 
         const backBtn = document.createElement("button");
         backBtn.textContent = "← Zurück";
-        backBtn.className = "closeBtn";
         backBtn.onclick = e => {
           e.stopPropagation();
           renderOverview();
@@ -374,13 +372,8 @@ function initPersonalSlides() {
         nextBtn.style.display = index === slides.length - 1 ? "none" : "inline-block";
       }
 
-      prevBtn.onclick = () => {
-        if (current > 0) render(--current);
-      };
-
-      nextBtn.onclick = () => {
-        if (current < slides.length - 1) render(++current);
-      };
+      prevBtn.onclick = () => current > 0 && render(--current);
+      nextBtn.onclick = () => current < slides.length - 1 && render(++current);
 
       render(0);
     });
@@ -443,17 +436,4 @@ function initNews() {
 ================================================== */
 function initShare() {
   const btn = document.getElementById("shareQuoteBtn");
-  if (!btn) return;
-
-  btn.onclick = () => {
-    const quote = dailyQuoteBox?.textContent;
-    if (!quote) return;
-
-    if (navigator.share) {
-      navigator.share({ title: "Tageszitat", text: quote });
-    } else {
-      navigator.clipboard.writeText(quote);
-      alert("Zitat kopiert");
-    }
-  };
-}
+  if (!b
