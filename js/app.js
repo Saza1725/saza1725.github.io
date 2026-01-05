@@ -49,11 +49,12 @@ function cacheElements() {
 ================================================== */
 function initIntro() {
   const overlay = document.getElementById("introOverlay");
+  if (!overlay) return;
+
   const card = document.getElementById("introCard");
   const textEl = document.getElementById("introText");
   const button = document.getElementById("introButton");
   const playBtn = document.getElementById("playIntroBtn");
-  if (!overlay) return;
 
   const audio = new Audio("introMusic.mp3");
   audio.volume = 0.4;
@@ -201,16 +202,27 @@ function initFocus() {
 }
 
 /* ==================================================
-   OVERLAYS
+   OVERLAYS (BASIS)
 ================================================== */
+function initOverlays() {
+  showMain();
+}
+
+function hideAllOverlays() {
+  overlays.forEach(o => (o.style.display = "none"));
+}
+
+function showMain() {
+  hideAllOverlays();
+  if (main) main.style.display = "flex";
+}
+
 function createOverlayHandler(overlayId, renderFn) {
   const overlay = document.getElementById(overlayId);
   if (!overlay) return;
 
   const content = overlay.querySelector(".overlayContent");
-  if (content) {
-    content.addEventListener("click", e => e.stopPropagation());
-  }
+  if (content) content.addEventListener("click", e => e.stopPropagation());
 
   overlay.addEventListener("click", showMain);
 
@@ -234,6 +246,56 @@ function initInfo() {
   fetch("data/info.json")
     .then(r => r.json())
     .then(d => (info.innerHTML = d.infoText));
+}
+
+/* ==================================================
+   MEINE ZEIT
+================================================== */
+function initMeineZeit() {
+  fetch("data/meinezeit.json")
+    .then(r => r.json())
+    .then(d => {
+      const grid = document.getElementById("meinezeitGrid");
+      if (!grid) return;
+
+      function renderOverview() {
+        grid.innerHTML = "";
+        Object.keys(d.folders).forEach(name => {
+          const div = document.createElement("div");
+          div.className = "myTimeFolder";
+          div.textContent = name;
+          div.onclick = () => renderFolder(name);
+          grid.appendChild(div);
+        });
+      }
+
+      function renderFolder(name) {
+        grid.innerHTML = "";
+        const fc = document.createElement("div");
+        fc.className = "folderContent";
+        fc.innerHTML = `<h3>${name}</h3>`;
+
+        d.folders[name].forEach(e => {
+          fc.innerHTML += `<h4>${e.title}</h4><p>${e.text}</p>`;
+          if (e.image) {
+            fc.innerHTML += `<img src="${e.image}" class="myTimeImage">`;
+          }
+        });
+
+        const backBtn = document.createElement("button");
+        backBtn.textContent = "← Zurück";
+        backBtn.className = "closeBtn";
+        backBtn.onclick = e => {
+          e.stopPropagation();
+          renderOverview();
+        };
+
+        fc.appendChild(backBtn);
+        grid.appendChild(fc);
+      }
+
+      createOverlayHandler("meinezeitOverlay", renderOverview);
+    });
 }
 
 /* ==================================================
@@ -282,6 +344,71 @@ function initZitate() {
       }
 
       createOverlayHandler("folderOverlay", renderOverview);
+    });
+}
+
+/* ==================================================
+   PERSONAL SLIDES
+================================================== */
+function initPersonalSlides() {
+  const container = document.getElementById("personalSlidesContainer");
+  if (!container) return;
+
+  const progress = document.getElementById("personalSlidesProgress");
+  const prevBtn = document.getElementById("prevSlide");
+  const nextBtn = document.getElementById("nextSlide");
+
+  let slides = [];
+  let current = 0;
+
+  fetch("data/personalSlides.json")
+    .then(r => r.json())
+    .then(d => {
+      slides = d.slides;
+
+      function render(index) {
+        container.innerHTML =
+          `<h3>${slides[index].title}</h3><p>${slides[index].text.replace(/\n/g,"<br>")}</p>`;
+        progress.textContent = `${index + 1} / ${slides.length}`;
+        prevBtn.style.display = index === 0 ? "none" : "inline-block";
+        nextBtn.style.display = index === slides.length - 1 ? "none" : "inline-block";
+      }
+
+      prevBtn.onclick = () => {
+        if (current > 0) render(--current);
+      };
+
+      nextBtn.onclick = () => {
+        if (current < slides.length - 1) render(++current);
+      };
+
+      render(0);
+    });
+
+  createOverlayHandler("personalOverlay");
+}
+
+/* ==================================================
+   ARCHIVE
+================================================== */
+function initArchive() {
+  fetch("data/archive.json")
+    .then(r => r.json())
+    .then(d => {
+      const monthDetail = document.getElementById("monthDetail");
+      if (!monthDetail) return;
+
+      function renderArchive() {
+        monthDetail.innerHTML = "";
+        d.days.forEach(entry => {
+          const box = document.createElement("div");
+          box.className = "archiveEntry";
+          box.innerHTML = `<h4>${entry.date}</h4><p>${entry.quote}</p>`;
+          monthDetail.appendChild(box);
+        });
+      }
+
+      createOverlayHandler("archiveOverlay", renderArchive);
     });
 }
 
