@@ -1,16 +1,27 @@
-/* ===== BASIS ===== */
+  /* =====================================
+BASIS
+======================================== */
 const menu = document.getElementById("menu");
 const menuButton = document.getElementById("menuButton");
 const overlay = document.getElementById("overlay");
 const overlayContent = document.getElementById("overlayContent");
 const closeOverlay = document.getElementById("closeOverlay");
 
-/* ===== MENU ===== */
+  /* =====================================
+MENÜ
+======================================== */
 menuButton.onclick = () => {
   menu.style.right = menu.style.right === "0px" ? "-240px" : "0px";
 };
 
-/* ===== OVERLAY HANDLER ===== */
+if (type === "about") {
+  loadAbout();
+}
+
+
+  /* =====================================
+OVERLAY HEADER
+======================================== */
 document.querySelectorAll("#menu button").forEach(btn => {
   btn.onclick = () => {
     menu.style.right = "-240px";
@@ -67,6 +78,10 @@ function openOverlay(type) {
     `;
   }
 }
+
+  /* =====================================
+ORDNER X
+======================================== */
 async function loadOrdnerX() {
   const res = await fetch("data/ordnerX.json");
   const data = await res.json();
@@ -149,7 +164,9 @@ async function loadOrdnerX() {
 
 
 
-/* ===== HEADER TIME ===== */
+  /* =====================================
+HEADER TIME
+======================================== */
 function updateHeader() {
   const now = new Date();
   const days = ["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
@@ -160,8 +177,98 @@ function updateHeader() {
 updateHeader();
 setInterval(updateHeader, 1000);
 
-/* ===== FOCUS ===== */
+  /* =====================================
+FOKUS
+======================================== */
 const focusInput = document.getElementById("dailyFocusInput");
 const key = "focus-" + new Date().toISOString().split("T")[0];
 focusInput.value = localStorage.getItem(key) || "";
 focusInput.oninput = () => localStorage.setItem(key, focusInput.value);
+
+  /* =====================================
+EBENEN FUNKTION
+======================================== */
+async function loadAbout() {
+  const res = await fetch("data/personalSlides.json");
+  const data = await res.json();
+
+  let currentFolder = null;
+  let currentSlide = 0;
+
+  showIntro();
+
+   /* =====================================
+EBENE 1
+======================================== */
+  function showIntro() {
+    overlayContent.innerHTML = `
+      <h2>${data.title}</h2>
+      <p>${data.intro}</p>
+      <button id="aboutNext">Weiter</button>
+    `;
+
+    document.getElementById("aboutNext").onclick = showFolders;
+  }
+
+  /* =====================================
+EBENE 2
+======================================== */
+  function showFolders() {
+    overlayContent.innerHTML = `
+      <button id="backToHome">← Zurück</button>
+      <h2>${data.title}</h2>
+
+      <div class="folder-grid">
+        ${data.folders.map((f, i) =>
+          `<div class="folder-card" data-index="${i}">${f.name}</div>`
+        ).join("")}
+      </div>
+    `;
+
+    document.getElementById("backToHome").onclick = showIntro;
+
+    document.querySelectorAll(".folder-card").forEach(card => {
+      card.onclick = () => {
+        currentFolder = +card.dataset.index;
+        currentSlide = 0;
+        showSlide();
+      };
+    });
+  }
+
+  /* =====================================
+EBENE 3
+======================================== */
+  function showSlide() {
+    const slide = data.folders[currentFolder].slides[currentSlide];
+
+    overlayContent.innerHTML = `
+      <button id="backToFolders">← Ordner</button>
+
+      <h3>${slide.title}</h3>
+      <p>${slide.text}</p>
+
+      <div class="nav">
+        <button id="prevSlide">←</button>
+        <button id="nextSlide">→</button>
+      </div>
+    `;
+
+    document.getElementById("backToFolders").onclick = showFolders;
+
+    document.getElementById("prevSlide").onclick = () => {
+      if (currentSlide > 0) {
+        currentSlide--;
+        showSlide();
+      }
+    };
+
+    document.getElementById("nextSlide").onclick = () => {
+      if (currentSlide < data.folders[currentFolder].slides.length - 1) {
+        currentSlide++;
+        showSlide();
+      }
+    };
+  }
+}
+

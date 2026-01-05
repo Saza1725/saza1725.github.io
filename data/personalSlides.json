@@ -1,24 +1,46 @@
 {
-  "intro": {
-    "title": "Über mich",
-    "text": "Warum diese Seite\n\nIch habe diese Seite gestartet, weil ich gemerkt habe, wie gut mir Zitate, Gedanken und ruhige Impulse tun.\nSie helfen mir, innezuhalten, den Kopf zu ordnen und den Fokus nicht zu verlieren.\n\nWas als persönlicher Ausgleich begann, ist zu einem Projekt geworden, das auch anderen Motivation und Antrieb geben soll."
-  },
-  "slides": [
+  "title": "Über mich",
+  "intro": "Ein persönlicher Weg, Gedanken und Entwicklung.",
+  "folders": [
     {
-      "title": "Hard Reset",
-      "text": "Nach einem harten Jahr habe ich einen klaren Entschluss gefasst: Hard Reset.\n\n• Trennung von Menschen – egal wie lange man sich kannte\n• Social Media gelöscht – keine Erklärungen\n• Zuhören gelernt – auch dem Gerede\n\nNicht alles, was erzählt wird, muss dich berühren."
+      "name": "Herkunft",
+      "slides": [
+        {
+          "title": "Anfang",
+          "text": "Jeder Mensch beginnt irgendwo."
+        },
+        {
+          "title": "Prägung",
+          "text": "Erfahrungen formen uns."
+        }
+      ]
     },
     {
-      "title": "Mein Fundament",
-      "text": "Die Menschen, die geblieben sind, sind heute mein Fundament.\n\n• Freundeskreis\n• Neue Kontakte\n• Klare Werte\n\nMit ihnen habe ich alles neu aufgebaut."
+      "name": "Wandel",
+      "slides": [
+        {
+          "title": "Entscheidung",
+          "text": "Veränderung beginnt im Inneren."
+        }
+      ]
     },
     {
-      "title": "Klarheit",
-      "text": "Viele reden viel.\n\nOft sind es genau die, die mit ihrem eigenen Leben nicht vorankommen.\n\nEinstecken ist keine Schwäche.\nAufgeben ist die Schwäche."
+      "name": "Heute",
+      "slides": [
+        {
+          "title": "Standpunkt",
+          "text": "Ich weiß, wo ich stehe."
+        }
+      ]
     },
     {
-      "title": "Deine Phase",
-      "text": "Während andere stillstehen, ist das genau deine Phase:\n\n• Finden\n• Lernen\n• Durchziehen\n\nEs ist keine Glückssache.\nEs ist eine Einstellung und Entscheidung."
+      "name": "Ausblick",
+      "slides": [
+        {
+          "title": "Zukunft",
+          "text": "Noch ist nicht alles geschrieben."
+        }
+      ]
     }
   ]
 }
