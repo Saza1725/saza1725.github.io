@@ -66,6 +66,12 @@ main {
   align-items: center;
   gap: 28px;
 }
+main,
+main * {
+  pointer-events: auto;
+  position: relative;
+  z-index: 5;
+}
 
 /* =====================================
 FOKUS CARD
@@ -136,7 +142,7 @@ MENÜ
   position: fixed;
   top: 16px;
   right: 20px;
-  z-index: 9999; /* WICHTIG */
+  z-index: 1000; /* WICHTIG */
   pointer-events: auto;
 
   font-size: 1.8rem;
@@ -158,6 +164,14 @@ OVERLAY
   background: rgba(0,0,0,0.85);
   display: none;
   z-index: 100;
+}
+#overlay {
+  display: none;
+  pointer-events: none;
+}
+
+#overlay[style*="display: block"] {
+  pointer-events: auto;
 }
 
 #overlayContent {
@@ -267,9 +281,14 @@ SLIDES / CARDS
 HERO / UHR / DATUM
 ===================================== */
 .hero {
-  padding: 80px 20px 40px;
-  text-align: center;
+  position: relative;
+  z-index: 1;
+  pointer-events: none;   /* DAS ist der Schlüssel */
 }
+.hero * {
+  pointer-events: none;
+}
+
 
 .time-block #time {
   font-size: 3.2rem;
