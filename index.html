@@ -23,17 +23,14 @@
 <!-- MENU BUTTON -->
 <button id="menuButton">☰ Menü</button>
 
-
 <!-- ===== MENU ===== -->
-<nav id="menu" style="position:fixed; right:-240px; top:0; width:240px; height:100%; background:#eee;">
-  <a href="#" data-target="about">Über mich</a>
-</nav>
-  <button data-overlay="about">Über mich</button>
-  <button data-overlay="info">Information</button>
-  <button data-overlay="time">Meine Zeit</button>
-  <button data-overlay="quotes">Zitate</button>
-  <button data-overlay="archive">Vergangene Tage</button>
-  <button data-overlay="ordnerX">Ordner X</button>
+<nav id="menu">
+  <button data-target="about">Über mich</button>
+  <button data-target="info">Information</button>
+  <button data-target="time">Meine Zeit</button>
+  <button data-target="quotes">Zitate</button>
+  <button data-target="archive">Vergangene Tage</button>
+  <button data-target="ordnerX">Ordner X</button>
 </nav>
 
 <!-- ===== MAIN ===== -->
@@ -52,25 +49,16 @@
   <div id="personalQuoteDisplay"></div>
 </main>
 
-<!-- OVERLAY -->
-<div id="overlay" style="
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.8);
-  display:none;
-">
-  <div id="overlayContent" style="
-    background:white;
-    margin:50px auto;
-    padding:20px;
-    max-width:600px;
-  ">
-    <!-- JS schreibt hier rein -->
-  </div>
-
-  <button id="closeOverlay" style="position:absolute;top:10px;right:10px;">X</button>
+<!-- ===== OVERLAY ===== -->
+<div id="overlay">
+  <div id="overlayContent"></div>
+  <button id="closeOverlay">✕</button>
 </div>
 
-<script src="js/app.js"></script>
+<!-- ===== SCRIPTS (REIHENFOLGE!) ===== -->
+<script src="js/app.js" defer></script>
+<script src="js/menu.js" defer></script>
+<script src="js/overlay.js" defer></script>
+
 </body>
 </html>
