@@ -22,107 +22,113 @@ document.querySelectorAll("#menu a").forEach(link => {
   };
 });
 
+
 /* =====================================
 OVERLAY BASIS
 ===================================== */
 function openOverlay(type) {
+  overlay.style.display = "block";
   document.body.style.overflow = "hidden";
-  overlay.classList.add("active");
   overlayContent.innerHTML = "";
 
-  switch (type) {
-    case "about":
-      loadAbout();
-      break;
-    case "ordnerX":
-      loadOrdnerX();
-      break;
-  }
+  if (type === "about") loadAbout();
 }
 
 closeOverlay.onclick = () => {
-  overlay.classList.remove("active");
+  overlay.style.display = "none";
   document.body.style.overflow = "";
 };
 
+
 /* =====================================
-ORDNER X – 3 EBENEN
+ÜBER MICH – 3 EBENEN
 ===================================== */
-async function loadOrdnerX() {
-  const res = await fetch("data/ordnerX.json");
+async function loadAbout() {
+  const res = await fetch("data/personalSlides.json");
   const data = await res.json();
 
   let currentFolder = null;
-  let currentIndex = 0;
-  let textVisible = false;
+  let currentSlide = 0;
 
   showIntro();
 
+  /* ========= EBENE 1: INTRO ========= */
   function showIntro() {
     overlayContent.innerHTML = `
+      <button class="close">← Home</button>
       <h2>${data.title}</h2>
       <p>${data.intro}</p>
-      <button id="startFolders">Weiter</button>
+      <button id="aboutNext">Weiter</button>
     `;
-    document.getElementById("startFolders").onclick = showFolders;
+
+    overlayContent.querySelector(".close").onclick = closeOverlay;
+    document.getElementById("aboutNext").onclick = showFolders;
   }
 
+  /* ========= EBENE 2: UNTERORDNER ========= */
   function showFolders() {
     overlayContent.innerHTML = `
       <button class="back">← Zurück</button>
+      <h2>${data.title}</h2>
+
       <div class="folder-grid">
-        ${data.folders.map((f, i) =>
-          `<div class="folder-card" data-i="${i}">${f.name}</div>`
-        ).join("")}
+        ${data.folders
+          .map(
+            (f, i) =>
+              `<div class="folder-card" data-index="${i}">
+                <h3>${f.name}</h3>
+              </div>`
+          )
+          .join("")}
       </div>
     `;
 
     overlayContent.querySelector(".back").onclick = showIntro;
 
-    document.querySelectorAll(".folder-card").forEach(card => {
+    overlayContent.querySelectorAll(".folder-card").forEach(card => {
       card.onclick = () => {
-        currentFolder = +card.dataset.i;
-        currentIndex = 0;
-        textVisible = false;
-        showEntry();
+        currentFolder = +card.dataset.index;
+        currentSlide = 0;
+        showSlide();
       };
     });
   }
 
-  function showEntry() {
-    const entry = data.folders[currentFolder].entries[currentIndex];
+  /* ========= EBENE 3: SLIDES ========= */
+  function showSlide() {
+    const slide = data.folders[currentFolder].slides[currentSlide];
 
     overlayContent.innerHTML = `
       <button class="back">← Ordner</button>
-      <h3>${entry.title}</h3>
-      ${textVisible ? `<p>${entry.text}</p>` : ""}
+
+      <h3>${slide.title}</h3>
+      <p>${slide.text}</p>
+
       <div class="nav">
         <button id="prev">←</button>
-        <button id="toggle">Text</button>
+        <span>${currentSlide + 1} / ${
+          data.folders[currentFolder].slides.length
+        }</span>
         <button id="next">→</button>
       </div>
     `;
 
     overlayContent.querySelector(".back").onclick = showFolders;
 
-    document.getElementById("toggle").onclick = () => {
-      textVisible = !textVisible;
-      showEntry();
-    };
-
     document.getElementById("prev").onclick = () => {
-      if (currentIndex > 0) {
-        currentIndex--;
-        textVisible = false;
-        showEntry();
+      if (currentSlide > 0) {
+        currentSlide--;
+        showSlide();
       }
     };
 
     document.getElementById("next").onclick = () => {
-      if (currentIndex < data.folders[currentFolder].entries.length - 1) {
-        currentIndex++;
-        textVisible = false;
-        showEntry();
+      if (
+        currentSlide <
+        data.folders[currentFolder].slides.length - 1
+      ) {
+        currentSlide++;
+        showSlide();
       }
     };
   }

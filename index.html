@@ -20,12 +20,14 @@
   <div id="dailyQuoteBox"></div>
 </header>
 
-<!-- ===== MENU BUTTON ===== -->
-<button id="menuButton">☰</button>
+<!-- MENU BUTTON -->
+<button id="menuButton">☰ Menü</button>
 
 
 <!-- ===== MENU ===== -->
-<nav id="menu">
+<nav id="menu" style="position:fixed; right:-240px; top:0; width:240px; height:100%; background:#eee;">
+  <a href="#" data-target="about">Über mich</a>
+</nav>
   <button data-overlay="about">Über mich</button>
   <button data-overlay="info">Information</button>
   <button data-overlay="time">Meine Zeit</button>
@@ -50,12 +52,23 @@
   <div id="personalQuoteDisplay"></div>
 </main>
 
-<!-- ===== OVERLAY (EIN SYSTEM FÜR ALLE) ===== -->
-<div id="overlay" class="overlay">
-  <div class="overlayBox">
-    <button id="closeOverlay">✕</button>
-    <div id="overlayContent"></div>
+<!-- OVERLAY -->
+<div id="overlay" style="
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.8);
+  display:none;
+">
+  <div id="overlayContent" style="
+    background:white;
+    margin:50px auto;
+    padding:20px;
+    max-width:600px;
+  ">
+    <!-- JS schreibt hier rein -->
   </div>
+
+  <button id="closeOverlay" style="position:absolute;top:10px;right:10px;">X</button>
 </div>
 
 <script src="js/app.js"></script>
