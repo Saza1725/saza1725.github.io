@@ -86,6 +86,10 @@ FOKUS CARD
 /* =====================================
 TAGESZEIT BUTTONS
 ===================================== */
+.buttons {
+  display: flex;
+  gap: 14px;
+}
 .buttons button.active {
   background: rgba(245,211,106,0.3);
   color: #fff;
@@ -99,12 +103,6 @@ TAGESZEIT BUTTONS
   color: #f5d36a;
   cursor: pointer;
   transition: all 0.2s ease;
-}
-
-.buttons button.active {
-  background: rgba(245,211,106,0.3);
-  color: #fff;
-  transform: translateY(-2px);
 }
 
 /* =====================================
