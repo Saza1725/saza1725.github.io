@@ -1,27 +1,21 @@
 /* ================= BUTTON BASIS ================= */
-.btn {
-  background: linear-gradient(
-    to bottom,
-    rgba(50,50,50,0.9),
-    rgba(20,20,20,0.9)
-  );
-  color: var(--gold);
-  border: 1px solid rgba(255,255,255,0.25);
-  border-radius: 999px;
-  padding: 10px 22px;
-  font-weight: 600;
+.button {
+  font-family: 'Libre Baskerville', serif;
+  background: var(--bg-glass);
+  color: var(--text-main);
+
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+
+  padding: 12px 22px;
   cursor: pointer;
 
-  transition:
-    transform 0.15s ease,
-    background 0.15s ease,
-    box-shadow 0.15s ease;
+  transition: transform 0.2s ease, background 0.2s ease;
 }
 
-.btn:hover {
+button:hover {
   transform: translateY(-2px);
-  background: rgba(60,60,60,0.95);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+  background: rgba(255,255,255,0.14);
 }
 
 .btn:active {
@@ -44,19 +38,19 @@
 
 /* 2. Root Variablen */
 :root {
-  --gold: #f5d36a;
-  --dark: rgba(34,34,34,0.9);
-  --red: #c40000;
-  --glass: rgba(255,255,255,0.15);
+  --bg-main: #0f1115;        /* sehr dunkles Grau (statt schwarz) */
+  --bg-glass: rgba(255,255,255,0.08);
+  --bg-card: rgba(255,255,255,0.92);
+
+  --text-main: #f2f2f2;
+  --text-muted: #b5b5b5;
+
+  --accent: #f5d36a;        /* dein Gold */
+  --accent-soft: rgba(245,211,106,0.4);
+
+  --border-soft: rgba(255,255,255,0.15);
 }
 
-:root {
-  --bg-dark: rgba(0,0,0,0.65);
-  --bg-glass: rgba(255,255,255,0.15);
-  --gold: #f5d36a;
-  --red: #c40000;
-  --text-light: #ffffff;
-}
 
 /* Card Variablen */
 .card {
@@ -69,10 +63,14 @@
 
 /* 3. Body & Global */
 body {
-  font-family: 'Georgia', serif;
-  background: url('../assets/images/Polar.jpg') center / cover no-repeat fixed;
-  color: #111;
-  line-height: 1.5;
+  font-family: 'Libre Baskerville', serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.6;
+}
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 0.4px;
 }
 
 #heroImage img {
@@ -83,25 +81,49 @@ body {
 
 /* 4. Header */
 header {
-  background: linear-gradient(
-    to bottom,
-    rgba(0,0,0,0.55),
-    rgba(0,0,0,0.25)
-  );
-  backdrop-filter: blur(8px);
-}
-
-header {
   position: fixed;
   top: 0;
   width: 100%;
-  min-height: 140px;
-  padding: 16px 0;
-  backdrop-filter: blur(6px);
-  color: #fff;
+
+  padding: 20px 0 26px;
+  background: linear-gradient(
+    to bottom,
+    rgba(15,17,21,0.9),
+    rgba(15,17,21,0.6),
+    transparent
+  );
+
+  backdrop-filter: blur(12px);
   text-align: center;
-  z-index: 700;
+  z-index: 1000;
 }
+#weekday {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+#daytime {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+}
+
+#date, #time {
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+#dailyQuoteBox {
+  margin-top: 18px;
+  max-width: 640px;
+
+  font-size: 1.35rem;
+  color: var(--accent);
+
+  background: var(--bg-glass);
+  border: 1px solid var(--accent-soft);
+  border-radius: 20px;
+  padding: 20px 26px;
+}
+
 
 /* 5. Menü */
 #menuButton {
@@ -135,12 +157,17 @@ header {
 
 /* 6. Main Layout */
 main {
-  padding-top: 240px;
+  padding-top: 220px;
+  padding-bottom: 80px;
+
+  max-width: 1100px;
+  margin: 0 auto;
+
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 20px;
+  gap: 48px;
 }
+
 
 /* 7. Inhalte */
 #dailyQuoteBox {
@@ -284,5 +311,9 @@ main {
 }
 
 .card {
-  animation: fadeUp 0.6s ease both;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  padding: 24px 28px;
+  backdrop-filter: blur(10px);
 }
