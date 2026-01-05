@@ -1,38 +1,58 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+  /* =========================
+  BASIS
+  ========================= */
   const menu = document.getElementById("menu");
   const menuButton = document.getElementById("menuButton");
   const overlay = document.getElementById("overlay");
   const overlayContent = document.getElementById("overlayContent");
   const closeOverlay = document.getElementById("closeOverlay");
+
   const focusInput = document.getElementById("dailyFocusInput");
   const focusCard = document.querySelector(".card");
+  const statsBox = document.getElementById("personalQuoteDisplay");
+
+  const weekdayEl = document.getElementById("weekday");
+  const dateEl = document.getElementById("date");
+  const timeEl = document.getElementById("time");
+  const daytimeEl = document.getElementById("daytime");
 
   /* =========================
-  ZEIT / DATUM
+  DATUM / ZEIT (FIX!)
   ========================= */
+  function todayKey() {
+    return new Date().toISOString().split("T")[0];
+  }
+
   function updateTime() {
     const now = new Date();
 
-    document.getElementById("weekday").textContent =
-      now.toLocaleDateString("de-DE", { weekday: "long" });
-
-    document.getElementById("date").textContent =
-      now.toLocaleDateString("de-DE", { day: "2-digit", month: "long", year: "numeric" });
-
-    document.getElementById("time").textContent =
-      now.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
+    weekdayEl.textContent = now.toLocaleDateString("de-DE", { weekday: "long" });
+    dateEl.textContent = now.toLocaleDateString("de-DE", { dateStyle: "long" });
+    timeEl.textContent = now.toLocaleTimeString("de-DE", {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
 
     const h = now.getHours();
-    document.getElementById("daytime").textContent =
-      h < 11 ? "Morgen" : h < 17 ? "Mittag" : "Abend";
+    daytimeEl.textContent = h < 11 ? "Morgen" : h < 17 ? "Mittag" : "Abend";
   }
 
   updateTime();
   setInterval(updateTime, 60000);
 
   /* =========================
-  MENÜ
+  TAGESRESET (MITTERNACHT)
+  ========================= */
+  const lastDay = localStorage.getItem("lastDay");
+  if (lastDay !== todayKey()) {
+    localStorage.clear();
+    localStorage.setItem("lastDay", todayKey());
+  }
+
+  /* =========================
+  MENÜ (JETZT FUNKTIONIERT ES)
   ========================= */
   menuButton.onclick = () => {
     menu.style.right = menu.style.right === "0px" ? "-240px" : "0px";
@@ -46,36 +66,40 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* =========================
-  FOKUS
+  FOKUS (PERSISTENT)
   ========================= */
-  const savedFocus = localStorage.getItem("dailyFocus");
+  const savedFocus = localStorage.getItem("focus");
   if (savedFocus) {
     focusInput.value = savedFocus;
     focusCard.classList.add("active");
   }
 
   focusInput.oninput = () => {
-    localStorage.setItem("dailyFocus", focusInput.value);
+    localStorage.setItem("focus", focusInput.value);
     focusCard.classList.toggle("active", focusInput.value.trim() !== "");
   };
 
   /* =========================
-  TAGESZEIT
+  TAGESZEIT BUTTONS
   ========================= */
   document.querySelectorAll(".buttons button").forEach(btn => {
     btn.onclick = () => {
       document.querySelectorAll(".buttons button")
         .forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
-      localStorage.setItem("daytime", btn.dataset.time);
+      localStorage.setItem("daytimeManual", btn.dataset.time);
     };
   });
 
-  const savedTime = localStorage.getItem("daytime");
-  if (savedTime) {
-    const btn = document.querySelector(`.buttons button[data-time="${savedTime}"]`);
-    if (btn) btn.classList.add("active");
+  /* =========================
+  STATISTIK
+  ========================= */
+  function updateStats() {
+    const count = +(localStorage.getItem("slidesToday") || 0);
+    statsBox.textContent = `Heute ${count} Folien gelesen`;
   }
+
+  updateStats();
 
   /* =========================
   OVERLAY
@@ -84,7 +108,6 @@ document.addEventListener("DOMContentLoaded", () => {
     overlay.style.display = "block";
     document.body.style.overflow = "hidden";
     overlayContent.innerHTML = "";
-
     if (type === "about") loadAbout();
   }
 
@@ -111,15 +134,11 @@ document.addEventListener("DOMContentLoaded", () => {
       overlayContent.innerHTML = `
         <h2>${data.title}</h2>
         <div class="folder-grid">
-          ${data.folders.map((f, i) => {
-            const saved = localStorage.getItem("slide_" + i) || 0;
-            return `
-              <div class="folder-card" data-index="${i}">
-                <strong>${f.name}</strong>
-                <div class="folder-progress">${+saved + 1} / ${f.slides.length}</div>
-              </div>
-            `;
-          }).join("")}
+          ${data.folders.map((f, i) => `
+            <div class="folder-card" data-index="${i}">
+              ${f.name}
+            </div>
+          `).join("")}
         </div>
       `;
 
@@ -137,6 +156,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const slide = slides[currentSlide];
 
       localStorage.setItem("slide_" + currentFolder, currentSlide);
+      localStorage.setItem(
+        "slidesToday",
+        +(localStorage.getItem("slidesToday") || 0) + 1
+      );
+      updateStats();
 
       overlayContent.innerHTML = `
         <button class="back">← Ordner</button>
