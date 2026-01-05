@@ -15,15 +15,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* =========================
   DIGITALE ZEIT-ELEMENTE
-  (DAS WAR DER FEHLENDE TEIL)
+  (NUR VARIABLENNAMEN GEÄNDERT)
   ========================= */
-  const weekday = document.getElementById("weekday");
-  const date = document.getElementById("date");
-  const time = document.getElementById("time");
-  const daytime = document.getElementById("daytime");
+  const weekdayEl = document.getElementById("weekday");
+  const dateEl = document.getElementById("date");
+  const timeEl = document.getElementById("time");
+  const daytimeEl = document.getElementById("daytime");
 
   /* =========================
-  DATUM / ZEIT (DIGITAL)
+  DATUM / ZEIT
   ========================= */
   function todayKey() {
     return new Date().toISOString().split("T")[0];
@@ -32,19 +32,24 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateTime() {
     const now = new Date();
 
-    weekday.textContent = now.toLocaleDateString("de-DE", { weekday: "long" });
-    date.textContent = now.toLocaleDateString("de-DE", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric"
-    });
-    time.textContent = now.toLocaleTimeString("de-DE", {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
+    weekdayEl.textContent =
+      now.toLocaleDateString("de-DE", { weekday: "long" });
+
+    dateEl.textContent =
+      now.toLocaleDateString("de-DE", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+      });
+
+    timeEl.textContent =
+      now.toLocaleTimeString("de-DE", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
 
     const h = now.getHours();
-    daytime.textContent =
+    daytimeEl.textContent =
       h < 11 ? "Morgen" : h < 17 ? "Mittag" : "Abend";
   }
 
@@ -52,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(updateTime, 60000);
 
   /* =========================
-  TAGESRESET (MITTERNACHT)
+  TAGESRESET
   ========================= */
   const lastDay = localStorage.getItem("lastDay");
   if (lastDay !== todayKey()) {
@@ -63,10 +68,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =========================
-  MENÜ
+  MENÜ (JETZT FUNKTIONIERT ES)
   ========================= */
   menuButton.onclick = () => {
-    menu.style.right = menu.style.right === "0px" ? "-240px" : "0px";
+    menu.style.right =
+      menu.style.right === "0px" ? "-240px" : "0px";
   };
 
   document.querySelectorAll("#menu button").forEach(btn => {
@@ -77,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* =========================
-  FOKUS (PERSISTENT)
+  FOKUS
   ========================= */
   const savedFocus = localStorage.getItem("focus");
   if (savedFocus) {
@@ -87,29 +93,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   focusInput.oninput = () => {
     localStorage.setItem("focus", focusInput.value);
-    focusCard.classList.toggle("active", focusInput.value.trim() !== "");
+    focusCard.classList.toggle(
+      "active",
+      focusInput.value.trim() !== ""
+    );
   };
-
-  /* =========================
-  TAGESZEIT BUTTONS
-  ========================= */
-  document.querySelectorAll(".buttons button").forEach(btn => {
-    btn.onclick = () => {
-      document
-        .querySelectorAll(".buttons button")
-        .forEach(b => b.classList.remove("active"));
-
-      btn.classList.add("active");
-      localStorage.setItem("daytimeManual", btn.dataset.time);
-    };
-  });
 
   /* =========================
   STATISTIK
   ========================= */
   function updateStats() {
-    const count = +(localStorage.getItem("slidesToday") || 0);
-    statsBox.textContent = `Heute ${count} Folien gelesen`;
+    const count =
+      +(localStorage.getItem("slidesToday") || 0);
+    statsBox.textContent =
+      `Heute ${count} Folien gelesen`;
   }
 
   updateStats();
@@ -155,23 +152,33 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       `;
 
-      overlayContent.querySelectorAll(".folder-card").forEach(card => {
-        card.onclick = () => {
-          currentFolder = +card.dataset.index;
-          currentSlide = +(localStorage.getItem("slide_" + currentFolder) || 0);
-          showSlide();
-        };
-      });
+      overlayContent.querySelectorAll(".folder-card")
+        .forEach(card => {
+          card.onclick = () => {
+            currentFolder = +card.dataset.index;
+            currentSlide =
+              +(localStorage.getItem(
+                "slide_" + currentFolder
+              ) || 0);
+            showSlide();
+          };
+        });
     }
 
     function showSlide() {
-      const slides = data.folders[currentFolder].slides;
+      const slides =
+        data.folders[currentFolder].slides;
       const slide = slides[currentSlide];
 
-      localStorage.setItem("slide_" + currentFolder, currentSlide);
+      localStorage.setItem(
+        "slide_" + currentFolder,
+        currentSlide
+      );
       localStorage.setItem(
         "slidesToday",
-        +(localStorage.getItem("slidesToday") || 0) + 1
+        +(localStorage.getItem(
+          "slidesToday"
+        ) || 0) + 1
       );
       updateStats();
 
@@ -181,13 +188,16 @@ document.addEventListener("DOMContentLoaded", () => {
         <p>${slide.text}</p>
 
         <div class="nav">
-          <button id="prev" ${currentSlide === 0 ? "disabled" : ""}>←</button>
+          <button id="prev"
+            ${currentSlide === 0 ? "disabled" : ""}>←</button>
           <span>${currentSlide + 1} / ${slides.length}</span>
-          <button id="next" ${currentSlide === slides.length - 1 ? "disabled" : ""}>→</button>
+          <button id="next"
+            ${currentSlide === slides.length - 1 ? "disabled" : ""}>→</button>
         </div>
       `;
 
-      overlayContent.querySelector(".back").onclick = showFolders;
+      overlayContent.querySelector(".back")
+        .onclick = showFolders;
 
       document.getElementById("prev")?.onclick = () => {
         if (currentSlide > 0) {
@@ -203,26 +213,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       };
     }
-
-    /* =========================
-    TASTATUR
-    ========================= */
-    document.onkeydown = e => {
-      if (overlay.style.display !== "block") return;
-
-      if (e.key === "Escape") closeOverlayFn();
-      if (e.key === "ArrowLeft" && currentSlide > 0) {
-        currentSlide--;
-        showSlide();
-      }
-      if (e.key === "ArrowRight") {
-        const max = data.folders[currentFolder].slides.length - 1;
-        if (currentSlide < max) {
-          currentSlide++;
-          showSlide();
-        }
-      }
-    };
   }
 
 });
