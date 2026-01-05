@@ -13,13 +13,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const focusCard = document.querySelector(".card");
   const statsBox = document.getElementById("personalQuoteDisplay");
 
-  const weekdayEl = document.getElementById("weekday");
-  const dateEl = document.getElementById("date");
-  const timeEl = document.getElementById("time");
-  const daytimeEl = document.getElementById("daytime");
+  /* =========================
+  DIGITALE ZEIT-ELEMENTE
+  (DAS WAR DER FEHLENDE TEIL)
+  ========================= */
+  const weekday = document.getElementById("weekday");
+  const date = document.getElementById("date");
+  const time = document.getElementById("time");
+  const daytime = document.getElementById("daytime");
 
   /* =========================
-  DATUM / ZEIT (FIX!)
+  DATUM / ZEIT (DIGITAL)
   ========================= */
   function todayKey() {
     return new Date().toISOString().split("T")[0];
@@ -28,15 +32,20 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateTime() {
     const now = new Date();
 
-    weekdayEl.textContent = now.toLocaleDateString("de-DE", { weekday: "long" });
-    dateEl.textContent = now.toLocaleDateString("de-DE", { dateStyle: "long" });
-    timeEl.textContent = now.toLocaleTimeString("de-DE", {
+    weekday.textContent = now.toLocaleDateString("de-DE", { weekday: "long" });
+    date.textContent = now.toLocaleDateString("de-DE", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    });
+    time.textContent = now.toLocaleTimeString("de-DE", {
       hour: "2-digit",
       minute: "2-digit"
     });
 
     const h = now.getHours();
-    daytimeEl.textContent = h < 11 ? "Morgen" : h < 17 ? "Mittag" : "Abend";
+    daytime.textContent =
+      h < 11 ? "Morgen" : h < 17 ? "Mittag" : "Abend";
   }
 
   updateTime();
@@ -47,12 +56,14 @@ document.addEventListener("DOMContentLoaded", () => {
   ========================= */
   const lastDay = localStorage.getItem("lastDay");
   if (lastDay !== todayKey()) {
-    localStorage.clear();
+    localStorage.removeItem("focus");
+    localStorage.removeItem("daytimeManual");
+    localStorage.removeItem("slidesToday");
     localStorage.setItem("lastDay", todayKey());
   }
 
   /* =========================
-  MENÜ (JETZT FUNKTIONIERT ES)
+  MENÜ
   ========================= */
   menuButton.onclick = () => {
     menu.style.right = menu.style.right === "0px" ? "-240px" : "0px";
@@ -84,8 +95,10 @@ document.addEventListener("DOMContentLoaded", () => {
   ========================= */
   document.querySelectorAll(".buttons button").forEach(btn => {
     btn.onclick = () => {
-      document.querySelectorAll(".buttons button")
+      document
+        .querySelectorAll(".buttons button")
         .forEach(b => b.classList.remove("active"));
+
       btn.classList.add("active");
       localStorage.setItem("daytimeManual", btn.dataset.time);
     };
