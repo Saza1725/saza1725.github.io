@@ -203,20 +203,21 @@ function initFocus() {
 /* ==================================================
    OVERLAYS
 ================================================== */
-function hideAllOverlays() {
-  overlays.forEach(o => (o.style.display = "none"));
-}
+function createOverlayHandler(overlayId, renderFn) {
+  const overlay = document.getElementById(overlayId);
+  if (!overlay) return;
 
-function showMain() {
-  hideAllOverlays();
-  main.style.display = "flex";
-}
+  const content = overlay.querySelector(".overlayContent");
+  if (content) {
+    content.addEventListener("click", e => e.stopPropagation());
+  }
 
-function initOverlays() {
+  overlay.addEventListener("click", showMain);
+
   document.addEventListener("openSection", e => {
-    hideAllOverlays();
-    const overlay = document.getElementById(e.detail);
-    if (overlay) {
+    if (e.detail === overlayId) {
+      hideAllOverlays();
+      if (renderFn) renderFn();
       overlay.style.display = "flex";
       main.style.display = "none";
     }
@@ -236,39 +237,51 @@ function initInfo() {
 }
 
 /* ==================================================
-MEINE ZEIT
+   ZITATE
 ================================================== */
-function initMeineZeit() {
-  fetch("data/meinezeit.json")
+function initZitate() {
+  fetch("data/folders.json")
     .then(r => r.json())
     .then(d => {
-      const grid = document.getElementById("meinezeitGrid");
+      const grid = document.getElementById("folderGrid");
       if (!grid) return;
 
-      function renderOverview(){
-        grid.innerHTML="";
-        Object.keys(d.folders).forEach(name=>{
-          const div=document.createElement("div");
-          div.className="myTimeFolder";
-          div.textContent=name;
-          div.onclick=()=>renderFolder(name);
+      function renderOverview() {
+        grid.innerHTML = "";
+        Object.keys(d.folders).forEach(name => {
+          const div = document.createElement("div");
+          div.className = "folderFrame";
+          div.textContent = name;
+          div.onclick = () => renderFolder(name);
           grid.appendChild(div);
         });
       }
 
-      function renderFolder(name){
-        grid.innerHTML="";
-        const fc=document.createElement("div");
-        fc.className="folderContent";
-        fc.innerHTML=`<h3>${name}</h3>`;
-        d.folders[name].forEach(e=>{
-          fc.innerHTML+=`<h4>${e.title}</h4><p>${e.text}</p>`;
-          if(e.image) fc.innerHTML+=`<img src="${e.image}" class="myTimeImage">`;
+      function renderFolder(name) {
+        grid.innerHTML = "";
+        const fc = document.createElement("div");
+        fc.className = "folderContent";
+        fc.innerHTML = `<h3>${name}</h3>`;
+
+        d.folders[name].forEach(q => {
+          const p = document.createElement("p");
+          p.textContent = q;
+          fc.appendChild(p);
         });
+
+        const backBtn = document.createElement("button");
+        backBtn.textContent = "← Zurück";
+        backBtn.className = "closeBtn";
+        backBtn.onclick = e => {
+          e.stopPropagation();
+          renderOverview();
+        };
+
+        fc.appendChild(backBtn);
         grid.appendChild(fc);
       }
 
-      createOverlayHandler("meinezeitOverlay", renderOverview);
+      createOverlayHandler("folderOverlay", renderOverview);
     });
 }
 
