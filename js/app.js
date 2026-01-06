@@ -316,5 +316,27 @@ document.addEventListener("DOMContentLoaded", () => {
       $("next").onclick = () => slide++ < slides.length - 1 && showSlide();
     }
   }
+/* =====================================
+INTRO VIDEO LOGIK
+===================================== */
+const introOverlay = document.getElementById("introOverlay");
+const introVideo = document.getElementById("introVideo");
+const introStart = document.getElementById("introStart");
+
+if (introOverlay && introVideo && introStart) {
+
+  introStart.addEventListener("click", () => {
+    introVideo.play();
+    introStart.style.display = "none";
+  });
+
+  introVideo.addEventListener("ended", () => {
+    introOverlay.classList.add("fade-out");
+
+    setTimeout(() => {
+      introOverlay.remove();
+    }, 1200);
+  });
+}
 
 });
