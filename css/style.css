@@ -586,7 +586,7 @@ HERO LOGO INTRO → BACKGROUND
 ===================================== */
 
 .hero {
-  position: relative;
+  position: fixed;
   overflow: hidden;
 }
 
@@ -709,13 +709,13 @@ HERO LOGO INTRO → BACKGROUND
   z-index: 5;
   pointer-events: none;
 
-  animation: logoFadeOut 3s ease forwards;
+  animation: logoFadeOut fixed;
   animation-delay: 2.4s;
 }
 
 hero-logo img {
   width: min(60vw, 420px);
-  animation: logoIntro 2s ease forwards;
+  animation: logoIntro 8s ease forwards;
   filter:
     drop-shadow(0 0 40px rgba(0,0,0,0.6))
     mask-image(linear-gradient(
