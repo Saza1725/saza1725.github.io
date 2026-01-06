@@ -7,10 +7,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const menu = $("menu");
   const menuButton = $("menuButton");
+  const homeBtn = $("homeBtn");
 
   const overlay = $("overlay");
   const overlayContent = $("overlayContent");
-  const closeOverlay = $("closeOverlay");
 
   const timeEl = $("time");
   const weekdayEl = $("weekday");
@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const dailyQuoteBox = $("dailyQuoteBox");
   const dailyTextBox = $("dailyTextBox");
-  const dailyTextBtn = $("dailyTextBtn");
 
   const focusInput = $("dailyFocusInput");
   const focusCard = document.querySelector(".card");
@@ -27,9 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ==================================================
      HELFER
   ================================================== */
-  const todayKey = () =>
-    new Date().toISOString().split("T")[0];
-
   const safe = (el, fn) => el && fn(el);
 
   /* ==================================================
@@ -63,98 +59,64 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(updateTime, 1000);
 
   /* ==================================================
-   TAGESZITAT (tageszeit.json)
-================================================== */
-async function loadDailyQuote() {
-  const dailyQuoteBox = document.getElementById("dailyQuoteBox");
-  if (!dailyQuoteBox) return;
-
-  try {
-    const response = await fetch("data/tageszeit.json");
-    if (!response.ok) {
-      throw new Error("tageszeit.json konnte nicht geladen werden");
-    }
-
-    const data = await response.json();
-
-    // ✅ WICHTIG: quotes aus dem Objekt holen
-    if (!Array.isArray(data.quotes)) {
-      throw new Error("quotes ist kein Array");
-    }
-
-    const randomIndex = Math.floor(Math.random() * data.quotes.length);
-    dailyQuoteBox.textContent = data.quotes[randomIndex];
-
-  } catch (error) {
-    console.error("Tageszitat Fehler:", error);
-    dailyQuoteBox.textContent =
-      "Heute zählt nicht das perfekte Zitat – sondern dein eigener Gedanke.";
-  }
-}
-
-/* 🔁 FUNKTIONSAUFRUF */
-loadDailyQuote();
-
-  /* ==================================================
-   DAILY IMPULS – BUTTON GESTEUERT
-================================================== */
-
-async function loadDailyText(time) {
-  if (!dailyTextBox) return;
-
-  try {
-    const res = await fetch("./data/dailyTexts.json");
-    if (!res.ok) throw new Error("dailyTexts.json fehlt");
-
-    const data = await res.json();
-
-    if (!Array.isArray(data[time])) {
-      throw new Error(`Keine Texte für ${time}`);
-    }
-
-    const list = data[time];
-    const randomIndex = Math.floor(Math.random() * list.length);
-    dailyTextBox.textContent = list[randomIndex];
-
-  } catch (e) {
-    console.error("DailyText Fehler:", e);
-    dailyTextBox.textContent =
-      "Heute darfst du dir selbst einen Impuls geben.";
-  }
-}
-
-/* ===============================
-   BUTTON EVENTS
-================================ */
-
-document.querySelectorAll(".buttons button").forEach(btn => {
-  btn.addEventListener("click", () => {
-
-    // Active-State
-    document
-      .querySelectorAll(".buttons button")
-      .forEach(b => b.classList.remove("active"));
-
-    btn.classList.add("active");
-
-    // morning | noon | evening
-    const time = btn.dataset.time;
-
-    loadDailyText(time);
-  });
-});
-
-  /* ==================================================
-     TAGESZEIT BUTTONS
+     TAGESZITAT
   ================================================== */
+  async function loadDailyQuote() {
+    if (!dailyQuoteBox) return;
+
+    try {
+      const res = await fetch("data/tageszeit.json");
+      if (!res.ok) throw new Error("tageszeit.json fehlt");
+
+      const data = await res.json();
+      if (!Array.isArray(data.quotes)) throw new Error("quotes ist kein Array");
+
+      dailyQuoteBox.textContent =
+        data.quotes[Math.floor(Math.random() * data.quotes.length)];
+
+    } catch (err) {
+      console.error(err);
+      dailyQuoteBox.textContent =
+        "Heute zählt nicht das perfekte Zitat – sondern dein eigener Gedanke.";
+    }
+  }
+
+  loadDailyQuote();
+
+  /* ==================================================
+     DAILY IMPULS (MORGEN / MITTAG / ABEND)
+  ================================================== */
+  async function loadDailyText(time) {
+    if (!dailyTextBox) return;
+
+    try {
+      const res = await fetch("data/dailyTexts.json");
+      if (!res.ok) throw new Error("dailyTexts.json fehlt");
+
+      const data = await res.json();
+      if (!Array.isArray(data[time])) throw new Error("Keine Texte für " + time);
+
+      const list = data[time];
+      dailyTextBox.textContent =
+        list[Math.floor(Math.random() * list.length)];
+
+    } catch (err) {
+      console.error(err);
+      dailyTextBox.textContent =
+        "Heute darfst du dir selbst einen Impuls geben.";
+    }
+  }
+
   document.querySelectorAll(".buttons button").forEach(btn => {
     btn.addEventListener("click", () => {
-      document
-        .querySelectorAll(".buttons button")
+      document.querySelectorAll(".buttons button")
         .forEach(b => b.classList.remove("active"));
 
       btn.classList.add("active");
-      localStorage.setItem("daytimeManual", btn.dataset.time);
+      const time = btn.dataset.time;
+
+      localStorage.setItem("daytimeManual", time);
+      loadDailyText(time);
     });
   });
 
@@ -171,10 +133,7 @@ document.querySelectorAll(".buttons button").forEach(btn => {
 
     focusInput.addEventListener("input", () => {
       localStorage.setItem("focus", focusInput.value);
-      focusCard.classList.toggle(
-        "active",
-        focusInput.value.trim() !== ""
-      );
+      focusCard.classList.toggle("active", focusInput.value.trim() !== "");
     });
   }
 
@@ -193,62 +152,30 @@ document.querySelectorAll(".buttons button").forEach(btn => {
   ================================================== */
   safe(menuButton, btn => {
     btn.addEventListener("click", () => {
-      if (!menu) return;
-      menu.style.right =
-        menu.style.right === "0px" ? "-260px" : "0px";
+      menu.classList.toggle("open");
     });
   });
 
-  document.querySelectorAll("#menu button").forEach(btn => {
-  btn.addEventListener("click", () => {
+  document.querySelectorAll("#menu button[data-target]").forEach(btn => {
+    btn.addEventListener("click", () => {
 
-    document
-      .querySelectorAll("#menu button")
-      .forEach(b => b.classList.remove("active"));
+      document.querySelectorAll("#menu button")
+        .forEach(b => b.classList.remove("active"));
 
-    btn.classList.add("active");
+      btn.classList.add("active");
+      menu.classList.remove("open");
 
-    // Menü schließen (mobil / desktop)
-    if (window.innerWidth <= 720) {
-      menu.style.bottom = "-100%";
-    } else {
-      menu.style.right = "-260px";
-    }
-
-    // Overlay bleibt offen – Inhalt wechselt
-    openOverlay(btn.dataset.target);
+      openOverlay(btn.dataset.target);
+    });
   });
-});
 
-const homeBtn = document.getElementById("homeBtn");
-
-if (homeBtn) {
-  homeBtn.addEventListener("click", () => {
-
-    // Overlay schließen
-    if (overlay) {
+  safe(homeBtn, btn => {
+    btn.addEventListener("click", () => {
+      menu.classList.remove("open");
       overlay.style.display = "none";
-    }
-
-    // Overlay-Inhalt leeren
-    if (overlayContent) {
       overlayContent.innerHTML = "";
-    }
-
-    // Active-State im Menü entfernen
-    document
-      .querySelectorAll("#menu button")
-      .forEach(b => b.classList.remove("active"));
-
-    // Menü schließen
-    if (window.innerWidth <= 720) {
-      menu.style.bottom = "-100%";
-    } else {
-      menu.style.right = "-260px";
-    }
+    });
   });
-}
-
 
   /* ==================================================
      OVERLAY
@@ -257,124 +184,87 @@ if (homeBtn) {
     if (!overlay || !overlayContent) return;
 
     overlay.style.display = "block";
-    document.body.style.overflow = "";
     overlayContent.innerHTML = "";
 
     if (type === "about") loadAbout();
     if (type === "thoughts") loadThoughts();
   }
 
-  safe(closeOverlay, btn =>
-    btn.addEventListener("click", () => {
+  overlay.addEventListener("click", e => {
+    if (e.target === overlay) {
       overlay.style.display = "none";
-      document.body.style.overflow = "";
-    })
-  );
+      overlayContent.innerHTML = "";
+    }
+  });
 
   /* ==================================================
      ÜBER MICH
   ================================================== */
   async function loadAbout() {
-  const res = await fetch("./data/personalSlides.json");
-  const data = await res.json();
+    const res = await fetch("data/personalSlides.json");
+    const data = await res.json();
 
-  let currentSection = null;
-  let currentSlide = 0;
+    let sectionIndex = null;
+    let slideIndex = 0;
 
-  showSections();
+    showSections();
 
-  /* ===============================
-     1️⃣ ORDNERÜBERSICHT
-  =============================== */
-  function showSections() {
-    currentSection = null;
-    currentSlide = 0;
-
-    overlayContent.innerHTML = `
-      <h2>${data.title}</h2>
-      <div class="folder-grid">
-        ${data.sections.map((section, i) => `
-          <div class="folder-card" data-index="${i}">
-            <h3>${section.title}</h3>
-            <div class="folder-progress">
-              ${section.slides.length} Karten
+    function showSections() {
+      overlayContent.innerHTML = `
+        <h2>${data.title}</h2>
+        <div class="folder-grid">
+          ${data.sections.map((s, i) => `
+            <div class="folder-card" data-i="${i}">
+              <h3>${s.title}</h3>
+              <div class="folder-progress">${s.slides.length} Karten</div>
             </div>
-          </div>
-        `).join("")}
-      </div>
-    `;
+          `).join("")}
+        </div>
+      `;
 
-    overlayContent.querySelectorAll(".folder-card").forEach(card => {
-      card.addEventListener("click", () => {
-        currentSection = Number(card.dataset.index);
-        currentSlide = 0;
-        showSlide();
+      overlayContent.querySelectorAll(".folder-card").forEach(card => {
+        card.onclick = () => {
+          sectionIndex = +card.dataset.i;
+          slideIndex = 0;
+          showSlide();
+        };
       });
-    });
-  }
-
-  /* ===============================
-     2️⃣ KARTENANSICHT
-  =============================== */
-  function showSlide() {
-    const section = data.sections[currentSection];
-    const slide = section.slides[currentSlide];
-
-    overlayContent.innerHTML = `
-      <button class="back">← Über mich</button>
-
-      <div class="slide">
-        <h3>${slide.title}</h3>
-        <p>${slide.text.replace(/\n/g, "<br>")}</p>
-      </div>
-
-      <div class="nav">
-        <button id="prev" ${currentSlide === 0 ? "disabled" : ""}>←</button>
-        <span>
-          ${currentSlide + 1} / ${section.slides.length}
-        </span>
-        <button id="next" ${currentSlide === section.slides.length - 1 ? "disabled" : ""}>→</button>
-      </div>
-    `;
-
-    // Statistik
-    localStorage.setItem(
-      "slidesToday",
-      +(localStorage.getItem("slidesToday") || 0) + 1
-    );
-    updateStats();
-
-    // Events
-    overlayContent.querySelector(".back").onclick = showSections;
-
-    const prevBtn = document.getElementById("prev");
-    const nextBtn = document.getElementById("next");
-
-    if (prevBtn) {
-      prevBtn.onclick = () => {
-        if (currentSlide > 0) {
-          currentSlide--;
-          showSlide();
-        }
-      };
     }
 
-    if (nextBtn) {
-      nextBtn.onclick = () => {
-        if (currentSlide < section.slides.length - 1) {
-          currentSlide++;
-          showSlide();
-        }
-      };
+    function showSlide() {
+      const section = data.sections[sectionIndex];
+      const slide = section.slides[slideIndex];
+
+      overlayContent.innerHTML = `
+        <button class="back">← Über mich</button>
+        <div class="slide">
+          <h3>${slide.title}</h3>
+          <p>${slide.text.replace(/\n/g, "<br>")}</p>
+        </div>
+        <div class="nav">
+          <button id="prev" ${slideIndex === 0 ? "disabled" : ""}>←</button>
+          <span>${slideIndex + 1} / ${section.slides.length}</span>
+          <button id="next" ${slideIndex === section.slides.length - 1 ? "disabled" : ""}>→</button>
+        </div>
+      `;
+
+      localStorage.setItem(
+        "slidesToday",
+        +(localStorage.getItem("slidesToday") || 0) + 1
+      );
+      updateStats();
+
+      overlayContent.querySelector(".back").onclick = showSections;
+      $("prev").onclick = () => slideIndex-- > 0 && showSlide();
+      $("next").onclick = () => slideIndex++ < section.slides.length - 1 && showSlide();
     }
   }
-}
 
   /* ==================================================
      GEDANKEN
   ================================================== */
   async function loadThoughts() {
-    const res = await fetch("./data/thoughtsSlides.json");
+    const res = await fetch("data/thoughtsSlides.json");
     const data = await res.json();
 
     let section = null;
