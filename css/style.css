@@ -534,3 +534,275 @@ STATISTIK
   font-size: 0.75rem;
   opacity: 0.5;
 }
+
+/* =====================================
+HERO BACKGROUND – SAZA / STÖRFAKTOR
+===================================== */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Bild + Abdunklung */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15,17,21,0.88),
+      rgba(12,14,18,0.95)
+    ),
+    url("../data/images/Saza17.webp") center / cover no-repeat;
+
+  filter: blur(2px) saturate(1.05);
+  opacity: 0.38;
+
+  z-index: -1;
+}
+
+/* dezenter Gold-Glow passend zu deinem Design */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(245,211,106,0.12),
+      transparent 65%
+    );
+
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* =====================================
+HERO LOGO INTRO → BACKGROUND
+===================================== */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+/* ========== LOGO OVERLAY ========== */
+.hero-logo {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 5;
+  pointer-events: none;
+  animation: logoFadeOut 2.8s ease forwards;
+  animation-delay: 2.2s;
+}
+
+.hero-logo img {
+  width: min(60vw, 420px);
+  filter: drop-shadow(0 0 40px rgba(0,0,0,0.6));
+  animation: logoIntro 2s ease forwards;
+}
+
+/* ========== BACKGROUND ========== */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15,17,21,0.92),
+      rgba(10,12,16,0.96)
+    ),
+    url("../data/images/Saza17.webp") center / cover no-repeat;
+
+  filter: blur(0px);
+  opacity: 0;
+  animation: bgReveal 2.5s ease forwards;
+  animation-delay: 2.4s;
+
+  z-index: -1;
+}
+
+/* ========== GOLD GLOW ========== */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(245,211,106,0.14),
+      transparent 65%
+    );
+  opacity: 0;
+  animation: glowReveal 2.5s ease forwards;
+  animation-delay: 2.8s;
+  pointer-events: none;
+}
+
+/* =====================================
+ANIMATIONEN
+===================================== */
+
+@keyframes logoIntro {
+  from {
+    opacity: 0;
+    transform: scale(1.15);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes logoFadeOut {
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+@keyframes bgReveal {
+  to {
+    opacity: 0.38;
+    filter: blur(2px);
+  }
+}
+
+@keyframes glowReveal {
+  to {
+    opacity: 1;
+  }
+}
+/* =====================================
+HERO LOGO INTRO → BACKGROUND
+===================================== */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+/* LOGO */
+.hero-logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 45%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding-left: 6vw;
+
+  z-index: 5;
+  pointer-events: none;
+
+  animation: logoFadeOut 3s ease forwards;
+  animation-delay: 2.4s;
+}
+
+hero-logo img {
+  width: min(60vw, 420px);
+  animation: logoIntro 2s ease forwards;
+  filter:
+    drop-shadow(0 0 40px rgba(0,0,0,0.6))
+    mask-image(linear-gradient(
+      90deg,
+      rgba(0,0,0,1) 70%,
+      rgba(0,0,0,0) 100%
+    ));
+}
+
+
+.hero-logo img {
+  width: min(60vw, 420px);
+  animation: logoIntro 2s ease forwards;
+  filter: drop-shadow(0 0 40px rgba(0,0,0,0.6));
+}
+
+/* HINTERGRUND */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+  linear-gradient(
+    180deg,
+    rgba(15,17,21,0.92),
+    rgba(10,12,16,0.96)
+  ),
+  url("../assets/Saza17.webp") left center / cover no-repeat;
+
+background-attachment: fixed;
+
+  opacity: 0;
+  filter: blur(0);
+  animation: bgReveal 2.5s ease forwards;
+  animation-delay: 2.4s;
+
+  z-index: -1;
+}
+
+/* GLOW */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(245,211,106,0.14),
+      transparent 65%
+    );
+  opacity: 0;
+  animation: glowReveal 2.5s ease forwards;
+  animation-delay: 2.8s;
+  pointer-events: none;
+}
+
+/* ANIMATIONEN */
+@keyframes logoIntro {
+  from {
+    opacity: 0;
+    transform: scale(1.15);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes logoFadeOut {
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+@keyframes bgReveal {
+  to {
+    opacity: 0.38;
+    filter: blur(2px);
+  }
+}
+
+@keyframes glowReveal {
+  to {
+    opacity: 1;
+  }
+}

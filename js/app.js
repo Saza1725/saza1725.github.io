@@ -195,7 +195,7 @@ document.querySelectorAll(".buttons button").forEach(btn => {
     btn.addEventListener("click", () => {
       if (!menu) return;
       menu.style.right =
-        menu.style.right === "0px" ? "-240px" : "0px";
+        menu.style.right === "0px" ? "-260px" : "0px";
     });
   });
 
