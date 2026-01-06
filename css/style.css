@@ -51,6 +51,18 @@ HEADER / HERO
   opacity: 0.75;
 }
 
+/* NUR Uhr & Datum passiv */
+.time-block,
+.time-block * {
+  pointer-events: none;
+}
+
+/* Tageszitat explizit aktiv */
+.daily-quote {
+  pointer-events: auto;
+}
+
+
 /* =====================================
 TAGESZITAT
 ===================================== */
@@ -200,7 +212,7 @@ MENU (DESKTOP SLIDE-IN)
 #menu::before {
   content: "Navigation";
   position: absolute;
-  top: 60px;          /* ⬅️ tiefer */
+  top: 90px;          /* ⬅️ tiefer */
   left: 22px;
 
   font-size: 0.7rem;

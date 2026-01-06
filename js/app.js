@@ -63,55 +63,86 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(updateTime, 1000);
 
   /* ==================================================
-     TAGESZITAT (24h)
-  ================================================== */
-  async function loadDailyQuote() {
-    if (!dailyQuoteBox) return;
+   TAGESZITAT (tageszeit.json)
+================================================== */
+async function loadDailyQuote() {
+  const dailyQuoteBox = document.getElementById("dailyQuoteBox");
+  if (!dailyQuoteBox) return;
 
-    const today = todayKey();
-    const savedDay = localStorage.getItem("dailyQuoteDay");
-    const savedQuote = localStorage.getItem("dailyQuoteText");
-
-    if (savedDay === today && savedQuote) {
-      dailyQuoteBox.textContent = savedQuote;
-      return;
+  try {
+    const response = await fetch("data/tageszeit.json");
+    if (!response.ok) {
+      throw new Error("tageszeit.json konnte nicht geladen werden");
     }
 
-    try {
-      const res = await fetch("./data/tageszeit.json");
-      const quotes = await res.json();
-      const quote = quotes[Math.floor(Math.random() * quotes.length)];
+    const data = await response.json();
 
-      dailyQuoteBox.textContent = quote;
-      localStorage.setItem("dailyQuoteDay", today);
-      localStorage.setItem("dailyQuoteText", quote);
-    } catch (e) {
-      dailyQuoteBox.textContent = "Heute zählt nur dein eigener Gedanke.";
-      console.error("Tageszitat Fehler:", e);
+    // ✅ WICHTIG: quotes aus dem Objekt holen
+    if (!Array.isArray(data.quotes)) {
+      throw new Error("quotes ist kein Array");
     }
+
+    const randomIndex = Math.floor(Math.random() * data.quotes.length);
+    dailyQuoteBox.textContent = data.quotes[randomIndex];
+
+  } catch (error) {
+    console.error("Tageszitat Fehler:", error);
+    dailyQuoteBox.textContent =
+      "Heute zählt nicht das perfekte Zitat – sondern dein eigener Gedanke.";
   }
+}
 
-  loadDailyQuote();
+/* 🔁 FUNKTIONSAUFRUF */
+loadDailyQuote();
 
   /* ==================================================
-     DAILY IMPULS
-  ================================================== */
-  async function loadDailyText() {
-    if (!dailyTextBox) return;
+   DAILY IMPULS – BUTTON GESTEUERT
+================================================== */
 
-    try {
-      const res = await fetch("./data/dailyTexts.json");
-      const texts = await res.json();
-      dailyTextBox.textContent =
-        texts[Math.floor(Math.random() * texts.length)];
-    } catch (e) {
-      dailyTextBox.textContent = "Kein Impuls verfügbar.";
+async function loadDailyText(time) {
+  if (!dailyTextBox) return;
+
+  try {
+    const res = await fetch("./data/dailyTexts.json");
+    if (!res.ok) throw new Error("dailyTexts.json fehlt");
+
+    const data = await res.json();
+
+    if (!Array.isArray(data[time])) {
+      throw new Error(`Keine Texte für ${time}`);
     }
-  }
 
-  safe(dailyTextBtn, btn =>
-    btn.addEventListener("click", loadDailyText)
-  );
+    const list = data[time];
+    const randomIndex = Math.floor(Math.random() * list.length);
+    dailyTextBox.textContent = list[randomIndex];
+
+  } catch (e) {
+    console.error("DailyText Fehler:", e);
+    dailyTextBox.textContent =
+      "Heute darfst du dir selbst einen Impuls geben.";
+  }
+}
+
+/* ===============================
+   BUTTON EVENTS
+================================ */
+
+document.querySelectorAll(".buttons button").forEach(btn => {
+  btn.addEventListener("click", () => {
+
+    // Active-State
+    document
+      .querySelectorAll(".buttons button")
+      .forEach(b => b.classList.remove("active"));
+
+    btn.classList.add("active");
+
+    // morning | noon | evening
+    const time = btn.dataset.time;
+
+    loadDailyText(time);
+  });
+});
 
   /* ==================================================
      TAGESZEIT BUTTONS
