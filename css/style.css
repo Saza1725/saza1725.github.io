@@ -792,3 +792,49 @@ button.back {
   margin-bottom: 24px;
   display: inline-block;
 }
+/* =====================================
+ZITATE
+===================================== */
+.quote-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: #f5d36a;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.quote-text:last-child {
+  margin-bottom: 0;
+}
+
+/* =====================================
+MUSIC PLAYER
+===================================== */
+#musicPlayer {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 9999;
+
+  display: flex;
+  gap: 8px;
+
+  padding: 10px 12px;
+  border-radius: 20px;
+
+  background: rgba(15,17,21,0.85);
+  backdrop-filter: blur(8px);
+
+  border: 1px solid rgba(245,211,106,0.35);
+}
+
+#musicPlayer button {
+  cursor: pointer;
+  border-radius: 50%;
+  border: 1px solid rgba(245,211,106,0.4);
+  background: rgba(0,0,0,0.4);
+  color: #f5d36a;
+  width: 34px;
+  height: 34px;
+}

@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const focusCard = document.querySelector(".card");
   const statsBox = $("personalQuoteDisplay");
 
+
   /* ==================================================
      HELFER
   ================================================== */
@@ -190,6 +191,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (type === "thoughts") loadThoughts();
     if (type === "info") loadInfo();
     if (type === "archive") loadArchive();
+    if (type === "quotes") loadQuotes();
+
+
 
 
   }
@@ -321,6 +325,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
 /* =====================================
 INTRO BILD LOGIK
 ===================================== */
@@ -473,6 +478,85 @@ async function loadArchive() {
   }
 }
 
+  /* ==================================================
+     ZITATE
+  ================================================== */
+  async function loadQuotes() {
+    const res = await fetch("data/zitate.json");
+    const data = await res.json();
+
+    let categoryIndex = null;
+    let cardIndex = 0;
+
+    showCategories();
+
+    function showCategories() {
+      overlayContent.innerHTML = `
+        <h2>${data.title}</h2>
+        <div class="folder-grid">
+          ${data.categories.map((c, i) => `
+            <div class="folder-card" data-i="${i}">
+              <h3>${c.name}</h3>
+              <div class="folder-progress">
+                ${c.quotes.length} Zitate
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+
+      overlayContent.querySelectorAll(".folder-card").forEach(card => {
+        card.onclick = () => {
+          categoryIndex = +card.dataset.i;
+          cardIndex = 0;
+          showCards();
+        };
+      });
+    }
+
+    function showCards() {
+      const category = data.categories[categoryIndex];
+      const pairs = [];
+
+      for (let i = 0; i < category.quotes.length; i += 2) {
+        pairs.push(category.quotes.slice(i, i + 2));
+      }
+
+      const pair = pairs[cardIndex];
+
+      overlayContent.innerHTML = `
+        <button class="back">← Kategorien</button>
+
+        <div class="card-ui">
+          ${pair.map(q => `
+            <blockquote class="quote-text">„${q}“</blockquote>
+          `).join("")}
+
+          <div class="nav">
+            <button id="prev" ${cardIndex === 0 ? "disabled" : ""}>←</button>
+            <span>${cardIndex + 1} / ${pairs.length}</span>
+            <button id="next" ${cardIndex === pairs.length - 1 ? "disabled" : ""}>→</button>
+          </div>
+        </div>
+      `;
+
+      document.querySelector(".back").onclick = showCategories;
+      document.getElementById("prev").onclick = () => {
+        if (cardIndex > 0) {
+          cardIndex--;
+          showCards();
+        }
+      };
+      document.getElementById("next").onclick = () => {
+        if (cardIndex < pairs.length - 1) {
+          cardIndex++;
+          showCards();
+        }
+      };
+    }
+  }
+
+  
 /* =====================================
 INFO SCROLL INDICATOR LOGIK
 ===================================== */
@@ -495,3 +579,71 @@ function initInfoScrollIndicator() {
   content.addEventListener("scroll", updateProgress);
   updateProgress();
 }
+/* =====================================
+MUSIC PLAYER LOGIK
+===================================== */
+document.addEventListener("DOMContentLoaded", () => {
+  const audio = document.getElementById("bgMusic");
+  const playBtn = document.getElementById("musicPlay");
+  const pauseBtn = document.getElementById("musicPause");
+  const stopBtn = document.getElementById("musicStop");
+
+  if (!audio || !playBtn || !pauseBtn || !stopBtn) return;
+
+ playBtn.addEventListener("click", async () => {
+  try {
+    await audio.play();
+    console.log("AUDIO SPIELT");
+  } catch (e) {
+    console.error("AUDIO FEHLER:", e);
+  }
+});
+
+
+  pauseBtn.addEventListener("click", () => {
+    audio.pause();
+  });
+
+  stopBtn.addEventListener("click", () => {
+    audio.pause();
+    audio.currentTime = 0;
+  });
+
+  /* Nach Ende → wieder von vorn spielbar */
+  audio.addEventListener("ended", () => {
+    audio.currentTime = 0;
+  });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const audio = document.getElementById("bgMusic");
+  const playBtn = document.getElementById("musicPlay");
+  const pauseBtn = document.getElementById("musicPause");
+  const stopBtn = document.getElementById("musicStop");
+
+  if (!audio) {
+    console.error("❌ Audio nicht gefunden");
+    return;
+  }
+
+  playBtn.onclick = () => {
+    audio.volume = 1;
+    audio.muted = false;
+
+    audio.play()
+      .then(() => console.log("🎵 Musik läuft"))
+      .catch(e => console.error("Audio Fehler:", e));
+  };
+
+  pauseBtn.onclick = () => audio.pause();
+
+  stopBtn.onclick = () => {
+    audio.pause();
+    audio.currentTime = 0;
+  };
+
+  audio.onended = () => {
+    audio.currentTime = 0;
+  };
+});
+
