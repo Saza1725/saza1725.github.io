@@ -189,6 +189,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (type === "about") loadAbout();
     if (type === "thoughts") loadThoughts();
     if (type === "info") loadInfo();
+    if (type === "archive") loadArchive();
+
 
   }
 
@@ -338,15 +340,158 @@ if (introOverlay && introImage && introStart) {
 }
 
 /* ==================================================
-   INFO
+   INFO – FOLIEN
 ================================================== */
 async function loadInfo() {
   const res = await fetch("data/info.json");
   const data = await res.json();
 
-  overlayContent.innerHTML = `
-    <div class="info-card">
-      ${data.infoText}
-    </div>
-  `;
+  let index = 0;
+
+  render();
+
+  function render() {
+    const slide = data.slides[index];
+
+    overlayContent.innerHTML = `
+      <div class="info-card info-scroll">
+        <h2 class="info-title">${data.title}</h2>
+
+        <div class="info-slide-title">${slide.title}</div>
+
+        <div class="scroll-indicator">
+          <span class="scroll-progress"></span>
+        </div>
+
+        <div class="info-content">
+          ${slide.content}
+        </div>
+
+        <div class="info-nav">
+          <button id="prev" ${index === 0 ? "disabled" : ""}>←</button>
+          <span>${index + 1} / ${data.slides.length}</span>
+          <button id="next" ${index === data.slides.length - 1 ? "disabled" : ""}>→</button>
+        </div>
+      </div>
+    `;
+
+    initInfoScrollIndicator();
+
+    document.getElementById("prev").onclick = () => {
+      if (index > 0) {
+        index--;
+        render();
+      }
+    };
+
+    document.getElementById("next").onclick = () => {
+      if (index < data.slides.length - 1) {
+        index++;
+        render();
+      }
+    };
+  }
+}
+/* ==================================================
+   ARCHIVE – VERGANGENE TAGE (aus days[])
+================================================== */
+async function loadArchive() {
+  const res = await fetch("data/archive.json");
+  const data = await res.json();
+
+  // Nach Monat/Jahr gruppieren
+  const groups = {};
+
+  data.days.forEach(d => {
+    const [day, month, year] = d.date.split(".");
+    const key = `${month}.${year}`;
+
+    if (!groups[key]) {
+      groups[key] = {
+        label: new Date(year, month - 1)
+          .toLocaleDateString("de-DE", { month: "long", year: "numeric" }),
+        entries: []
+      };
+    }
+
+    groups[key].entries.push(d);
+  });
+
+  const months = Object.values(groups)
+    .sort((a, b) => new Date(b.label) - new Date(a.label));
+
+  let activeMonth = null;
+
+  showMonths();
+
+  /* -------- MONATSORDNER -------- */
+  function showMonths() {
+    overlayContent.innerHTML = `
+      <h2>Vergangene Tage</h2>
+      <div class="folder-grid">
+        ${months.map((m, i) => `
+          <div class="folder-card" data-i="${i}">
+            <h3>${m.label}</h3>
+            <div class="folder-progress">
+              ${m.entries.length} Einträge
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+
+    overlayContent.querySelectorAll(".folder-card").forEach(card => {
+      card.onclick = () => {
+        activeMonth = +card.dataset.i;
+        showMonth();
+      };
+    });
+  }
+
+  /* -------- MONATSANSICHT -------- */
+  function showMonth() {
+    const month = months[activeMonth];
+
+    overlayContent.innerHTML = `
+      <button class="back">← Monate</button>
+
+      <div class="archive-month">
+        <h3>${month.label}</h3>
+
+        <div class="archive-table">
+          ${month.entries.map(e => `
+            <div class="archive-row">
+              <div class="archive-date">${e.date}</div>
+              <div class="archive-text">${e.quote}</div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+
+    overlayContent.querySelector(".back").onclick = showMonths;
+  }
+}
+
+/* =====================================
+INFO SCROLL INDICATOR LOGIK
+===================================== */
+function initInfoScrollIndicator() {
+  const content = document.querySelector(".info-content");
+  const progress = document.querySelector(".scroll-progress");
+
+  if (!content || !progress) return;
+
+  const updateProgress = () => {
+    const scrollTop = content.scrollTop;
+    const scrollHeight = content.scrollHeight - content.clientHeight;
+    const percent = scrollHeight > 0
+      ? (scrollTop / scrollHeight) * 100
+      : 0;
+
+    progress.style.width = `${percent}%`;
+  };
+
+  content.addEventListener("scroll", updateProgress);
+  updateProgress();
 }
