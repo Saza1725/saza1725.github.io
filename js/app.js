@@ -188,6 +188,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (type === "about") loadAbout();
     if (type === "thoughts") loadThoughts();
+    if (type === "info") loadInfo();
+
   }
 
   overlay.addEventListener("click", e => {
@@ -333,4 +335,18 @@ if (introOverlay && introImage && introStart) {
       introOverlay.remove();
     }, 1200);
   });
+}
+
+/* ==================================================
+   INFO
+================================================== */
+async function loadInfo() {
+  const res = await fetch("data/info.json");
+  const data = await res.json();
+
+  overlayContent.innerHTML = `
+    <div class="info-card">
+      ${data.infoText}
+    </div>
+  `;
 }
