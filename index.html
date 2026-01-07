@@ -15,23 +15,24 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
-<body>
-  <body class="intro-active">
+<!-- ✅ HIER ist der Body richtig -->
+<body class="intro-active ui-hidden">
+
+<!-- ================= HEADER / HERO ================= -->
+  <header class="hero">
 
 
-<!-- ================= INTRO Bild ================= -->
-<div id="introOverlay">
-  <img
-    id="introImage"
-    src="assets/images/nubis.jpg"
-    alt="Intro Bild"
-  >
+  <div id="introOverlay">
+    <img
+      id="introImage"
+      src="assets/images/nubis.jpg"
+      alt="Intro Bild"
+    >
 
-  <button id="introStart">
-    ▶ Start
-  </button>
-</div>
-
+    <button id="introStart">
+      ▶ Start
+    </button>
+  </div>
 
     <!-- Uhrzeit & Datum -->
     <div class="time-block">
@@ -46,24 +47,25 @@
 
   </header>
 
+
   <!-- ================= MENU BUTTON ================= -->
   <button id="menuButton">☰ Menü</button>
 
   <!-- ================= NAVIGATION ================= -->
   <nav id="menu">
 
-     <button id="homeBtn" class="menu-home">
-    ⌂ Hauptseite
-  </button>
+    <button id="homeBtn" class="menu-home">
+      ⌂ Hauptseite
+    </button>
 
     <button data-target="info">Information</button>
     <button data-target="about">Über Mich</button>
     <button data-target="time">Meine Geschichte</button>
-     <button data-target="thoughts">Gedanken</button>
+    <button data-target="thoughts">Gedanken</button>
     <button data-target="archive">Vergangene Tage</button>
     <button data-target="ordnerX">Ordner X</button>
     <button data-target="quotes">Zitate</button>
-    
+
   </nav>
 
   <!-- ================= MAIN CONTENT ================= -->
@@ -79,10 +81,7 @@
       >
     </section>
 
-
-
-<div id="dailyTextBox"></div>
-
+    <div id="dailyTextBox"></div>
 
     <!-- Tageszeit Buttons -->
     <div class="buttons">
@@ -99,10 +98,9 @@
   <!-- ================= OVERLAY ================= -->
   <div id="overlay">
     <div id="overlayContent"></div>
-    </div>
+  </div>
 
   <!-- ================= SCRIPT ================= -->
-  <!-- defer ist korrekt, DOM ist verfügbar -->
   <script src="js/app.js" defer></script>
 
 </body>
