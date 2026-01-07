@@ -525,3 +525,40 @@ ANIMATIONEN
   backdrop-filter: blur(6px);
 }
 
+/* =====================================
+INFO CARD – TYPO & RUHE
+===================================== */
+.info-card {
+  background: rgba(18, 20, 26, 0.96);
+  border-radius: 22px;
+  padding: 40px 36px;
+  border: 1px solid rgba(245,211,106,0.25);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+
+  font-family: 'Libre Baskerville', serif;
+  line-height: 1.75;
+}
+
+/* H2 – HAUPTTITEL */
+.info-card h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.1rem;
+  margin-bottom: 24px;
+  color: #f5d36a;
+}
+
+/* H3 – ZWISCHENÜBERSCHRIFTEN */
+.info-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  margin: 32px 0 10px;
+  color: #f5d36a;
+  letter-spacing: 0.4px;
+}
+
+/* ABSÄTZE */
+.info-card p {
+  font-size: 0.95rem;
+  opacity: 0.85;
+  margin-bottom: 14px;
+}
