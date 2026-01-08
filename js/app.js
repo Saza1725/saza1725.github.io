@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
      BASIS / DOM
   ================================================== */
   const $ = (id) => document.getElementById(id);
+  const safe = (el, fn) => el && fn(el);
 
   const menu = $("menu");
   const menuButton = $("menuButton");
@@ -23,18 +24,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const focusCard = document.querySelector(".card");
   const statsBox = $("personalQuoteDisplay");
 
-
   /* ==================================================
-     HELFER
+     INTRO
   ================================================== */
-  const safe = (el, fn) => el && fn(el);
+  const introOverlay = $("introOverlay");
+  const introStart = $("introStart");
+
+  if (introOverlay && introStart) {
+    introStart.onclick = () => {
+      introOverlay.classList.add("fade-out");
+      setTimeout(() => introOverlay.remove(), 1200);
+    };
+  }
 
   /* ==================================================
      UHR / DATUM
   ================================================== */
   function updateTime() {
     if (!timeEl) return;
-
     const now = new Date();
 
     timeEl.textContent = now.toLocaleTimeString("de-DE", {
@@ -58,84 +65,61 @@ document.addEventListener("DOMContentLoaded", () => {
 
   updateTime();
   setInterval(updateTime, 1000);
-
   /* ==================================================
      TAGESZITAT
   ================================================== */
   async function loadDailyQuote() {
     if (!dailyQuoteBox) return;
-
     try {
       const res = await fetch("data/tageszeit.json");
-      if (!res.ok) throw new Error("tageszeit.json fehlt");
-
       const data = await res.json();
-      if (!Array.isArray(data.quotes)) throw new Error("quotes ist kein Array");
-
       dailyQuoteBox.textContent =
         data.quotes[Math.floor(Math.random() * data.quotes.length)];
-
-    } catch (err) {
-      console.error(err);
+    } catch {
       dailyQuoteBox.textContent =
         "Heute zählt nicht das perfekte Zitat – sondern dein eigener Gedanke.";
     }
   }
-
   loadDailyQuote();
-
   /* ==================================================
-     DAILY IMPULS (MORGEN / MITTAG / ABEND)
+     DAILY IMPULS
   ================================================== */
   async function loadDailyText(time) {
     if (!dailyTextBox) return;
-
     try {
       const res = await fetch("data/dailyTexts.json");
-      if (!res.ok) throw new Error("dailyTexts.json fehlt");
-
       const data = await res.json();
-      if (!Array.isArray(data[time])) throw new Error("Keine Texte für " + time);
-
       const list = data[time];
       dailyTextBox.textContent =
         list[Math.floor(Math.random() * list.length)];
-
-    } catch (err) {
-      console.error(err);
+    } catch {
       dailyTextBox.textContent =
         "Heute darfst du dir selbst einen Impuls geben.";
     }
   }
 
   document.querySelectorAll(".buttons button").forEach(btn => {
-    btn.addEventListener("click", () => {
+    btn.onclick = () => {
       document.querySelectorAll(".buttons button")
         .forEach(b => b.classList.remove("active"));
-
       btn.classList.add("active");
-      const time = btn.dataset.time;
-
-      localStorage.setItem("daytimeManual", time);
-      loadDailyText(time);
-    });
+      loadDailyText(btn.dataset.time);
+    };
   });
-
   /* ==================================================
      FOKUS
   ================================================== */
   if (focusInput && focusCard) {
-    const savedFocus = localStorage.getItem("focus");
-
-    if (savedFocus) {
-      focusInput.value = savedFocus;
+    const saved = localStorage.getItem("focus");
+    if (saved) {
+      focusInput.value = saved;
       focusCard.classList.add("active");
     }
 
-    focusInput.addEventListener("input", () => {
+    focusInput.oninput = () => {
       localStorage.setItem("focus", focusInput.value);
       focusCard.classList.toggle("active", focusInput.value.trim() !== "");
-    });
+    };
   }
 
   /* ==================================================
@@ -148,42 +132,36 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   updateStats();
 
-  /* ==================================================
+ /* ==================================================
      MENÜ
   ================================================== */
-  safe(menuButton, btn => {
-    btn.addEventListener("click", () => {
-      menu.classList.toggle("open");
-    });
-  });
+  safe(menuButton, btn =>
+    btn.onclick = () => menu.classList.toggle("open")
+  );
 
   document.querySelectorAll("#menu button[data-target]").forEach(btn => {
-    btn.addEventListener("click", () => {
-
+    btn.onclick = () => {
       document.querySelectorAll("#menu button")
         .forEach(b => b.classList.remove("active"));
-
       btn.classList.add("active");
       menu.classList.remove("open");
-
       openOverlay(btn.dataset.target);
-    });
+    };
   });
 
-  safe(homeBtn, btn => {
-    btn.addEventListener("click", () => {
+  safe(homeBtn, btn =>
+    btn.onclick = () => {
       menu.classList.remove("open");
       overlay.style.display = "none";
       overlayContent.innerHTML = "";
-    });
-  });
+    }
+  );
 
   /* ==================================================
      OVERLAY
   ================================================== */
   function openOverlay(type) {
     if (!overlay || !overlayContent) return;
-
     overlay.style.display = "block";
     overlayContent.innerHTML = "";
 
@@ -192,19 +170,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (type === "info") loadInfo();
     if (type === "archive") loadArchive();
     if (type === "quotes") loadQuotes();
-
-
-
-
   }
 
-  overlay.addEventListener("click", e => {
+  overlay.onclick = (e) => {
     if (e.target === overlay) {
       overlay.style.display = "none";
       overlayContent.innerHTML = "";
     }
-  });
-
+  };
   /* ==================================================
      ÜBER MICH
   ================================================== */
@@ -579,71 +552,27 @@ function initInfoScrollIndicator() {
   content.addEventListener("scroll", updateProgress);
   updateProgress();
 }
-/* =====================================
-MUSIC PLAYER LOGIK
-===================================== */
-document.addEventListener("DOMContentLoaded", () => {
-  const audio = document.getElementById("bgMusic");
-  const playBtn = document.getElementById("musicPlay");
-  const pauseBtn = document.getElementById("musicPause");
-  const stopBtn = document.getElementById("musicStop");
+/* ==================================================
+     MUSIC PLAYER
+  ================================================== */
+  const audio = $("bgMusic");
+  const playBtn = $("musicPlay");
+  const pauseBtn = $("musicPause");
+  const stopBtn = $("musicStop");
 
-  if (!audio || !playBtn || !pauseBtn || !stopBtn) return;
+  if (audio && playBtn && pauseBtn && stopBtn) {
+    audio.volume = 0.4;
 
- playBtn.addEventListener("click", async () => {
-  try {
-    await audio.play();
-    console.log("AUDIO SPIELT");
-  } catch (e) {
-    console.error("AUDIO FEHLER:", e);
+    playBtn.onclick = () =>
+      audio.play().catch(e => console.error("🎵 Audio Fehler:", e));
+
+    pauseBtn.onclick = () => audio.pause();
+
+    stopBtn.onclick = () => {
+      audio.pause();
+      audio.currentTime = 0;
+    };
+  } else {
+    console.warn("⚠️ Music Player unvollständig");
   }
-});
-
-
-  pauseBtn.addEventListener("click", () => {
-    audio.pause();
-  });
-
-  stopBtn.addEventListener("click", () => {
-    audio.pause();
-    audio.currentTime = 0;
-  });
-
-  /* Nach Ende → wieder von vorn spielbar */
-  audio.addEventListener("ended", () => {
-    audio.currentTime = 0;
-  });
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  const audio = document.getElementById("bgMusic");
-  const playBtn = document.getElementById("musicPlay");
-  const pauseBtn = document.getElementById("musicPause");
-  const stopBtn = document.getElementById("musicStop");
-
-  if (!audio) {
-    console.error("❌ Audio nicht gefunden");
-    return;
-  }
-
-  playBtn.onclick = (on) => {
-    audio.volume = 1;
-    
-
-    audio.play()
-      .then(() => console.log("🎵 Musik läuft"))
-      .catch(e => console.error("Audio Fehler:", e));
-  };
-
-  pauseBtn.onclick = () => audio.pause();
-
-  stopBtn.onclick = () => {
-    audio.pause();
-    audio.currentTime = 0;
-  };
-
-  audio.onended = () => {
-    audio.currentTime = 0;
-  };
-});
 
