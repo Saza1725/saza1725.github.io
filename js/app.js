@@ -330,19 +330,19 @@ document.addEventListener("DOMContentLoaded", () => {
 INTRO BILD LOGIK
 ===================================== */
 const introOverlay = document.getElementById("introOverlay");
-const introImage = document.getElementById("introImage");
 const introStart = document.getElementById("introStart");
 
-if (introOverlay && introImage && introStart) {
-
-  introStart.addEventListener("click", () => {
+if (introOverlay && introStart) {
+  introStart.onclick = () => {
     introOverlay.classList.add("fade-out");
 
     setTimeout(() => {
+      introOverlay.style.display = "none";
       introOverlay.remove();
     }, 1200);
-  });
+  };
 }
+
 
 /* ==================================================
    INFO – FOLIEN
@@ -626,9 +626,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  playBtn.onclick = () => {
+  playBtn.onclick = (on) => {
     audio.volume = 1;
-    audio.muted = false;
+    
 
     audio.play()
       .then(() => console.log("🎵 Musik läuft"))
