@@ -18,42 +18,14 @@ body {
   position: relative;
 }
 
-
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-
-  background-image: url("../assets/images/nubis.jpg");
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
-
-  opacity: 1;          /* TEST: volle Sichtbarkeit */
-  filter: none;        /* TEST: kein Blur */
-
-  z-index: -1;
-}
-
-
-
-
+body::before,
 body::after {
   content: "";
   position: fixed;
   inset: 0;
-
-  background: linear-gradient(
-    180deg,
-    rgba(0,0,0,0.45),
-    rgba(0,0,0,0.7)
-  );
-
+  pointer-events: none; /* ⬅️ DAS IST ENTSCHEIDEND */
   z-index: -1;
-  pointer-events: none;
 }
-
 
 
 /* ===== LIGHT MODE ===== */
@@ -815,7 +787,7 @@ MUSIC PLAYER
   position: fixed;
   left: 16px;
   bottom: 16px;
-  z-index: 9999;
+   z-index: 999999 !important;
 
   display: flex;
   gap: 8px;
@@ -837,4 +809,9 @@ MUSIC PLAYER
   color: #f5d36a;
   width: 34px;
   height: 34px;
+}
+
+#musicPlayer,
+#musicPlayer * {
+  pointer-events: auto !important;
 }
