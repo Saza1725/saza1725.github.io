@@ -1,9 +1,11 @@
-document.addEventListener("DOMContentLoaded", () => {
+const $ = (id) => document.getElementById(id);
 
+
+document.addEventListener("DOMContentLoaded", () => {
   /* ==================================================
      BASIS / DOM
   ================================================== */
-  const $ = (id) => document.getElementById(id);
+  
   const safe = (el, fn) => el && fn(el);
 
   const menu = $("menu");
@@ -299,6 +301,63 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+ /* ==================================================
+     Meine GEschichte
+  ================================================== */
+  async function loadThoughts() {
+    const res = await fetch("data/meinegeschichte.json");
+    const data = await res.json();
+
+    let section = null;
+    let slide = 0;
+
+    showSections();
+
+    function showSections() {
+      overlayContent.innerHTML = `
+        <h2>${data.title}</h2>
+        <div class="folder-grid">
+          ${data.sections.map((s, i) => `
+            <div class="folder-card" data-i="${i}">
+              <h3>${s.title}</h3>
+            </div>
+          `).join("")}
+        </div>
+      `;
+
+      overlayContent.querySelectorAll(".folder-card").forEach(card => {
+        card.onclick = () => {
+          section = +card.dataset.i;
+          slide = 0;
+          showSlide();
+        };
+      });
+    }
+
+    function showSlide() {
+      const slides = data.sections[section].slides;
+      const s = slides[slide];
+      const empty = !s.text || !s.text.trim();
+
+      overlayContent.innerHTML = `
+        <button class="back">← Themen</button>
+        <div class="slide ${empty ? "empty" : ""}">
+          <h3>${s.title}</h3>
+          <p>${empty ? "" : s.text.replace(/\n/g, "<br>")}</p>
+        </div>
+        <div class="nav">
+          <button id="prev" ${slide === 0 ? "disabled" : ""}>←</button>
+          <span>${slide + 1} / ${slides.length}</span>
+          <button id="next" ${slide === slides.length - 1 ? "disabled" : ""}>→</button>
+        </div>
+      `;
+
+      overlayContent.querySelector(".back").onclick = showSections;
+      $("prev").onclick = () => slide-- > 0 && showSlide();
+      $("next").onclick = () => slide++ < slides.length - 1 && showSlide();
+    }
+  }
+
 /* =====================================
 INTRO BILD LOGIK
 ===================================== */
@@ -452,26 +511,32 @@ async function loadArchive() {
 }
 
   /* ==================================================
-     ZITATE
-  ================================================== */
-  async function loadQuotes() {
-    const res = await fetch("data/zitate.json");
+   ZITATE (ORDNER → KARTEN)
+================================================== */
+async function loadQuotes() {
+  try {
+    const res = await fetch("data/folders.json");
+    if (!res.ok) throw new Error("folders.json nicht gefunden");
+
     const data = await res.json();
 
-    let categoryIndex = null;
-    let cardIndex = 0;
+    // 🔑 Objekt → Array
+    const folders = Object.entries(data.folders);
+    let activeFolder = null;
+    let quoteIndex = 0;
 
-    showCategories();
+    showFolders();
 
-    function showCategories() {
+    /* -------- ORDNER -------- */
+    function showFolders() {
       overlayContent.innerHTML = `
-        <h2>${data.title}</h2>
+        <h2>Zitate</h2>
         <div class="folder-grid">
-          ${data.categories.map((c, i) => `
+          ${folders.map(([name, quotes], i) => `
             <div class="folder-card" data-i="${i}">
-              <h3>${c.name}</h3>
+              <h3>${name}</h3>
               <div class="folder-progress">
-                ${c.quotes.length} Zitate
+                ${quotes.length} Zitate
               </div>
             </div>
           `).join("")}
@@ -480,54 +545,55 @@ async function loadArchive() {
 
       overlayContent.querySelectorAll(".folder-card").forEach(card => {
         card.onclick = () => {
-          categoryIndex = +card.dataset.i;
-          cardIndex = 0;
-          showCards();
+          activeFolder = +card.dataset.i;
+          quoteIndex = 0;
+          showQuote();
         };
       });
     }
 
-    function showCards() {
-      const category = data.categories[categoryIndex];
-      const pairs = [];
-
-      for (let i = 0; i < category.quotes.length; i += 2) {
-        pairs.push(category.quotes.slice(i, i + 2));
-      }
-
-      const pair = pairs[cardIndex];
+    /* -------- KARTEN -------- */
+    function showQuote() {
+      const [folderName, quotes] = folders[activeFolder];
 
       overlayContent.innerHTML = `
-        <button class="back">← Kategorien</button>
+        <button class="back">← Ordner</button>
 
         <div class="card-ui">
-          ${pair.map(q => `
-            <blockquote class="quote-text">„${q}“</blockquote>
-          `).join("")}
+          <blockquote class="quote-text">
+            „${quotes[quoteIndex]}“
+          </blockquote>
 
           <div class="nav">
-            <button id="prev" ${cardIndex === 0 ? "disabled" : ""}>←</button>
-            <span>${cardIndex + 1} / ${pairs.length}</span>
-            <button id="next" ${cardIndex === pairs.length - 1 ? "disabled" : ""}>→</button>
+            <button id="prev" ${quoteIndex === 0 ? "disabled" : ""}>←</button>
+            <span>${quoteIndex + 1} / ${quotes.length}</span>
+            <button id="next" ${quoteIndex === quotes.length - 1 ? "disabled" : ""}>→</button>
           </div>
         </div>
       `;
 
-      document.querySelector(".back").onclick = showCategories;
-      document.getElementById("prev").onclick = () => {
-        if (cardIndex > 0) {
-          cardIndex--;
-          showCards();
+      overlayContent.querySelector(".back").onclick = showFolders;
+
+      $("prev").onclick = () => {
+        if (quoteIndex > 0) {
+          quoteIndex--;
+          showQuote();
         }
       };
-      document.getElementById("next").onclick = () => {
-        if (cardIndex < pairs.length - 1) {
-          cardIndex++;
-          showCards();
+
+      $("next").onclick = () => {
+        if (quoteIndex < quotes.length - 1) {
+          quoteIndex++;
+          showQuote();
         }
       };
     }
+
+  } catch (err) {
+    console.error("❌ Zitate Fehler:", err);
+    overlayContent.innerHTML = `<p>⚠️ Zitate konnten nicht geladen werden.</p>`;
   }
+}
 
   
 /* =====================================
