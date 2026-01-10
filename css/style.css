@@ -1,0 +1,817 @@
+/* =====================================
+RESET / BASIS
+===================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Libre Baskerville', serif;
+  color: #f2f2f2;
+  min-height: 100vh;
+
+  background:
+    url("../assets/images/nubis.jpg") center top / cover no-repeat fixed;
+
+  position: relative;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none; /* ⬅️ DAS IST ENTSCHEIDEND */
+  z-index: -1;
+}
+
+
+/* ===== LIGHT MODE ===== */
+body.light {
+  color: #1b1b1b;
+  background:
+    radial-gradient(circle at top, rgba(245,211,106,0.25), transparent 60%),
+    linear-gradient(180deg, #fafafa 0%, #f2f2f2 100%);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,0.35),
+      rgba(0,0,0,0.65)
+    );
+
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* =====================================
+HERO / HEADER
+===================================== */
+.hero::before {
+  display: none;
+}
+
+
+
+/* GOLD GLOW */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(245,211,106,0.12),
+      transparent 65%
+    );
+
+  opacity: 1;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* HERO LOGO */
+.hero-logo {
+  position: fixed;
+  inset: 0;
+
+  display: grid;
+  place-items: center;
+
+  z-index: 50;
+  pointer-events: none;
+
+  animation: logoFadeOut 3s ease forwards;
+  animation-delay: 2.4s;
+}
+
+.hero-logo img {
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(245,211,106,0.12),
+      transparent 65%
+    );
+
+  animation: logoFadeOut 3s ease forwards;
+  animation-delay: 1.4s;
+}
+
+
+/* =====================================
+UHR & DATUM – FESTE REFERENZ
+===================================== */
+.time-block {
+  position: fixed;
+  top: 42px;
+  left: 48px;
+  z-index: 20;
+
+  mix-blend-mode: screen;
+}
+
+
+.time-block {
+  opacity: 0;
+  transform: translateY(-6px);
+
+  animation: uiReveal 1.4s ease forwards;
+  animation-delay: 3.2s; /* ⬅️ NACH LOGO */
+
+  z-index: 20;
+}
+
+#time {
+  font-size: 3.2rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+.date-line {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  opacity: 0.75;
+}
+
+
+/* =====================================
+TAGESZITAT
+===================================== */
+.daily-quote {
+  pointer-events: auto;
+  margin: 40px auto 0;
+  max-width: 520px;
+  padding: 26px 28px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(245,211,106,0.25);
+  box-shadow: 0 0 40px rgba(245,211,106,0.08);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* =====================================
+MAIN
+===================================== */
+main {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  position: relative;
+  z-index: 10;
+}
+
+/* =====================================
+FOKUS CARD
+===================================== */
+.card {
+  width: 100%;
+  padding: 24px;
+  margin-top: 60px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 18px;
+  border: 1px solid rgba(245,211,106,0.2);
+}
+
+.card.active {
+  box-shadow: 0 0 20px rgba(245,211,106,0.35);
+}
+
+#dailyFocusInput {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.35);
+  border: none;
+  color: #fff;
+}
+
+/* =====================================
+TAGESZEIT BUTTONS
+===================================== */
+.buttons {
+  display: flex;
+  gap: 14px;
+}
+
+.buttons button {
+  padding: 10px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(245,211,106,0.35);
+  background: rgba(0,0,0,0.35);
+  color: #f5d36a;
+  cursor: pointer;
+}
+
+.buttons button.active {
+  background: rgba(245,211,106,0.3);
+  color: #fff;
+}
+
+/* =====================================
+MENU BUTTON
+===================================== */
+#menuButton {
+  position: fixed;
+  top: 18px;
+  right: 20px;
+  z-index: 2000;
+  font-size: 1.6rem;
+  padding: 8px 12px;
+  background: rgba(15,17,21,0.85);
+  backdrop-filter: blur(8px);
+  color: #f5d36a;
+  border: 1px solid rgba(245,211,106,0.35);
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  cursor: pointer;
+}
+
+/* =====================================
+MENU
+===================================== */
+#menu {
+  position: fixed;
+  top: 0;
+  right: -260px;
+  width: 260px;
+  height: 100vh;
+  padding: 120px 22px 30px;
+  background: linear-gradient(
+    180deg,
+    rgba(22,24,30,0.98),
+    rgba(14,16,22,0.96)
+  );
+  backdrop-filter: blur(14px);
+  box-shadow: -10px 0 40px rgba(0,0,0,0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: right 0.35s cubic-bezier(.4,0,.2,1);
+  z-index: 1000;
+}
+
+#menu.open {
+  right: 0;
+}
+
+#menu::before {
+  content: "Navigation";
+  position: absolute;
+  top: 90px;
+  left: 22px;
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  opacity: 0.4;
+}
+
+#menu button {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-size: 0.9rem;
+  color: rgba(245,211,106,0.85);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(245,211,106,0.15);
+  transition: all 0.2s ease;
+}
+
+#menu button:hover {
+  background: rgba(245,211,106,0.12);
+  transform: translateX(-2px);
+}
+
+#menu button.active {
+  background: rgba(245,211,106,0.2);
+  box-shadow: inset 0 0 0 1px rgba(245,211,106,0.4);
+}
+
+#menu .menu-home {
+  margin-bottom: 18px;
+  background: rgba(245,211,106,0.15);
+  border: 1px solid rgba(245,211,106,0.4);
+  font-weight: 600;
+}
+
+/* MOBILE MENU */
+@media (max-width: 720px) {
+  #menu {
+    top: auto;
+    bottom: -100%;
+    right: 0;
+    width: 100%;
+    height: 70vh;
+    border-radius: 20px 20px 0 0;
+    transition: bottom 0.35s ease;
+  }
+
+  #menu.open {
+    bottom: 0;
+  }
+}
+
+/* =====================================
+OVERLAY
+===================================== */
+#overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 500;
+}
+
+#overlayContent {
+  max-width: 620px;
+  margin: 60px auto;
+  padding: 28px;
+  background: #111;
+  border-radius: 18px;
+}
+
+/* =====================================
+ORDNER & SLIDES
+===================================== */
+.folder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 28px;
+  margin-top: 36px;
+}
+
+
+.folder-card {
+  position: relative;
+   border-radius: 28px;
+  padding: 68px 30px 30px;
+  cursor: pointer;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,0.08),
+      rgba(255,255,255,0.02)
+    );
+
+  border: 1px solid rgba(245,211,106,0.28);
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.55),
+    inset 0 0 0 1px rgba(245,211,106,0.08);
+
+  backdrop-filter: blur(6px);
+
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
+}
+.folder-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  margin-bottom: 10px;
+  color: #f5d36a;
+  letter-spacing: 0.4px;
+}
+.folder-card:hover {
+  transform: translateY(-10px) scale(1.02);
+
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.75),
+    inset 0 0 0 1px rgba(245,211,106,0.35);
+}
+.folder-card::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  height: 2px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(245,211,106,0.6),
+    transparent
+  );
+
+  opacity: 0.5;
+}
+
+.slide {
+  background: rgba(18, 20, 26, 0.96);
+  border-radius: 26px;
+  padding: 42px 38px;
+  border: 1px solid rgba(245,211,106,0.25);
+
+  box-shadow:
+    0 30px 90px rgba(0,0,0,0.7);
+
+  font-family: 'Libre Baskerville', serif;
+  line-height: 1.75;
+}
+
+.slide h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  margin-bottom: 18px;
+  color: #f5d36a;
+}
+
+
+/* =====================================
+ANIMATIONEN
+===================================== */
+@keyframes logoIntro {
+  from {
+    opacity: 0;
+    transform: scale(1.12);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes logoFadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+
+@keyframes bgReveal {
+  to { opacity: 0.38; filter: blur(2px); }
+}
+
+@keyframes glowReveal {
+  to { opacity: 1; }
+}
+
+@keyframes uiReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* =====================================
+INTRO VIDEO OVERLAY
+===================================== */
+#introOverlay {
+  position: fixed;
+  inset: 0;
+
+  z-index: 100000;   /* ⬅️ HÖHER ALS ALLES */
+  isolation: isolate;
+
+  background: #000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 1.2s ease;
+}
+
+#introOverlay.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+/* =====================================
+INTRO BILD
+===================================== */
+#introImage {
+  width: 2000px;
+  max-width: 9000px;
+  height: 100vh;
+max-width: 9000px;
+  opacity: 0;
+  transform: translateY(80px) scale(0.96);
+  filter: blur(8px);
+
+  animation: introImageIn 1.6s ease forwards;
+  animation-delay: 0.4s;
+
+  z-index: 2;
+}
+
+/* AUSBLENDEN */
+#introOverlay.fade-out #introImage {
+  animation: introImageOut 1.2s ease forwards;
+}
+
+/* =====================================
+ANIMATIONEN
+===================================== */
+@keyframes introImageIn {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes introImageOut {
+  to {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.96);
+    filter: blur(10px);
+  }
+}
+
+/* START BUTTON */
+#introStart {
+  position: absolute;
+  bottom: 40px;
+
+  z-index: 5;              /* ⬅️ ENTSCHEIDEND */
+
+  padding: 14px 28px;
+  font-size: 1rem;
+
+  color: #f5d36a;
+  background: rgba(0,0,0,0.6);
+  border: 1px solid rgba(245,211,106,0.6);
+  border-radius: 30px;
+
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+}
+
+/* =====================================
+INFO CARD – TYPO & RUHE
+===================================== */
+.info-card {
+  background: rgba(18, 20, 26, 0.96);
+  border-radius: 22px;
+  padding: 40px 36px;
+  border: 1px solid rgba(245,211,106,0.25);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+
+  font-family: 'Libre Baskerville', serif;
+  line-height: 1.75;
+}
+
+/* H2 – HAUPTTITEL */
+.info-card h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.1rem;
+  margin-bottom: 24px;
+  color: #f5d36a;
+}
+
+/* H3 – ZWISCHENÜBERSCHRIFTEN */
+.info-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  margin: 32px 0 10px;
+  color: #f5d36a;
+  letter-spacing: 0.4px;
+}
+
+/* ABSÄTZE */
+.info-card p {
+  font-size: 0.95rem;
+  opacity: 0.85;
+  margin-bottom: 14px;
+}
+/* =====================================
+INFO SCROLL INDICATOR
+===================================== */
+.info-scroll {
+  position: relative;
+  max-height: 70vh;
+  overflow: hidden;
+}
+
+/* Scrollbarer Inhalt */
+.info-content {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+/* feiner Scrollbar (optional) */
+.info-content::-webkit-scrollbar {
+  width: 6px;
+}
+.info-content::-webkit-scrollbar-thumb {
+  background: rgba(245,211,106,0.35);
+  border-radius: 10px;
+}
+
+/* Indikator oben */
+.scroll-indicator {
+  position: sticky;
+  top: 0;
+  height: 3px;
+  width: 100%;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+/* Fortschritt */
+.scroll-progress {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(
+    90deg,
+    rgba(245,211,106,0.4),
+    rgba(245,211,106,0.9)
+  );
+  transition: width 0.1s linear;
+}
+@media (max-width: 600px) {
+  .folder-card {
+    padding: 52px 22px 24px;
+  }
+
+  .slide {
+    padding: 32px 26px;
+  }
+}
+/* =====================================
+UNIVERSAL CARD
+===================================== */
+.card-ui {
+  background: rgba(18, 20, 26, 0.96);
+  border-radius: 26px;
+  padding: 42px 38px;
+
+  border: 1px solid rgba(245,211,106,0.25);
+
+  box-shadow:
+    0 30px 90px rgba(0,0,0,0.7),
+    inset 0 0 0 1px rgba(245,211,106,0.08);
+
+  backdrop-filter: blur(6px);
+
+  font-family: 'Libre Baskerville', serif;
+  line-height: 1.75;
+}
+.slide,
+.archive-month,
+.info-card {
+  background: rgba(18, 20, 26, 0.96);
+  border-radius: 26px;
+  padding: 42px 38px;
+  border: 1px solid rgba(245,211,106,0.25);
+  box-shadow: 0 30px 90px rgba(0,0,0,0.7);
+
+  font-family: 'Libre Baskerville', serif;
+  line-height: 1.75;
+}
+.archive-row {
+  padding: 26px 28px;
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,0.06),
+      rgba(255,255,255,0.02)
+    );
+
+  border: 1px solid rgba(245,211,106,0.22);
+
+  box-shadow:
+    0 18px 45px rgba(0,0,0,0.55),
+    inset 0 0 0 1px rgba(245,211,106,0.08);
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.archive-date {
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  opacity: 0.55;
+}
+.archive-text {
+  font-size: 1rem;
+  line-height: 1.7;
+}
+/* =====================================
+NAV BUTTONS – GLOBAL
+===================================== */
+.nav button,
+button.back,
+.info-nav button {
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(245,211,106,0.45);
+
+  color: #f5d36a;
+  font-size: 0.85rem;
+
+  padding: 10px 22px;
+  border-radius: 22px;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.nav button:hover,
+button.back:hover,
+.info-nav button:hover {
+  background: rgba(245,211,106,0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.nav button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.nav,
+.info-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 28px;
+}
+button.back {
+  margin-bottom: 24px;
+  display: inline-block;
+}
+/* =====================================
+ZITATE
+===================================== */
+.quote-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: #f5d36a;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.quote-text:last-child {
+  margin-bottom: 0;
+}
+
+/* =====================================
+MUSIC PLAYER
+===================================== */
+#musicPlayer {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+   z-index: 999999 !important;
+
+  display: flex;
+  gap: 8px;
+
+  padding: 10px 12px;
+  border-radius: 20px;
+
+  background: rgba(15,17,21,0.85);
+  backdrop-filter: blur(8px);
+
+  border: 1px solid rgba(245,211,106,0.35);
+}
+
+#musicPlayer button {
+  cursor: pointer;
+  border-radius: 50%;
+  border: 1px solid rgba(245,211,106,0.4);
+  background: rgba(0,0,0,0.4);
+  color: #f5d36a;
+  width: 34px;
+  height: 34px;
+}
+
+#musicPlayer,
+#musicPlayer * {
+  pointer-events: auto !important;
+}

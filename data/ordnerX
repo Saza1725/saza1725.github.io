@@ -1,0 +1,46 @@
+{
+  "title": "Ordner X",
+  "intro": "Dies ist ein Ort für Gedanken, Entwicklungen und innere Prozesse.",
+  "folders": [
+    {
+      "name": "Gedanken",
+      "entries": [
+        {
+          "title": "Anfang",
+          "text": "Jeder Gedanke beginnt leise."
+        },
+        {
+          "title": "Tiefe",
+          "text": "Manche Gedanken wollen bleiben."
+        }
+      ]
+    },
+    {
+      "name": "Reflexion",
+      "entries": [
+        {
+          "title": "Beobachten",
+          "text": "Nicht alles verlangt eine Reaktion."
+        }
+      ]
+    },
+    {
+      "name": "Veränderung",
+      "entries": [
+        {
+          "title": "Schritt",
+          "text": "Veränderung beginnt klein."
+        }
+      ]
+    },
+    {
+      "name": "Ruhe",
+      "entries": [
+        {
+          "title": "Stille",
+          "text": "In der Ruhe liegt Klarheit."
+        }
+      ]
+    }
+  ]
+}

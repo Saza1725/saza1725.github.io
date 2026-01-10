@@ -1,0 +1,21 @@
+{
+  "title": "Information",
+  "slides": [
+    {
+      "title": "Willkommen",
+      "content": "<p>Willkommen auf dieser Motivationsseite.</p><p>Hier findest du tägliche Inspiration, persönliche Gedanken und Zitate.</p>"
+    },
+    {
+      "title": "Warum diese Seite entstanden ist",
+      "content": "<p>Ich habe diese Seite geschaffen, weil ich selbst nach Ruhe, Klarheit und Sinn gesucht habe.</p><p>Worte helfen mir, innezuhalten.</p>"
+    },
+    {
+      "title": "Was dich hier begleitet",
+      "content": "<p>Du findest hier tägliche Zitate, Gedanken und Impulse.</p><p>Sie sollen ein stiller Begleiter sein.</p>"
+    },
+    {
+      "title": "Ein leiser Gedanke",
+      "content": "<p>Wenn dir ein Satz bleibt, hat diese Seite ihren Zweck erfüllt.</p>"
+    }
+  ]
+}
