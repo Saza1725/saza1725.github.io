@@ -4,113 +4,67 @@
   <meta charset="UTF-8">
   <title>Motivation</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Favicon -->
   <link rel="icon" href="data:,">
-
-  <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
-
-  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
+<body>
 
-<!-- ✅ HIER ist der Body richtig -->
-<body class="intro-active ui-hidden">
-
-
-<!-- ================= HEADER / HERO ================= -->
-  <header class="hero">
-
-
+<header class="hero">
   <div id="introOverlay">
-    <img
-      id="introImage"
-      src="assets/images/nubis.jpg"
-      alt="Intro Bild"
-    >
-
-    <button id="introStart">
-      ▶ Start
-    </button>
+    <img id="introImage" src="assets/images/nubis.jpg">
+    <button id="introStart">▶ Start</button>
   </div>
 
-    <!-- Uhrzeit & Datum -->
-    <div class="time-block">
-      <div id="time"></div>
-      <div class="date-line">
-        <span id="weekday"></span> · <span id="date"></span>
-      </div>
+  <div class="time-block">
+    <div id="time"></div>
+    <div class="date-line">
+      <span id="weekday"></span> · <span id="date"></span>
     </div>
-
-    <!-- Tageszitat -->
-    <div id="dailyQuoteBox" class="daily-quote"></div>
-
-  </header>
-
-
-  <!-- ================= MENU BUTTON ================= -->
-  <button id="menuButton">☰ Menü</button>
-
-  <!-- ================= NAVIGATION ================= -->
-  <nav id="menu">
-
-    <button id="homeBtn" class="menu-home">
-      ⌂ Hauptseite
-    </button>
-
-    <button data-target="info">Information</button>
-    <button data-target="about">Über Mich</button>
-    <button data-target="time">Meine Geschichte</button>
-    <button data-target="thoughts">Gedanken</button>
-    <button data-target="archive">Vergangene Tage</button>
-    <button data-target="ordnerX">Ordner X</button>
-    <button data-target="quotes">Zitate</button>
-
-
-  </nav>
-
-  <!-- ================= MAIN CONTENT ================= -->
-   <!-- MAIN -->
-  <main>
-    <section class="card">
-      <p>Mein Fokus heute</p>
-      <input id="dailyFocusInput" type="text" placeholder="Dein Fokus …">
-    </section>
-
-    <div id="dailyTextBox"></div>
-
-    <!-- Tageszeit Buttons -->
-    <div class="buttons">
-      <button data-time="morning">🌅 Morgen</button>
-      <button data-time="noon">☀️ Mittag</button>
-      <button data-time="evening">🌙 Abend</button>
-    </div>
-
-    <!-- Persönliche Zitate / Statistik -->
-    <div id="personalQuoteDisplay"></div>
-
-  </main>
-
-
-
-  <!-- ================= OVERLAY ================= -->
-  <div id="overlay">
-    <div id="overlayContent"></div>
   </div>
 
-  <!-- ================= SCRIPT ================= -->
-  <script src="js/app.js" defer></script>
-  
-<!-- ================= MUSIC PLAYER ================= -->
+  <div id="dailyQuoteBox" class="daily-quote"></div>
+</header>
+
+<button id="menuButton">☰ Menü</button>
+
+<nav id="menu">
+  <button id="homeBtn" class="menu-home">⌂ Hauptseite</button>
+  <button data-target="info">Information</button>
+  <button data-target="about">Über mich</button>
+  <button data-target="story">Meine Geschichte</button>
+  <button data-target="thoughts">Gedanken</button>
+  <button data-target="archive">Vergangene Tage</button>
+  <button data-target="quotes">Zitate</button>
+</nav>
+
+<main>
+  <section class="card">
+    <p>Mein Fokus heute</p>
+    <input id="dailyFocusInput" placeholder="Dein Fokus …">
+  </section>
+
+  <div id="dailyTextBox"></div>
+
+  <div class="buttons">
+    <button data-time="morning">🌅 Morgen</button>
+    <button data-time="noon">☀️ Mittag</button>
+    <button data-time="evening">🌙 Abend</button>
+  </div>
+
+  <div id="personalQuoteDisplay"></div>
+</main>
+
+<div id="overlay"><div id="overlayContent"></div></div>
+
 <div id="musicPlayer">
   <button id="musicPlay">▶</button>
   <button id="musicPause">⏸</button>
   <button id="musicStop">⏹</button>
-
   <audio id="bgMusic" src="mot.mp3"></audio>
 </div>
 
+<script src="js/app.js"></script>
 </body>
 </html>
