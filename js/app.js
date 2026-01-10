@@ -1,17 +1,15 @@
 const $ = (id) => document.getElementById(id);
 
-
 document.addEventListener("DOMContentLoaded", () => {
-  /* ==================================================
-     BASIS / DOM
-  ================================================== */
-  
-  const safe = (el, fn) => el && fn(el);
 
+  
+
+  /* =========================
+     BASIS
+  ========================= */
   const menu = $("menu");
   const menuButton = $("menuButton");
   const homeBtn = $("homeBtn");
-
   const overlay = $("overlay");
   const overlayContent = $("overlayContent");
 
@@ -26,9 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const focusCard = document.querySelector(".card");
   const statsBox = $("personalQuoteDisplay");
 
-  /* ==================================================
+  /* =========================
      INTRO
-  ================================================== */
+  ========================= */
   const introOverlay = $("introOverlay");
   const introStart = $("introStart");
 
@@ -39,78 +37,62 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  /* ==================================================
-     UHR / DATUM
-  ================================================== */
+  /* =========================
+     UHR & DATUM
+  ========================= */
   function updateTime() {
-    if (!timeEl) return;
     const now = new Date();
-
-    timeEl.textContent = now.toLocaleTimeString("de-DE", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit"
+    timeEl.textContent = now.toLocaleTimeString("de-DE");
+    weekdayEl.textContent = now.toLocaleDateString("de-DE", { weekday: "long" });
+    dateEl.textContent = now.toLocaleDateString("de-DE", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
     });
-
-    safe(weekdayEl, el =>
-      el.textContent = now.toLocaleDateString("de-DE", { weekday: "long" })
-    );
-
-    safe(dateEl, el =>
-      el.textContent = now.toLocaleDateString("de-DE", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric"
-      })
-    );
   }
-
   updateTime();
   setInterval(updateTime, 1000);
-  /* ==================================================
+
+  /* =========================
      TAGESZITAT
-  ================================================== */
+  ========================= */
   async function loadDailyQuote() {
-    if (!dailyQuoteBox) return;
     try {
       const res = await fetch("data/tageszeit.json");
       const data = await res.json();
       dailyQuoteBox.textContent =
         data.quotes[Math.floor(Math.random() * data.quotes.length)];
     } catch {
-      dailyQuoteBox.textContent =
-        "Heute zählt nicht das perfekte Zitat – sondern dein eigener Gedanke.";
+      dailyQuoteBox.textContent = "Heute zählt dein eigener Gedanke.";
     }
   }
   loadDailyQuote();
-  /* ==================================================
+
+  /* =========================
      DAILY IMPULS
-  ================================================== */
+  ========================= */
   async function loadDailyText(time) {
-    if (!dailyTextBox) return;
     try {
       const res = await fetch("data/dailyTexts.json");
       const data = await res.json();
-      const list = data[time];
       dailyTextBox.textContent =
-        list[Math.floor(Math.random() * list.length)];
+        data[time][Math.floor(Math.random() * data[time].length)];
     } catch {
-      dailyTextBox.textContent =
-        "Heute darfst du dir selbst einen Impuls geben.";
+      dailyTextBox.textContent = "Höre heute auf dich selbst.";
     }
   }
 
   document.querySelectorAll(".buttons button").forEach(btn => {
     btn.onclick = () => {
-      document.querySelectorAll(".buttons button")
-        .forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".buttons button").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       loadDailyText(btn.dataset.time);
     };
   });
-  /* ==================================================
+
+  /* =========================
      FOKUS
-  ================================================== */
+  ========================= */
   if (focusInput && focusCard) {
     const saved = localStorage.getItem("focus");
     if (saved) {
@@ -124,46 +106,44 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  /* ==================================================
+  /* =========================
      STATISTIK
-  ================================================== */
+  ========================= */
   function updateStats() {
-    if (!statsBox) return;
     const count = +(localStorage.getItem("slidesToday") || 0);
     statsBox.textContent = `Heute ${count} Folien gelesen`;
   }
   updateStats();
 
- /* ==================================================
+  /* =========================
      MENÜ
-  ================================================== */
-  safe(menuButton, btn =>
-    btn.onclick = () => menu.classList.toggle("open")
-  );
+  ========================= */
+  menuButton.onclick = () => menu.classList.toggle("open");
 
   document.querySelectorAll("#menu button[data-target]").forEach(btn => {
     btn.onclick = () => {
-      document.querySelectorAll("#menu button")
-        .forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
       menu.classList.remove("open");
       openOverlay(btn.dataset.target);
     };
   });
 
-  safe(homeBtn, btn =>
-    btn.onclick = () => {
-      menu.classList.remove("open");
+  homeBtn.onclick = () => {
+    menu.classList.remove("open");
+    overlay.style.display = "none";
+    overlayContent.innerHTML = "";
+  };
+
+  overlay.onclick = e => {
+    if (e.target === overlay) {
       overlay.style.display = "none";
       overlayContent.innerHTML = "";
     }
-  );
+  };
 
-  /* ==================================================
-     OVERLAY
-  ================================================== */
+  /* =========================
+     OVERLAY DISPATCHER
+  ========================= */
   function openOverlay(type) {
-    if (!overlay || !overlayContent) return;
     overlay.style.display = "block";
     overlayContent.innerHTML = "";
 
@@ -172,8 +152,61 @@ document.addEventListener("DOMContentLoaded", () => {
     if (type === "info") loadInfo();
     if (type === "archive") loadArchive();
     if (type === "quotes") loadQuotes();
+    if (type === "story") loadMeineGeschichte();
   }
 
+ /* ==================================================
+   MENÜ
+================================================== */
+
+// Menü öffnen / schließen
+menuButton.onclick = () => {
+  menu.classList.toggle("open");
+};
+
+// Menü-Navigation
+document.querySelectorAll("#menu button[data-target]").forEach(btn => {
+  btn.onclick = () => {
+
+    // Active State
+    document.querySelectorAll("#menu button")
+      .forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    // Menü schließen
+    menu.classList.remove("open");
+
+    // Overlay öffnen
+    openOverlay(btn.dataset.target);
+  };
+});
+
+// Home / Hauptseite
+homeBtn.onclick = () => {
+  menu.classList.remove("open");
+  overlay.style.display = "none";
+  overlayContent.innerHTML = "";
+};
+
+
+  /* ==================================================
+     OVERLAY
+  ================================================== */
+ function openOverlay(type) {
+  overlay.style.display = "block";
+  overlayContent.innerHTML = "";
+
+  if (type === "about") loadAbout();
+  if (type === "thoughts") loadThoughts();
+  if (type === "info") loadInfo();
+  if (type === "archive") loadArchive();
+  if (type === "quotes") loadQuotes();
+  if (type === "story") loadMeineGeschichte();
+}
+
+
+  
+  
   overlay.onclick = (e) => {
     if (e.target === overlay) {
       overlay.style.display = "none";
@@ -299,83 +332,49 @@ document.addEventListener("DOMContentLoaded", () => {
       $("next").onclick = () => slide++ < slides.length - 1 && showSlide();
     }
   }
-});
 
- /* ==================================================
-     Meine GEschichte
-  ================================================== */
-  async function loadThoughts() {
+
+/* =========================
+     MEINE GESCHICHTE
+  ========================= */
+  async function loadMeineGeschichte() {
     const res = await fetch("data/meinegeschichte.json");
     const data = await res.json();
+    const folders = Object.entries(data.folders);
+    let f = 0, i = 0;
 
-    let section = null;
-    let slide = 0;
+    showFolders();
 
-    showSections();
-
-    function showSections() {
+    function showFolders() {
       overlayContent.innerHTML = `
-        <h2>${data.title}</h2>
+        <h2>Meine Geschichte</h2>
         <div class="folder-grid">
-          ${data.sections.map((s, i) => `
-            <div class="folder-card" data-i="${i}">
-              <h3>${s.title}</h3>
-            </div>
-          `).join("")}
-        </div>
-      `;
-
-      overlayContent.querySelectorAll(".folder-card").forEach(card => {
-        card.onclick = () => {
-          section = +card.dataset.i;
-          slide = 0;
-          showSlide();
-        };
-      });
+          ${folders.map(([n, e], x) => `
+            <div class="folder-card" data-i="${x}">
+              <h3>${n}</h3>
+              <div class="folder-progress">${e.length} Einträge</div>
+            </div>`).join("")}
+        </div>`;
+      overlayContent.querySelectorAll(".folder-card").forEach(c =>
+        c.onclick = () => { f = +c.dataset.i; i = 0; showEntry(); }
+      );
     }
 
-    function showSlide() {
-      const slides = data.sections[section].slides;
-      const s = slides[slide];
-      const empty = !s.text || !s.text.trim();
-
+    function showEntry() {
+      const [, entries] = folders[f];
       overlayContent.innerHTML = `
-        <button class="back">← Themen</button>
-        <div class="slide ${empty ? "empty" : ""}">
-          <h3>${s.title}</h3>
-          <p>${empty ? "" : s.text.replace(/\n/g, "<br>")}</p>
-        </div>
+        <button class="back">← Meine Geschichte</button>
+        <p>${entries[i]}</p>
         <div class="nav">
-          <button id="prev" ${slide === 0 ? "disabled" : ""}>←</button>
-          <span>${slide + 1} / ${slides.length}</span>
-          <button id="next" ${slide === slides.length - 1 ? "disabled" : ""}>→</button>
-        </div>
-      `;
-
-      overlayContent.querySelector(".back").onclick = showSections;
-      $("prev").onclick = () => slide-- > 0 && showSlide();
-      $("next").onclick = () => slide++ < slides.length - 1 && showSlide();
+          <button id="prev" ${i === 0 ? "disabled" : ""}>←</button>
+          <span>${i + 1} / ${entries.length}</span>
+          <button id="next" ${i === entries.length - 1 ? "disabled" : ""}>→</button>
+        </div>`;
+      $(".back").onclick = showFolders;
+      $("prev").onclick = () => { if (i > 0) { i--; showEntry(); } };
+      $("next").onclick = () => { if (i < entries.length - 1) { i++; showEntry(); } };
     }
   }
-
-/* =====================================
-INTRO BILD LOGIK
-===================================== */
-const introOverlay = document.getElementById("introOverlay");
-const introStart = document.getElementById("introStart");
-
-if (introOverlay && introStart) {
-  introStart.onclick = () => {
-    introOverlay.classList.add("fade-out");
-
-    setTimeout(() => {
-      introOverlay.style.display = "none";
-      introOverlay.remove();
-    }, 1200);
-  };
-}
-
-
 /* ==================================================
    INFO – FOLIEN
 ================================================== */
@@ -510,91 +509,47 @@ async function loadArchive() {
   }
 }
 
-  /* ==================================================
-   ZITATE (ORDNER → KARTEN)
-================================================== */
-async function loadQuotes() {
-  try {
+/* =========================
+     ZITATE
+  ========================= */
+  async function loadQuotes() {
     const res = await fetch("data/folders.json");
-    if (!res.ok) throw new Error("folders.json nicht gefunden");
-
     const data = await res.json();
-
-    // 🔑 Objekt → Array
     const folders = Object.entries(data.folders);
-    let activeFolder = null;
-    let quoteIndex = 0;
+    let f = 0, i = 0;
 
     showFolders();
 
-    /* -------- ORDNER -------- */
     function showFolders() {
       overlayContent.innerHTML = `
         <h2>Zitate</h2>
         <div class="folder-grid">
-          ${folders.map(([name, quotes], i) => `
-            <div class="folder-card" data-i="${i}">
-              <h3>${name}</h3>
-              <div class="folder-progress">
-                ${quotes.length} Zitate
-              </div>
-            </div>
-          `).join("")}
-        </div>
-      `;
-
-      overlayContent.querySelectorAll(".folder-card").forEach(card => {
-        card.onclick = () => {
-          activeFolder = +card.dataset.i;
-          quoteIndex = 0;
-          showQuote();
-        };
-      });
+          ${folders.map(([n, q], x) => `
+            <div class="folder-card" data-i="${x}">
+              <h3>${n}</h3>
+              <div class="folder-progress">${q.length} Zitate</div>
+            </div>`).join("")}
+        </div>`;
+      overlayContent.querySelectorAll(".folder-card").forEach(c =>
+        c.onclick = () => { f = +c.dataset.i; i = 0; showQuote(); }
+      );
     }
 
-    /* -------- KARTEN -------- */
     function showQuote() {
-      const [folderName, quotes] = folders[activeFolder];
-
+      const [, quotes] = folders[f];
       overlayContent.innerHTML = `
         <button class="back">← Ordner</button>
-
-        <div class="card-ui">
-          <blockquote class="quote-text">
-            „${quotes[quoteIndex]}“
-          </blockquote>
-
-          <div class="nav">
-            <button id="prev" ${quoteIndex === 0 ? "disabled" : ""}>←</button>
-            <span>${quoteIndex + 1} / ${quotes.length}</span>
-            <button id="next" ${quoteIndex === quotes.length - 1 ? "disabled" : ""}>→</button>
-          </div>
-        </div>
-      `;
-
-      overlayContent.querySelector(".back").onclick = showFolders;
-
-      $("prev").onclick = () => {
-        if (quoteIndex > 0) {
-          quoteIndex--;
-          showQuote();
-        }
-      };
-
-      $("next").onclick = () => {
-        if (quoteIndex < quotes.length - 1) {
-          quoteIndex++;
-          showQuote();
-        }
-      };
+        <blockquote class="quote-text">„${quotes[i]}“</blockquote>
+        <div class="nav">
+          <button id="prev" ${i === 0 ? "disabled" : ""}>←</button>
+          <span>${i + 1} / ${quotes.length}</span>
+          <button id="next" ${i === quotes.length - 1 ? "disabled" : ""}>→</button>
+        </div>`;
+      $(".back").onclick = showFolders;
+      $("prev").onclick = () => { if (i > 0) { i--; showQuote(); } };
+      $("next").onclick = () => { if (i < quotes.length - 1) { i++; showQuote(); } };
     }
-
-  } catch (err) {
-    console.error("❌ Zitate Fehler:", err);
-    overlayContent.innerHTML = `<p>⚠️ Zitate konnten nicht geladen werden.</p>`;
   }
-}
-
   
 /* =====================================
 INFO SCROLL INDICATOR LOGIK
@@ -618,27 +573,11 @@ function initInfoScrollIndicator() {
   content.addEventListener("scroll", updateProgress);
   updateProgress();
 }
-/* ==================================================
-     MUSIC PLAYER
-  ================================================== */
+/* =========================
+     MUSIKPLAYER
+  ========================= */
   const audio = $("bgMusic");
-  const playBtn = $("musicPlay");
-  const pauseBtn = $("musicPause");
-  const stopBtn = $("musicStop");
-
-  if (audio && playBtn && pauseBtn && stopBtn) {
-    audio.volume = 0.4;
-
-    playBtn.onclick = () =>
-      audio.play().catch(e => console.error("🎵 Audio Fehler:", e));
-
-    pauseBtn.onclick = () => audio.pause();
-
-    stopBtn.onclick = () => {
-      audio.pause();
-      audio.currentTime = 0;
-    };
-  } else {
-    console.warn("⚠️ Music Player unvollständig");
-  }
-
+  $("musicPlay").onclick = () => audio.play();
+  $("musicPause").onclick = () => audio.pause();
+  $("musicStop").onclick = () => { audio.pause(); audio.currentTime = 0; };
+});
