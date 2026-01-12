@@ -569,6 +569,17 @@ ANIMATIONEN
 /* =====================================
 INTRO VIDEO OVERLAY
 ===================================== */
+#introBackground {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+
+  background:
+    url("assets/images/nubis.jpg") center top no-repeat;
+
+  background-size: contain;
+}
+
 #introOverlay {
   position: fixed;
   inset: 0;
@@ -1014,7 +1025,7 @@ MASTER STORY CARD
   }
 }
 @media (max-width: 900px) and (orientation: portrait) {
-  body::before {
+  #introBackground {
     background-size: 120%;
     background-position: center 15%;
   }
