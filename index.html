@@ -55,22 +55,31 @@
   <button id="menuButton">☰ Menü</button>
 
   <!-- ================= NAVIGATION ================= -->
-  <nav id="menu">
+ <nav id="menu">
 
-    <button id="homeBtn" class="menu-home">
-      ⌂ Hauptseite
-    </button>
+  <button id="homeBtn" class="menu-home group-a">
+    ⌂ Hauptseite
+  </button>
 
-    <button data-target="info">Information</button>
-    <button data-target="about">Über Mich</button>
-    <button data-target="story">Meine Geschichte</button>
-    <button data-target="thoughts">Gedanken</button>
-    <button data-target="archive">Vergangene Tage</button>
-    <button data-target="ordnerX">Ordner X</button>
-    <button data-target="quotes">Zitate</button>
+  <button data-target="info" class="group-a">Information</button>
 
+  <div class="menu-separator"></div>
 
-  </nav>
+  <button data-target="about" class="group-b">Über Mich</button>
+  <button data-target="story" class="group-b">Meine Geschichte</button>
+
+  <div class="menu-separator"></div>
+
+  <button data-target="thoughts" class="group-c">Gedanken</button>
+  <button data-target="ordnerX" class="group-c">Ordner X</button>
+
+  <div class="menu-separator"></div>
+
+  <button data-target="quotes" class="group-d">Zitate</button>
+  <button data-target="archive" class="group-d">Vergangene Tage</button>
+
+</nav>
+
 
   <!-- ================= MAIN CONTENT ================= -->
    <!-- MAIN -->
