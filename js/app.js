@@ -191,6 +191,7 @@ function openOverlay(type) {
   document.body.classList.add("modal-open");
 
   if (type === "about") loadAbout();
+  if (type === "ordnerX") loadOrdnerX();
   if (type === "thoughts") loadThoughts();
   if (type === "info") loadInfo();
   if (type === "archive") loadArchive();
@@ -253,6 +254,68 @@ function closeOverlay() {
 
       overlayContent.innerHTML = `
         <button class="back">← Über mich</button>
+        <div class="slide">
+          <h3>${slide.title}</h3>
+          <p>${slide.text.replace(/\n/g, "<br>")}</p>
+        </div>
+        <div class="nav">
+          <button id="prev" ${slideIndex === 0 ? "disabled" : ""}>←</button>
+          <span>${slideIndex + 1} / ${section.slides.length}</span>
+          <button id="next" ${slideIndex === section.slides.length - 1 ? "disabled" : ""}>→</button>
+        </div>
+      `;
+
+      localStorage.setItem(
+        "slidesToday",
+        +(localStorage.getItem("slidesToday") || 0) + 1
+      );
+      updateStats();
+
+      overlayContent.querySelector(".back").onclick = showSections;
+      $("prev").onclick = () => slideIndex-- > 0 && showSlide();
+      $("next").onclick = () => slideIndex++ < section.slides.length - 1 && showSlide();
+    }
+  }
+  /* ==================================================
+     Ordner X
+  ================================================== */
+  async function loadOrdnerX() {
+    const res = await fetch("data/ordnerX.json");
+    const data = await res.json();
+
+    let sectionIndex = null;
+    let slideIndex = 0;
+
+    showSections();
+
+    function showSections() {
+      overlayContent.innerHTML = `
+        <h2>${data.title}</h2>
+        <div class="folder-grid">
+          ${data.sections.map((s, i) => `
+            <div class="folder-card" data-i="${i}">
+              <h3>${s.title}</h3>
+              <div class="folder-progress">${s.slides.length} Karten</div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+
+      overlayContent.querySelectorAll(".folder-card").forEach(card => {
+        card.onclick = () => {
+          sectionIndex = +card.dataset.i;
+          slideIndex = 0;
+          showSlide();
+        };
+      });
+    }
+
+    function showSlide() {
+      const section = data.sections[sectionIndex];
+      const slide = section.slides[slideIndex];
+
+      overlayContent.innerHTML = `
+        <button class="back">← OrdnerX</button>
         <div class="slide">
           <h3>${slide.title}</h3>
           <p>${slide.text.replace(/\n/g, "<br>")}</p>

@@ -13,8 +13,11 @@ body {
   min-height: 100vh;
   position: relative;
 
-  background:
-    url("../assets/images/nubis.jpg") center top / cover no-repeat;
+  background-image: url("../assets/images/nubis.jpg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 45%;
+  background-attachment: fixed;
 }
 
 
@@ -32,6 +35,7 @@ body::after {
 /* ===== LIGHT MODE ===== */
 body.light {
   color: #1b1b1b;
+  background-image: none;
   background:
     radial-gradient(circle at top, rgba(245,211,106,0.25), transparent 60%),
     linear-gradient(180deg, #fafafa 0%, #f2f2f2 100%);
@@ -341,7 +345,7 @@ overflow-y: auto;
   position: fixed;
   inset: 0;
   z-index: -5;
-  background: url("../assets/images/nubis.jpg") center / cover no-repeat;
+  background: url("../assets/images/nubis.jpg") center /  contain;
   transform: translateZ(0);
 }
 
