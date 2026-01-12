@@ -1026,7 +1026,7 @@ MASTER STORY CARD
 }
 @media (max-width: 768px) and (orientation: portrait) {
   #introBackground {
-    background-size: 120%;
+    background-size: 200%;
     background-position: center 50%;
   }
 }
