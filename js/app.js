@@ -1,8 +1,8 @@
-const $ = (id) => document.getElementById(id);
+const $ = id => document.getElementById(id);
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  
+
 
   /* =========================
      BASIS
@@ -131,12 +131,14 @@ document.addEventListener("DOMContentLoaded", () => {
     menu.classList.remove("open");
     overlay.style.display = "none";
     overlayContent.innerHTML = "";
+    document.body.classList.remove("modal-open");   // 🔓 Scroll wieder frei
   };
 
   overlay.onclick = e => {
     if (e.target === overlay) {
       overlay.style.display = "none";
       overlayContent.innerHTML = "";
+      document.body.classList.remove("modal-open"); // 🔓 Scroll wieder frei
     }
   };
 
@@ -146,6 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function openOverlay(type) {
     overlay.style.display = "block";
     overlayContent.innerHTML = "";
+    document.body.classList.add("modal-open");   // 🔒 Hintergrund sperren
 
     if (type === "about") loadAbout();
     if (type === "thoughts") loadThoughts();
@@ -154,65 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (type === "quotes") loadQuotes();
     if (type === "story") loadMeineGeschichte();
   }
-
- /* ==================================================
-   MENÜ
-================================================== */
-
-// Menü öffnen / schließen
-menuButton.onclick = () => {
-  menu.classList.toggle("open");
-};
-
-// Menü-Navigation
-document.querySelectorAll("#menu button[data-target]").forEach(btn => {
-  btn.onclick = () => {
-
-    // Active State
-    document.querySelectorAll("#menu button")
-      .forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-
-    // Menü schließen
-    menu.classList.remove("open");
-
-    // Overlay öffnen
-    openOverlay(btn.dataset.target);
-  };
-});
-
-// Home / Hauptseite
-homeBtn.onclick = () => {
-  menu.classList.remove("open");
-  overlay.style.display = "none";
-  overlayContent.innerHTML = "";
-};
-
-
-  /* ==================================================
-     OVERLAY
-  ================================================== */
- function openOverlay(type) {
-  overlay.style.display = "block";
-  overlayContent.innerHTML = "";
-
-  if (type === "about") loadAbout();
-  if (type === "thoughts") loadThoughts();
-  if (type === "info") loadInfo();
-  if (type === "archive") loadArchive();
-  if (type === "quotes") loadQuotes();
-  if (type === "story") loadMeineGeschichte();
-}
-
-
   
-  
-  overlay.onclick = (e) => {
-    if (e.target === overlay) {
-      overlay.style.display = "none";
-      overlayContent.innerHTML = "";
-    }
-  };
   /* ==================================================
      ÜBER MICH
   ================================================== */
@@ -328,10 +273,11 @@ homeBtn.onclick = () => {
       `;
 
       overlayContent.querySelector(".back").onclick = showSections;
-      $("prev").onclick = () => slide-- > 0 && showSlide();
+           $("prev").onclick = () => slide-- > 0 && showSlide();
       $("next").onclick = () => slide++ < slides.length - 1 && showSlide();
     }
-  }
+  }   // <-- DIESE ZEILE FEHLT BEI DIR
+
 
 
 /* =========================
@@ -360,21 +306,30 @@ homeBtn.onclick = () => {
       );
     }
 
-    function showEntry() {
-      const [, entries] = folders[f];
-      overlayContent.innerHTML = `
-        <button class="back">← Meine Geschichte</button>
-        <p>${entries[i]}</p>
-        <div class="nav">
-          <button id="prev" ${i === 0 ? "disabled" : ""}>←</button>
-          <span>${i + 1} / ${entries.length}</span>
-          <button id="next" ${i === entries.length - 1 ? "disabled" : ""}>→</button>
-        </div>`;
-      $(".back").onclick = showFolders;
-      $("prev").onclick = () => { if (i > 0) { i--; showEntry(); } };
-      $("next").onclick = () => { if (i < entries.length - 1) { i++; showEntry(); } };
-    }
-  }
+   function showEntry() {
+  const [, entries] = folders[f];
+
+  overlayContent.innerHTML = `
+    <button class="back">← Meine Geschichte</button>
+
+    <pre class="story-text">${entries[i]}</pre>
+
+    <div class="nav">
+      <button id="prev" ${i === 0 ? "disabled" : ""}>←</button>
+      <span>${i + 1} / ${entries.length}</span>
+      <button id="next" ${i === entries.length - 1 ? "disabled" : ""}>→</button>
+    </div>
+  `;
+
+  document.querySelector(".back").onclick = showFolders;
+  document.getElementById("prev").onclick = () => {
+    if (i > 0) { i--; showEntry(); }
+  };
+  document.getElementById("next").onclick = () => {
+    if (i < entries.length - 1) { i++; showEntry(); }
+  };
+}
+}
 /* ==================================================
    INFO – FOLIEN
 ================================================== */
@@ -511,45 +466,81 @@ async function loadArchive() {
 
 /* =========================
      ZITATE
-  ========================= */
-  async function loadQuotes() {
-    const res = await fetch("data/folders.json");
-    const data = await res.json();
-    const folders = Object.entries(data.folders);
-    let f = 0, i = 0;
+========================= */
+async function loadQuotes() {
+  const res = await fetch("data/folders.json");
+  const data = await res.json();
 
-    showFolders();
+  const folders = Object.entries(data.folders);
+  let f = 0;
+  let i = 0;
 
-    function showFolders() {
-      overlayContent.innerHTML = `
-        <h2>Zitate</h2>
-        <div class="folder-grid">
-          ${folders.map(([n, q], x) => `
-            <div class="folder-card" data-i="${x}">
-              <h3>${n}</h3>
-              <div class="folder-progress">${q.length} Zitate</div>
-            </div>`).join("")}
-        </div>`;
-      overlayContent.querySelectorAll(".folder-card").forEach(c =>
-        c.onclick = () => { f = +c.dataset.i; i = 0; showQuote(); }
-      );
+  showFolders();
+
+  function showFolders() {
+    overlayContent.innerHTML = `
+      <h2>Zitate</h2>
+      <div class="folder-grid">
+        ${folders.map(([name, quotes], index) => `
+          <div class="folder-card" data-i="${index}">
+            <h3>${name}</h3>
+            <div class="folder-progress">${quotes.length} Zitate</div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+
+    overlayContent.querySelectorAll(".folder-card").forEach(card => {
+      card.onclick = () => {
+        f = Number(card.dataset.i);
+        i = 0;
+        showQuote();
+      };
+    });
+  }
+
+  function showQuote() {
+    const [, quotes] = folders[f];
+
+    overlayContent.innerHTML = `
+      <button class="back">← Ordner</button>
+
+      <blockquote class="quote-text">„${quotes[i]}“</blockquote>
+
+      <div class="nav">
+        <button id="prev" ${i === 0 ? "disabled" : ""}>←</button>
+        <span>${i + 1} / ${quotes.length}</span>
+        <button id="next" ${i === quotes.length - 1 ? "disabled" : ""}>→</button>
+      </div>
+    `;
+
+    /* 👉 HIER IST DER FIX */
+    const back = overlayContent.querySelector(".back");
+    const prev = overlayContent.querySelector("#prev");
+    const next = overlayContent.querySelector("#next");
+
+    if (back) back.onclick = showFolders;
+
+    if (prev) {
+      prev.onclick = () => {
+        if (i > 0) {
+          i--;
+          showQuote();
+        }
+      };
     }
 
-    function showQuote() {
-      const [, quotes] = folders[f];
-      overlayContent.innerHTML = `
-        <button class="back">← Ordner</button>
-        <blockquote class="quote-text">„${quotes[i]}“</blockquote>
-        <div class="nav">
-          <button id="prev" ${i === 0 ? "disabled" : ""}>←</button>
-          <span>${i + 1} / ${quotes.length}</span>
-          <button id="next" ${i === quotes.length - 1 ? "disabled" : ""}>→</button>
-        </div>`;
-      $(".back").onclick = showFolders;
-      $("prev").onclick = () => { if (i > 0) { i--; showQuote(); } };
-      $("next").onclick = () => { if (i < quotes.length - 1) { i++; showQuote(); } };
+    if (next) {
+      next.onclick = () => {
+        if (i < quotes.length - 1) {
+          i++;
+          showQuote();
+        }
+      };
     }
   }
+}
+
   
 /* =====================================
 INFO SCROLL INDICATOR LOGIK
@@ -575,9 +566,13 @@ function initInfoScrollIndicator() {
 }
 /* =========================
      MUSIKPLAYER
-  ========================= */
-  const audio = $("bgMusic");
-  $("musicPlay").onclick = () => audio.play();
-  $("musicPause").onclick = () => audio.pause();
-  $("musicStop").onclick = () => { audio.pause(); audio.currentTime = 0; };
+========================= */
+const audio = $("bgMusic");
+$("musicPlay").onclick = () => audio.play();
+$("musicPause").onclick = () => audio.pause();
+$("musicStop").onclick = () => { 
+  audio.pause(); 
+  audio.currentTime = 0; 
+}
 });
+

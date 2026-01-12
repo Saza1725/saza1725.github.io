@@ -17,6 +17,10 @@ body {
 
   position: relative;
 }
+body.modal-open {
+  overflow: hidden;
+}
+
 
 body::before,
 body::after {
@@ -333,20 +337,20 @@ MENU
 OVERLAY
 ===================================== */
 #overlay {
-  display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.75);
-  z-index: 500;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  display: none;
+  z-index: 9999;
 }
 
 #overlayContent {
-  max-width: 620px;
-  margin: 60px auto;
-  padding: 28px;
-  background: #111;
-  border-radius: 18px;
+  max-height: 100vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
+
 
 /* =====================================
 ORDNER & SLIDES
@@ -385,12 +389,15 @@ ORDNER & SLIDES
     box-shadow 0.4s ease;
 }
 .folder-card h3 {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.35rem;
-  margin-bottom: 10px;
-  color: #f5d36a;
-  letter-spacing: 0.4px;
+  font-size: 1.6rem;
+  margin-bottom: 8px;
 }
+
+.folder-progress {
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
 .folder-card:hover {
   transform: translateY(-10px) scale(1.02);
 
@@ -815,3 +822,28 @@ MUSIC PLAYER
 #musicPlayer * {
   pointer-events: auto !important;
 }
+
+.story-text {
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 1.25rem;
+  line-height: 1.8;
+  max-width: 700px;
+  margin: 30px auto;
+  text-align: center;
+}
+.story-text::first-line {
+  font-size: 1.8rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+.nav {
+  font-size: 1.2rem;
+  margin-top: 20px;
+}
+
+.nav button {
+  font-size: 1.4rem;
+  padding: 6px 14px;
+}
+

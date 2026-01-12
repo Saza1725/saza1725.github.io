@@ -1,13 +1,23 @@
 {
-  "days": [
-    { "date": "03.02.2026", "quote": "Lass los, was du nicht ändern kannst - denk an dich.." },
-    { "date": "02.01.2026", "quote": "01:40 Uhr: Beginne jetzt mit deinen Veränderungen." },
-    { "date": "01.01.2026", "quote": "Der erste Tag ist fast rum...Fühlt sich alles wie beim alten an." },
-    { "date": "01.01.2026", "quote": "Vergangenheit ist und bleibt Vergangenheit - Willkommen 2026." },
-    { "date": "31.12.2025", "quote": "Der letzte Tag, bevor Vergangenheit Vergangenheit bleibt." },
-    { "date": "30.12.2025", "quote": "Schaue nicht zurück - Der Werg liegt vor dir, nicht in der Vergangenheit hinter Dir." },
-    { "date": "29.12.2025", "quote": "Starte mit einem klaren Kopf in den Tag." },
-    { "date": "28.12.2025", "quote": "Atme tief durch und tanke neue Energie." },
-    { "date": "27.12.2025", "quote": "Reflektiere den Tag und sei dankbar für alles, was du erreicht hast." }
-  ]
+"days": [
+  { "date": "12.01.2026", "quote": "Du musst nicht alles heute lösen. Es reicht, wenn du heute ehrlich zu dir bist." },
+  { "date": "11.01.2026", "quote": "Nicht jeder Zweifel ist ein Rückschritt – manchmal zeigt er dir nur, wo du noch wachsen darfst." },
+  { "date": "10.01.2026", "quote": "Du veränderst dich nicht, um jemandem zu gefallen, sondern um dir selbst näher zu kommen." },
+  { "date": "09.01.2026", "quote": "Manchmal ist Stille die einzige Antwort, die dich wirklich weiterbringt." },
+  { "date": "08.01.2026", "quote": "Dein Weg darf sich falsch anfühlen, solange er sich ehrlich anfühlt." },
+  { "date": "07.01.2026", "quote": "Du musst nicht stark wirken – es reicht, wenn du weitergehst." },
+  { "date": "06.01.2026", "quote": "Alles, was du loslässt, schafft Platz für das, was wirklich zu dir gehört." },
+  { "date": "05.01.2026", "quote": "Du darfst langsamer werden, ohne stehen zu bleiben." },
+  { "date": "04.01.2026", "quote": "Nicht jede Entscheidung bringt sofort Frieden – aber sie bringt Richtung." },
+  { "date": "03.01.2026", "quote": "Heute ist kein Neustart. Heute ist ein Schritt weiter." },
+
+  { "date": "02.01.2026", "quote": "01:40 Uhr: Beginne jetzt mit deinen Veränderungen." },
+  { "date": "01.01.2026", "quote": "Der erste Tag ist fast rum...Fühlt sich alles wie beim alten an." },
+  { "date": "01.01.2026", "quote": "Vergangenheit ist und bleibt Vergangenheit - Willkommen 2026." },
+  { "date": "31.12.2025", "quote": "Der letzte Tag, bevor Vergangenheit Vergangenheit bleibt." },
+  { "date": "30.12.2025", "quote": "Schaue nicht zurück - Der Weg liegt vor dir, nicht in der Vergangenheit hinter dir." },
+  { "date": "29.12.2025", "quote": "Starte mit einem klaren Kopf in den Tag." },
+  { "date": "28.12.2025", "quote": "Atme tief durch und tanke neue Energie." },
+  { "date": "27.12.2025", "quote": "Reflektiere den Tag und sei dankbar für alles, was du erreicht hast." }
+]
 }
