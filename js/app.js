@@ -423,6 +423,25 @@ function closeOverlay() {
         c.onclick = () => { f = +c.dataset.i; i = 0; showEntry(); }
       );
     }
+function setMusicVolumeForStory() {
+  const music = document.getElementById("bgMusic");
+  if (!music) return;
+
+  music.volume = 0.20; // 25% Lautstärke
+}
+if (target === "story") {
+  setMusicVolumeForStory();
+}
+
+function setMusicVolumeNormal() {
+  const music = document.getElementById("bgMusic");
+  if (!music) return;
+
+  music.volume = 0.6; // normale Lautstärke
+}
+if (target !== "story") {
+  setMusicVolumeNormal();
+}
 
    function showEntry() {
   const [, entries] = folders[f];

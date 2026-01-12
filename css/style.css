@@ -1,3 +1,9 @@
+#app-bg,
+#introBackground,
+#introImage,
+
+
+
 /* =====================================
 RESET / BASIS
 ===================================== */
@@ -21,17 +27,22 @@ body::before {
   inset: 0;
   z-index: -2;
 
-  background:
-    url("../assets/images/nubis.jpg") center top no-repeat;
-  background-size: cover;
+  background: url("../assets/images/nubis.jpg") center top no-repeat;
+  background-size: contain;
 }
 
 body::after {
   content: "";
   position: fixed;
   inset: 0;
-  pointer-events: none; /* ⬅️ DAS IST ENTSCHEIDEND */
   z-index: -1;
+  pointer-events: none;
+
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,0.65),
+    rgba(0,0,0,0.85)
+  );
 }
 
 
@@ -159,8 +170,8 @@ TAGESZITAT
 ===================================== */
 .daily-quote {
   pointer-events: auto;
-  margin: 40px auto 0;
-  max-width: 520px;
+  margin: 550px auto 0;
+  max-width: 990px;
   padding: 26px 28px;
   border-radius: 20px;
   background: rgba(255,255,255,0.04);
@@ -169,6 +180,15 @@ TAGESZITAT
   font-style: italic;
   line-height: 1.6;
 }
+.daily-quote {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 90%;
+  z-index: 30;
+}
+
 
 /* =====================================
 MAIN
@@ -1070,9 +1090,10 @@ MASTER STORY CARD
     background-attachment: scroll;
   }
 }
-@media (max-width: 900px) and (orientation: top no-repeat) {
+@media (max-width: 900px)  {
+  
   #introBackground {
-    background-size: 200%;
-    background-position: center 50%;
+    background-size:120%;
+    background-position: center 12%;
   }
 }
