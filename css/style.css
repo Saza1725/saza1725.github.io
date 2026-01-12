@@ -12,8 +12,14 @@ body {
   color: #f2f2f2;
   min-height: 100vh;
 
-  background:
-    url("../assets/images/nubis.jpg") center top / cover no-repeat fixed;
+background:
+  url("../assets/images/nubis.jpg") center top / cover no-repeat;
+  @supports (-webkit-touch-callout: none) {
+  body {
+    background-attachment: scroll !important;
+  }
+}
+
 
   position: relative;
 }
@@ -347,9 +353,14 @@ OVERLAY
  z-index: 10000;
    pointer-events: auto;
 }
+#overlay {
+  overscroll-behavior: contain;
+}
+
 
 #overlayContent {
-  max-height: 100vh;
+height: calc(100dvh - 40px);
+max-height: calc(100dvh - 40px);
   overflow-y: auto;
   padding: 40px 20px;
 }
@@ -888,22 +899,23 @@ MUSIC PLAYER
 MASTER STORY CARD
 ========================= */
 .story-card {
-  position: relative;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(22,24,30,0.92),
-      rgba(14,16,22,0.96)
-    );
+  max-width: 900px;
+  margin: 60px auto 40px;
+
+  background: linear-gradient(
+    180deg,
+    rgba(22,24,30,0.92),
+    rgba(14,16,22,0.96)
+  );
 
   border-radius: 28px;
-  padding: 48px 52px;
+  padding: 52px 56px;
 
-  border: 1px solid rgba(245,211,106,0.35);
+  border: 1px solid rgba(245,211,106,0.4);
 
   box-shadow:
     0 40px 120px rgba(0,0,0,0.8),
-    inset 0 0 0 1px rgba(245,211,106,0.08);
+    inset 0 0 0 1px rgba(245,211,106,0.1);
 
   backdrop-filter: blur(8px);
 }
@@ -970,4 +982,17 @@ MASTER STORY CARD
 .nav button {
   font-size: 1.4rem;
   padding: 6px 14px;
+}
+@supports (-webkit-touch-callout: none) {
+
+  #menuButton,
+  #musicPlayer,
+  .time-block {
+    position: absolute;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
 }

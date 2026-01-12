@@ -2,6 +2,10 @@ const $ = id => document.getElementById(id);
 
 document.addEventListener("DOMContentLoaded", () => {
 
+let storyAudio = null;
+let storyAudioTime = 0;
+let storyAudioWasPlaying = false;
+let activeSection = null;
 
 
   /* =========================
@@ -24,6 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const focusCard = document.querySelector(".card");
   const statsBox = $("personalQuoteDisplay");
 
+  const storyMusic = document.getElementById("storyMusic");
+
+
   /* =========================
      INTRO
   ========================= */
@@ -36,6 +43,24 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => introOverlay.remove(), 1200);
     };
   }
+function playStoryMusic() {
+  if (!storyAudio) {
+    storyAudio = new Audio("assets/audio/story.mp3"); // DEIN SONG
+    storyAudio.loop = true;
+  }
+
+  storyAudio.currentTime = storyAudioTime;
+  storyAudio.play();
+  storyAudioWasPlaying = true;
+}
+
+function pauseStoryMusic() {
+  if (!storyAudio) return;
+
+  storyAudioTime = storyAudio.currentTime;
+  storyAudio.pause();
+  storyAudioWasPlaying = false;
+}
 
   /* =========================
      UHR & DATUM
@@ -120,12 +145,20 @@ document.addEventListener("DOMContentLoaded", () => {
   ========================= */
   menuButton.onclick = () => menu.classList.toggle("open");
 
-  document.querySelectorAll("#menu button[data-target]").forEach(btn => {
-    btn.onclick = () => {
-      menu.classList.remove("open");
-      openOverlay(btn.dataset.target);
-    };
-  });
+document.querySelectorAll("#menu button[data-target]").forEach(btn => {
+  btn.onclick = () => {
+    const target = btn.dataset.target;
+
+    if (activeSection === "story" && target !== "story") {
+      pauseStoryMusic();
+    }
+
+    activeSection = target;
+
+    menu.classList.remove("open");
+    openOverlay(target);
+  };
+});
 
 homeBtn.onclick = () => {
   menu.classList.toggle("open");
@@ -150,13 +183,22 @@ function openOverlay(type) {
   if (type === "info") loadInfo();
   if (type === "archive") loadArchive();
   if (type === "quotes") loadQuotes();
-  if (type === "story") loadMeineGeschichte();
+if (type === "story") {
+  activeSection = "story";
+  playStoryMusic();
+  loadMeineGeschichte();
+}
+
 }
 
 function closeOverlay() {
   overlay.style.display = "none";
   overlayContent.innerHTML = "";
   document.body.classList.remove("modal-open");
+
+  if (activeSection !== "story") {
+    pauseStoryMusic();
+  }
 }
 
   /* ==================================================
@@ -311,9 +353,11 @@ function closeOverlay() {
   const [, entries] = folders[f];
 
   overlayContent.innerHTML = `
-    <button class="back">← Meine Geschichte</button>
+    <button class="back">←Meine Geschichte</button>
 
-    <pre class="story-text">${entries[i]}</pre>
+<div class="slide">
+  <pre class="story-text">${entries[i]}</pre>
+</div>
 
     <div class="nav">
       <button id="prev" ${i === 0 ? "disabled" : ""}>←</button>
@@ -321,8 +365,13 @@ function closeOverlay() {
       <button id="next" ${i === entries.length - 1 ? "disabled" : ""}>→</button>
     </div>
   `;
+document.querySelector(".back").onclick = () => {
+  
+  showFolders();
+};
 
-  document.querySelector(".back").onclick = showFolders;
+
+
   document.getElementById("prev").onclick = () => {
     if (i > 0) { i--; showEntry(); }
   };
@@ -447,7 +496,7 @@ async function loadArchive() {
     overlayContent.innerHTML = `
       <button class="back">← Monate</button>
 
-      <div class="archive-month">
+<div class="slide archive-month">
         <h3>${month.label}</h3>
 
         <div class="archive-table">
@@ -506,7 +555,10 @@ async function loadQuotes() {
     overlayContent.innerHTML = `
       <button class="back">← Ordner</button>
 
-      <blockquote class="quote-text">„${quotes[i]}“</blockquote>
+      <div class="slide">
+  <blockquote class="quote-text">„${quotes[i]}“</blockquote>
+</div>
+
 
       <div class="nav">
         <button id="prev" ${i === 0 ? "disabled" : ""}>←</button>

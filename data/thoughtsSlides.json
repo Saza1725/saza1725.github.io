@@ -4,8 +4,11 @@
     {
       "title": "Stillwerden",
       "slides": [
-        { "title": "Ruhe", "text": "" },
-        { "title": "Abstand", "text": "" }
+        { "title": "Ruhe", 
+        "text": "folgt...." },
+
+        { "title": "Abstand", 
+        "text": "folgt..." }
       ]
     }
   ]
