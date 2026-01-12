@@ -1010,3 +1010,9 @@ MASTER STORY CARD
     background-attachment: scroll;
   }
 }
+@media (max-width: 768px) {
+  .hero {
+    background-size: cover;
+    background-position: center;
+  }
+}
