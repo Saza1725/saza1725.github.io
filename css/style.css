@@ -1070,9 +1070,9 @@ MASTER STORY CARD
     background-attachment: scroll;
   }
 }
-@media (max-width: 768px) and (orientation: portrait) {
+@media (max-width: 900px) and (orientation: top no-repeat) {
   #introBackground {
-    background-size: 120%;
-    background-position: center 15%;
+    background-size: 200%;
+    background-position: center 50%;
   }
 }
