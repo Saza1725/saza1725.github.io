@@ -1014,8 +1014,10 @@ MASTER STORY CARD
   }
 }
 @media (max-width: 900px) and (orientation: portrait) {
+
   body::before {
     background-size: 120%;
     background-position: center 15%;
+
   }
 }
