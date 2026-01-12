@@ -2,10 +2,37 @@ const $ = id => document.getElementById(id);
 
 document.addEventListener("DOMContentLoaded", () => {
 
-let storyAudio = null;
-let storyAudioTime = 0;
-let storyAudioWasPlaying = false;
+let activeMusic = null;
+let activeMusicSrc = null;
+let activeMusicTime = 0;
 let activeSection = null;
+
+function playMusic(src) {
+  if (activeMusicSrc === src && activeMusic) {
+    activeMusic.play();
+    return;
+  }
+
+  if (activeMusic) {
+    activeMusic.pause();
+    activeMusic.currentTime = 0;
+  }
+
+  activeMusic = new Audio(src);
+  activeMusic.loop = true;
+  activeMusic.play();
+
+  activeMusicSrc = src;
+}
+
+function pauseMusic() {
+  if (!activeMusic) return;
+  activeMusic.pause();
+  activeMusic.currentTime = 0;
+  activeMusic = null;
+  activeMusicSrc = null;
+}
+
 
 
   /* =========================
@@ -44,22 +71,11 @@ let activeSection = null;
     };
   }
 function playStoryMusic() {
-  if (!storyAudio) {
-    storyAudio = new Audio("assets/audio/story.mp3"); // DEIN SONG
-    storyAudio.loop = true;
-  }
-
-  storyAudio.currentTime = storyAudioTime;
-  storyAudio.play();
-  storyAudioWasPlaying = true;
+  playMusic("assets/audio/story.mp3");
 }
 
 function pauseStoryMusic() {
-  if (!storyAudio) return;
-
-  storyAudioTime = storyAudio.currentTime;
-  storyAudio.pause();
-  storyAudioWasPlaying = false;
+  pauseMusic();
 }
 
   /* =========================
@@ -149,11 +165,14 @@ document.querySelectorAll("#menu button[data-target]").forEach(btn => {
   btn.onclick = () => {
     const target = btn.dataset.target;
 
-    if (activeSection === "story" && target !== "story") {
-      pauseStoryMusic();
-    }
+    pauseMusic(); // stoppe immer vorher
 
     activeSection = target;
+    if (target === "about") playMusic("assets/audio/entspannt.mp3");
+    if (target === "story") playMusic("assets/audio/story.mp3");
+    if (target === "info") playMusic("assets/audio/entferne.m4a");
+    if (target === "quotes") playMusic("assets/audio/entspannt.mp3");
+    if (target === "archive") playMusic("assets/audio/archive.mp3");
 
     menu.classList.remove("open");
     openOverlay(target);
@@ -169,9 +188,7 @@ homeBtn.onclick = () => {
   document.body.classList.remove("modal-open");
 
   // Story verlassen → Musik pausieren
-  if (activeSection === "story") {
-    pauseStoryMusic();
-  }
+pauseMusic();
 
   activeSection = null;
 };
@@ -209,9 +226,7 @@ function closeOverlay() {
   overlayContent.innerHTML = "";
   document.body.classList.remove("modal-open");
 
-  if (activeSection !== "story") {
-    pauseStoryMusic();
-  }
+pauseMusic();
 }
 
   /* ==================================================
@@ -363,13 +378,16 @@ function closeOverlay() {
         </div>
       `;
 
-      overlayContent.querySelectorAll(".folder-card").forEach(card => {
-        card.onclick = () => {
-          section = +card.dataset.i;
-          slide = 0;
-          showSlide();
-        };
-      });
+overlayContent.querySelectorAll(".folder-card").forEach(card => {
+  card.onclick = () => {
+    section = +card.dataset.i;
+    slide = 0;
+
+    playMusic("assets/audio/Übermich.m4a"); // 🎧 startet erst hier
+
+    showSlide();
+  };
+});
     }
 
     function showSlide() {
@@ -390,7 +408,10 @@ function closeOverlay() {
         </div>
       `;
 
-      overlayContent.querySelector(".back").onclick = showSections;
+        overlayContent.querySelector(".back").onclick = () => {
+         pauseMusic();
+        showSections();
+};
            $("prev").onclick = () => slide-- > 0 && showSlide();
       $("next").onclick = () => slide++ < slides.length - 1 && showSlide();
     }
