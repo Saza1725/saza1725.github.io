@@ -343,13 +343,20 @@ OVERLAY
   backdrop-filter: blur(6px);
   display: none;
   z-index: 9999;
+
+  /* wichtig */
+  overflow: hidden;
 }
 
 #overlayContent {
-  max-height: 100vh;
+  height: 100%;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  padding: 40px 20px;
+
+  /* wichtig */
+  box-sizing: border-box;
 }
+
 
 
 /* =====================================
