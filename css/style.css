@@ -17,9 +17,6 @@ body {
 
   position: relative;
 }
-body.modal-open {
-  overflow: hidden;
-}
 
 
 body::before,
@@ -54,6 +51,9 @@ body::before {
 
   pointer-events: none;
   z-index: -1;
+}
+body.modal-open {
+  overflow: hidden;
 }
 
 /* =====================================
@@ -233,7 +233,7 @@ MENU BUTTON
   position: fixed;
   top: 18px;
   right: 20px;
-  z-index: 2000;
+  z-index: 20001;
   font-size: 1.6rem;
   padding: 8px 12px;
   background: rgba(15,17,21,0.85);
@@ -266,7 +266,8 @@ MENU
   flex-direction: column;
   gap: 14px;
   transition: right 0.35s cubic-bezier(.4,0,.2,1);
-  z-index: 1000;
+  z-index: 20000;
+    pointer-events: auto;
 }
 
 #menu.open {
@@ -297,6 +298,7 @@ MENU
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(245,211,106,0.15);
   transition: all 0.2s ease;
+    pointer-events: auto;
 }
 
 #menu button:hover {
@@ -340,40 +342,59 @@ OVERLAY
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(8px);
   display: none;
-  z-index: 9999;
-
-  /* wichtig */
-  overflow: hidden;
+ z-index: 10000;
+   pointer-events: auto;
 }
 
 #overlayContent {
-  height: 100%;
+  max-height: 100vh;
   overflow-y: auto;
   padding: 40px 20px;
-
-  /* wichtig */
-  box-sizing: border-box;
 }
 
+
+/* sichtbar */
+#overlay.active #overlayContent {
+  transform: translateY(0);
+}
+
+/* Schließen Button */
+.overlay-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  font-size: 22px;
+  border: none;
+  background: rgba(255,255,255,0.08);
+  color: white;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+}
+
+/* iOS Handle */
+.overlay-handle {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: 50px;
+  height: 5px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 10px;
+  transform: translateX(-50%);
+}
 
 
 /* =====================================
 ORDNER & SLIDES
 ===================================== */
-.folder-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 28px;
-  margin-top: 36px;
-}
-
-
 .folder-card {
   position: relative;
-   border-radius: 28px;
-  padding: 68px 30px 30px;
+  padding: 56px 32px 32px;
+  border-radius: 26px;
   cursor: pointer;
 
   background:
@@ -386,31 +407,44 @@ ORDNER & SLIDES
   border: 1px solid rgba(245,211,106,0.28);
 
   box-shadow:
-    0 20px 50px rgba(0,0,0,0.55),
+    0 24px 60px rgba(0,0,0,0.6),
     inset 0 0 0 1px rgba(245,211,106,0.08);
 
   backdrop-filter: blur(6px);
 
   transition:
     transform 0.4s ease,
-    box-shadow 0.4s ease;
+    box-shadow 0.4s ease,
+    background 0.4s ease;
 }
 .folder-card h3 {
+  font-family: 'Playfair Display', serif;
   font-size: 1.6rem;
-  margin-bottom: 8px;
+  color: #f5d36a;
+  margin-bottom: 12px;
+  letter-spacing: 0.6px;
+}
+.folder-grid {
+  max-width: 1000px;
+  margin: 40px auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 28px;
 }
 
 .folder-progress {
-  font-size: 1rem;
-  opacity: 0.7;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.6;
 }
 
 .folder-card:hover {
   transform: translateY(-10px) scale(1.02);
 
   box-shadow:
-    0 30px 80px rgba(0,0,0,0.75),
-    inset 0 0 0 1px rgba(245,211,106,0.35);
+    0 40px 100px rgba(0,0,0,0.8),
+    inset 0 0 0 1px rgba(245,211,106,0.4);
 }
 .folder-card::before {
   content: "";
@@ -431,23 +465,34 @@ ORDNER & SLIDES
 }
 
 .slide {
+  max-width: 720px;
+  margin: 60px auto 40px;
+
   background: rgba(18, 20, 26, 0.96);
   border-radius: 26px;
-  padding: 42px 38px;
-  border: 1px solid rgba(245,211,106,0.25);
+  padding: 48px 52px;
 
+  border: 1px solid rgba(245,211,106,0.28);
   box-shadow:
-    0 30px 90px rgba(0,0,0,0.7);
+    0 30px 90px rgba(0,0,0,0.7),
+    inset 0 0 0 1px rgba(245,211,106,0.08);
 
   font-family: 'Libre Baskerville', serif;
-  line-height: 1.75;
+  line-height: 1.85;
+  text-align: center;
 }
+
 
 .slide h3 {
   font-family: 'Playfair Display', serif;
-  font-size: 1.5rem;
-  margin-bottom: 18px;
+  font-size: 2.1rem;
+  margin-bottom: 28px;
   color: #f5d36a;
+  letter-spacing: 0.5px;
+}
+.slide p {
+  font-size: 1.05rem;
+  opacity: 0.9;
 }
 
 
@@ -690,16 +735,24 @@ UNIVERSAL CARD
   line-height: 1.75;
 }
 .slide,
-.archive-month,
-.info-card {
-  background: rgba(18, 20, 26, 0.96);
-  border-radius: 26px;
-  padding: 42px 38px;
-  border: 1px solid rgba(245,211,106,0.25);
-  box-shadow: 0 30px 90px rgba(0,0,0,0.7);
+.info-card,
+.archive-month {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(22,24,30,0.92),
+      rgba(14,16,22,0.96)
+    );
 
-  font-family: 'Libre Baskerville', serif;
-  line-height: 1.75;
+  border-radius: 28px;
+  padding: 48px 52px;
+  border: 1px solid rgba(245,211,106,0.35);
+
+  box-shadow:
+    0 40px 120px rgba(0,0,0,0.8),
+    inset 0 0 0 1px rgba(245,211,106,0.08);
+
+  backdrop-filter: blur(8px);
 }
 .archive-row {
   padding: 26px 28px;
@@ -830,6 +883,71 @@ MUSIC PLAYER
   pointer-events: auto !important;
 }
 
+
+/* =========================
+MASTER STORY CARD
+========================= */
+.story-card {
+  position: relative;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(22,24,30,0.92),
+      rgba(14,16,22,0.96)
+    );
+
+  border-radius: 28px;
+  padding: 48px 52px;
+
+  border: 1px solid rgba(245,211,106,0.35);
+
+  box-shadow:
+    0 40px 120px rgba(0,0,0,0.8),
+    inset 0 0 0 1px rgba(245,211,106,0.08);
+
+  backdrop-filter: blur(8px);
+}
+.story-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: #f5d36a;
+  margin-bottom: 28px;
+}
+.story-card p,
+.story-card blockquote,
+.story-card pre {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  opacity: 0.9;
+  color: #f2f2f2;
+}
+
+.story-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      180deg,
+      transparent,
+      rgba(245,211,106,0.25),
+      transparent
+    );
+
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+
+  padding: 1px;
+}
+
 .story-text {
   white-space: pre-wrap;
   font-family: inherit;
@@ -853,4 +971,3 @@ MUSIC PLAYER
   font-size: 1.4rem;
   padding: 6px 14px;
 }
-

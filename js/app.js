@@ -127,37 +127,38 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   });
 
-  homeBtn.onclick = () => {
-    menu.classList.remove("open");
-    overlay.style.display = "none";
-    overlayContent.innerHTML = "";
-    document.body.classList.remove("modal-open");   // 🔓 Scroll wieder frei
-  };
+homeBtn.onclick = () => {
+  menu.classList.toggle("open");
+};
 
-  overlay.onclick = e => {
-    if (e.target === overlay) {
-      overlay.style.display = "none";
-      overlayContent.innerHTML = "";
-      document.body.classList.remove("modal-open"); // 🔓 Scroll wieder frei
-    }
-  };
+
+overlay.onclick = e => {
+  if (e.target === overlay) closeOverlay();
+};
+
 
   /* =========================
      OVERLAY DISPATCHER
   ========================= */
-  function openOverlay(type) {
-    overlay.style.display = "block";
-    overlayContent.innerHTML = "";
-    document.body.classList.add("modal-open");   // 🔒 Hintergrund sperren
+function openOverlay(type) {
+  overlay.style.display = "block";
+  overlayContent.innerHTML = "";
+  document.body.classList.add("modal-open");
 
-    if (type === "about") loadAbout();
-    if (type === "thoughts") loadThoughts();
-    if (type === "info") loadInfo();
-    if (type === "archive") loadArchive();
-    if (type === "quotes") loadQuotes();
-    if (type === "story") loadMeineGeschichte();
-  }
-  
+  if (type === "about") loadAbout();
+  if (type === "thoughts") loadThoughts();
+  if (type === "info") loadInfo();
+  if (type === "archive") loadArchive();
+  if (type === "quotes") loadQuotes();
+  if (type === "story") loadMeineGeschichte();
+}
+
+function closeOverlay() {
+  overlay.style.display = "none";
+  overlayContent.innerHTML = "";
+  document.body.classList.remove("modal-open");
+}
+
   /* ==================================================
      ÜBER MICH
   ================================================== */
@@ -576,3 +577,13 @@ $("musicStop").onclick = () => {
 }
 });
 
+let startY = 0;
+
+overlayContent.addEventListener("touchstart", e => {
+  startY = e.touches[0].clientY;
+});
+
+overlayContent.addEventListener("touchmove", e => {
+  const y = e.touches[0].clientY - startY;
+  if (y > 100) closeOverlay();
+});
