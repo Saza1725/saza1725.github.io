@@ -12,17 +12,20 @@ body {
   color: #f2f2f2;
   min-height: 100vh;
   position: relative;
-
-  background-image: url("../assets/images/nubis.jpg");
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: 45%;
-  background-attachment: fixed;
+  background: black;
 }
 
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
 
+  background:
+    url("../assets/images/nubis.jpg") center top no-repeat;
+  background-size: contain;
+}
 
-body::before,
 body::after {
   content: "";
   position: fixed;
@@ -1010,9 +1013,9 @@ MASTER STORY CARD
     background-attachment: scroll;
   }
 }
-@media (max-width: 768px) {
-  .hero {
-    background-size: cover;
-    background-position: center;
+@media (max-width: 900px) and (orientation: portrait) {
+  body::before {
+    background-size: 120%;
+    background-position: center 15%;
   }
 }
