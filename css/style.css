@@ -18,6 +18,7 @@ body {
 }
 
 
+
 body::before,
 body::after {
   content: "";
@@ -269,6 +270,7 @@ overflow-y: auto;
   transition: right 0.35s cubic-bezier(.4,0,.2,1);
   z-index: 20000;
     pointer-events: auto;
+    overscroll-behavior: contain;
 }
 
 #menu.open {
@@ -335,6 +337,14 @@ overflow-y: auto;
     bottom: 0;
   }
 }
+#app-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -5;
+  background: url("../assets/images/nubis.jpg") center / cover no-repeat;
+  transform: translateZ(0);
+}
+
 
 /* =====================================
 OVERLAY
@@ -347,6 +357,7 @@ OVERLAY
   display: none;
  z-index: 10000;
    pointer-events: auto;
+   overflow: hidden;
 }
 #overlay {
   overscroll-behavior: contain;
@@ -354,9 +365,13 @@ OVERLAY
 
 
 #overlayContent {
+
   height: calc(100dvh - 40px);
   max-height: calc(100dvh - 40px);
   overflow-y: auto;
+  height: calc(100dvh - 40px);
+  max-height: calc(100dvh - 40px);
+   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding: 40px 20px;
 }
@@ -838,6 +853,13 @@ button.back {
   margin-bottom: 24px;
   display: inline-block;
 }
+.folder-card,
+#menu button,
+.nav button,
+button.back {
+  touch-action: manipulation;
+}
+
 /* =====================================
 ZITATE
 ===================================== */
