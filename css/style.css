@@ -11,17 +11,10 @@ body {
   font-family: 'Libre Baskerville', serif;
   color: #f2f2f2;
   min-height: 100vh;
-
-background:
-  url("../assets/images/nubis.jpg") center top / cover no-repeat;
-  @supports (-webkit-touch-callout: none) {
-  body {
-    background-attachment: scroll !important;
-  }
-}
-
-
   position: relative;
+
+  background:
+    url("../assets/images/nubis.jpg") center top / cover no-repeat;
 }
 
 
@@ -239,7 +232,7 @@ MENU BUTTON
   position: fixed;
   top: 18px;
   right: 20px;
-  z-index: 20001;
+  z-index: 99999;
   font-size: 1.6rem;
   padding: 8px 12px;
   background: rgba(15,17,21,0.85);
@@ -259,7 +252,9 @@ MENU
   top: 0;
   right: -260px;
   width: 260px;
-  height: 100vh;
+height: 100dvh;
+overflow-y: auto;
+-webkit-overflow-scrolling: touch;
   padding: 120px 22px 30px;
   background: linear-gradient(
     180deg,
@@ -359,9 +354,10 @@ OVERLAY
 
 
 #overlayContent {
-height: calc(100dvh - 40px);
-max-height: calc(100dvh - 40px);
+  height: calc(100dvh - 40px);
+  max-height: calc(100dvh - 40px);
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 40px 20px;
 }
 
@@ -984,15 +980,7 @@ MASTER STORY CARD
   padding: 6px 14px;
 }
 @supports (-webkit-touch-callout: none) {
-
-  #menuButton,
-  #musicPlayer,
-  .time-block {
-    position: absolute;
-  }
-
   body {
-    overflow-x: hidden;
+    background-attachment: scroll;
   }
-
 }

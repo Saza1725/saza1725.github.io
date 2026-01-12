@@ -161,7 +161,19 @@ document.querySelectorAll("#menu button[data-target]").forEach(btn => {
 });
 
 homeBtn.onclick = () => {
-  menu.classList.toggle("open");
+  menu.classList.remove("open");
+
+  // Overlay schließen
+  overlay.style.display = "none";
+  overlayContent.innerHTML = "";
+  document.body.classList.remove("modal-open");
+
+  // Story verlassen → Musik pausieren
+  if (activeSection === "story") {
+    pauseStoryMusic();
+  }
+
+  activeSection = null;
 };
 
 
