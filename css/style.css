@@ -1036,11 +1036,27 @@ MASTER STORY CARD
 .story-text {
   white-space: pre-wrap;
   font-family: inherit;
-  font-size: 1.25rem;
-  line-height: 1.8;
-  max-width: 700px;
+  font-size: 1.6rem;
+  line-height: 1.5;
+  max-width: 800px;
   margin: 30px auto;
   text-align: center;
+  padding: 1,5rem;
+  color: white;
+  transition: opacity 0.3s ease;
+}
+
+.story-slide {
+  position: relative;
+  height: 60vh;               /* feste Höhe */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.story-slide + .nav {
+  position: absolute;
+  bottom: 40px;
+  right: 60px;
 }
 .story-text::first-line {
   font-size: 1.8rem;

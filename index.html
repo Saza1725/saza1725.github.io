@@ -25,17 +25,32 @@
   <header class="hero">
 
 
-  <div id="introOverlay">
+<div id="introOverlay">
+
+  <picture>
+    <source 
+      srcset="
+        assets/images/640.jpg 640w,
+        assets/images/1536.jpg 1536w,
+        assets/images/1920.jpg 1920w
+      "
+      sizes="70vw">
+
     <img
       id="introImage"
-      src="assets/images/nubis.jpg"
+      src="assets/images/1536.jpg"
       alt="Intro Bild"
-    >
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+      style="width:100%; height:20%; object-fit:cover;">
+  </picture>
 
-    <button id="introStart">
-      ▶ Start
-    </button>
-  </div>
+  <button id="introStart">
+    ▶ Start
+  </button>
+
+</div>
 
     <!-- Uhrzeit & Datum -->
     <div class="time-block">
@@ -88,7 +103,9 @@
       <input id="dailyFocusInput" type="text" placeholder="Dein Fokus …">
     </section>
 
+    <div id="dailyTextBox" class="story-text"></div>
     <div id="dailyTextBox"></div>
+    
 
     <!-- Tageszeit Buttons -->
     <div class="buttons">
@@ -99,7 +116,7 @@
 
     <!-- Persönliche Zitate / Statistik -->
     <div id="personalQuoteDisplay"></div>
-
+    
   </main>
 
 
@@ -114,7 +131,7 @@
   
 <!-- ================= MUSIC PLAYER ================= -->
 
-<audio id="storyMusic" src="assets/audio/story.mp3" preload="auto"></audio>
+<audio id="storyMusic" src="assets/audio/nichtseinreden .mp3"></audio>
 
 </body>
 </html>

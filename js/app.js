@@ -6,6 +6,12 @@ let activeMusic = null;
 let activeMusicSrc = null;
 let activeMusicTime = 0;
 let activeSection = null;
+let storyTarget = null;
+let thoughtsSection = 0;
+let thoughtsSlide = 0;
+let storyIsOpen = false;
+
+
 
 function playMusic(src) {
   if (activeMusicSrc === src && activeMusic) {
@@ -57,6 +63,8 @@ function pauseMusic() {
 
   const storyMusic = document.getElementById("storyMusic");
 
+
+let storyPage = 0;
 
   /* =========================
      INTRO
@@ -202,7 +210,21 @@ overlay.onclick = e => {
   /* =========================
      OVERLAY DISPATCHER
   ========================= */
+  storyIsOpen = false;
+storyTarget = null;
+storyMusic.pause();
+storyMusic.currentTime = 0;
+
+
 function openOverlay(type) {
+  storyIsOpen = false;
+  storyTarget = null;
+  storyMusic.pause();
+  storyMusic.currentTime = 0;
+
+  overlay.style.display = "block";
+  overlayContent.innerHTML = "";
+  document.body.classList.add("modal-open");
   overlay.style.display = "block";
   overlayContent.innerHTML = "";
   document.body.classList.add("modal-open");
@@ -220,13 +242,21 @@ if (type === "story") {
 }
 
 }
+storyIsOpen = false;
+storyTarget = null;
+storyMusic.pause();
+storyMusic.currentTime = 0;
 
 function closeOverlay() {
+  storyIsOpen = false;
+  storyTarget = null;
+  storyMusic.pause();
+  storyMusic.currentTime = 0;
+
   overlay.style.display = "none";
   overlayContent.innerHTML = "";
   document.body.classList.remove("modal-open");
-
-pauseMusic();
+  pauseMusic();
 }
 
   /* ==================================================
@@ -354,70 +384,131 @@ pauseMusic();
     }
   }
 
-  /* ==================================================
-     GEDANKEN
-  ================================================== */
-  async function loadThoughts() {
-    const res = await fetch("data/thoughtsSlides.json");
-    const data = await res.json();
+/* =========================
+   GEDANKEN – STABILES STORY MODUL
+========================= */
 
-    let section = null;
-    let slide = 0;
+async function loadThoughts() {
+  const res = await fetch("data/thoughtsSlides.json");
+  const data = await res.json();
 
-    showSections();
+  const storyPages = [
+    { start: 0.0, end: 31.0 },
+    { start: 31.0, end: 62.5 }
+  ];
 
-    function showSections() {
-      overlayContent.innerHTML = `
-        <h2>${data.title}</h2>
-        <div class="folder-grid">
-          ${data.sections.map((s, i) => `
-            <div class="folder-card" data-i="${i}">
-              <h3>${s.title}</h3>
-            </div>
-          `).join("")}
-        </div>
-      `;
+  let storyPage = 0;
+  let storyTarget = null;
+  let sectionIndex = 0;
+  let slideIndex = 0;
+  let storyRunning = false;
 
-overlayContent.querySelectorAll(".folder-card").forEach(card => {
-  card.onclick = () => {
-    section = +card.dataset.i;
-    slide = 0;
+  showSections();
 
-    playMusic("assets/audio/Übermich.m4a"); // 🎧 startet erst hier
+  function showSections() {
+    stopStory();
+    overlayContent.innerHTML = `
+      <h2>${data.title}</h2>
+      <div class="folder-grid">
+        ${data.sections.map((s, i) => `
+          <div class="folder-card" data-i="${i}">
+            <h3>${s.title}</h3>
+          </div>`).join("")}
+      </div>
+    `;
 
-    showSlide();
-  };
-});
+    overlayContent.querySelectorAll(".folder-card").forEach(card => {
+      card.onclick = () => {
+        sectionIndex = +card.dataset.i;
+        slideIndex = 0;
+        openStory();
+      };
+    });
+  }
+
+  function openStory() {
+    storyRunning = true;
+    storyPage = 0;
+
+    overlayContent.innerHTML = `
+      <button class="back">← Themen</button>
+
+      <div class="slide story-slide">
+        <div id="storyText" class="story-text"></div>
+        <div class="story-page" id="storyPage">1 / ${storyPages.length}</div>
+      </div>
+
+      <div class="nav">
+        <button id="next">→</button>
+      </div>
+    `;
+
+    storyTarget = document.getElementById("storyText");
+
+    storyMusic.src = "assets/audio/nichtseinreden .mp3";
+    storyMusic.currentTime = storyPages[0].start;
+    storyMusic.play();
+
+    overlayContent.querySelector(".back").onclick = showSections;
+    document.getElementById("next").onclick = nextStoryPage;
+
+    storyMusic.onended = nextStoryPage;
+  }
+
+  function nextStoryPage() {
+    if (storyPage < storyPages.length - 1) {
+      storyPage++;
+      storyMusic.currentTime = storyPages[storyPage].start;
+      storyMusic.play();
+      document.getElementById("storyPage").textContent = `${storyPage + 1} / ${storyPages.length}`;
+    } else {
+      stopStory();
+      showThoughtSlide();
     }
+  }
 
-    function showSlide() {
-      const slides = data.sections[section].slides;
-      const s = slides[slide];
-      const empty = !s.text || !s.text.trim();
+  function stopStory() {
+    storyRunning = false;
+    storyTarget = null;
+    storyMusic.pause();
+    storyMusic.currentTime = 0;
+  }
 
-      overlayContent.innerHTML = `
-        <button class="back">← Themen</button>
-        <div class="slide ${empty ? "empty" : ""}">
-          <h3>${s.title}</h3>
-          <p>${empty ? "" : s.text.replace(/\n/g, "<br>")}</p>
-        </div>
-        <div class="nav">
-          <button id="prev" ${slide === 0 ? "disabled" : ""}>←</button>
-          <span>${slide + 1} / ${slides.length}</span>
-          <button id="next" ${slide === slides.length - 1 ? "disabled" : ""}>→</button>
-        </div>
-      `;
+  function showThoughtSlide() {
+    const slides = data.sections[sectionIndex].slides;
+    const s = slides[slideIndex];
 
-        overlayContent.querySelector(".back").onclick = () => {
-         pauseMusic();
-        showSections();
-};
-           $("prev").onclick = () => slide-- > 0 && showSlide();
-      $("next").onclick = () => slide++ < slides.length - 1 && showSlide();
+    overlayContent.innerHTML = `
+      <button class="back">← Themen</button>
+      <div class="slide">
+        <h3>${s.title}</h3>
+        <p>${(s.text || "").replace(/\n/g, "<br>")}</p>
+      </div>
+      <div class="nav">
+        <button id="prev" ${slideIndex === 0 ? "disabled" : ""}>←</button>
+        <span>${slideIndex + 1} / ${slides.length}</span>
+        <button id="next" ${slideIndex === slides.length - 1 ? "disabled" : ""}>→</button>
+      </div>
+    `;
+
+    overlayContent.querySelector(".back").onclick = showSections;
+    document.getElementById("prev").onclick = () => { if (slideIndex > 0) { slideIndex--; showThoughtSlide(); }};
+    document.getElementById("next").onclick = () => { if (slideIndex < slides.length - 1) { slideIndex++; showThoughtSlide(); }};
+  }
+
+  /* ---------- Untertitel Sync ---------- */
+  storyMusic.addEventListener("timeupdate", () => {
+    if (!storyRunning || !storyTarget) return;
+    const t = storyMusic.currentTime;
+
+    for (let i = storyScript.length - 1; i >= 0; i--) {
+      if (t >= storyScript[i].time) {
+        storyTarget.textContent = storyScript[i].text;
+        break;
+      }
     }
-  }   // <-- DIESE ZEILE FEHLT BEI DIR
-
-
+  });
+}
 
 /* =========================
      MEINE GESCHICHTE
@@ -447,20 +538,18 @@ overlayContent.querySelectorAll(".folder-card").forEach(card => {
 function setMusicVolumeForStory() {
   const music = document.getElementById("bgMusic");
   if (!music) return;
-
-  music.volume = 0.20; // 25% Lautstärke
-}
-if (target === "story") {
-  setMusicVolumeForStory();
+  music.volume = 0.20;
 }
 
 function setMusicVolumeNormal() {
   const music = document.getElementById("bgMusic");
   if (!music) return;
-
-  music.volume = 0.6; // normale Lautstärke
+  music.volume = 0.6;
 }
-if (target !== "story") {
+
+if (activeSection === "story") {
+  setMusicVolumeForStory();
+} else {
   setMusicVolumeNormal();
 }
 
@@ -733,24 +822,78 @@ function initInfoScrollIndicator() {
   updateProgress();
 }
 /* =========================
-     MUSIKPLAYER
+   GLOBAL STORY STATE
 ========================= */
-const audio = $("bgMusic");
-$("musicPlay").onclick = () => audio.play();
-$("musicPause").onclick = () => audio.pause();
-$("musicStop").onclick = () => { 
-  audio.pause(); 
-  audio.currentTime = 0; 
-}
+
+
+
+const storyPages = [
+  { start: 0.0, end: 31.0 },
+  { start: 31.0, end: 62.5 }
+];
+
+/* =========================
+   STORY SCRIPT
+========================= */
+const storyScript = [
+  { time: 0.00, text: "Lass dir von niemandem je einreden" },
+  { time: 2.14, text: "dass du was nicht kannst" },
+  { time: 3.26, text: "weil das wichtigste ist" },
+  { time: 4.27, text: "dass ihr auf euch selber immer vertraut" },
+  { time: 6.13, text: "egal was andere sagen" },
+  { time: 8.03, text: "wenn ihr euch etwas in den Kopf setzt" },
+  { time: 10.07, text: "oder an etwas glaubt das zu erreichen" },
+  { time: 12.17, text: "dann werdet ihr es erreichen" },
+  { time: 13.19, text: "ist egal ob tausende Leute dagegen sprechen" },
+  { time: 16.16, text: "oder es vielleicht für unmöglich halten" },
+  { time: 17.23, text: "du kannst nicht kontrollieren was andere denken" },
+  { time: 19.18, text: "was andere glauben" },
+  { time: 20.12, text: "was andere tun wo du reingeboren bist" },
+  { time: 22.04, text: "was für ein Start du hast" },
+  { time: 23.06, text: "auf welche Ressourcen du Zugriff hast" },
+  { time: 24.18, text: "aber was du kontrollieren kannst ist dein Handeln" },
+  { time: 26.15, text: "ihr dürft nicht aufhören zu kämpfen" },
+  { time: 28.02, text: "macht einfach weiter egal wie doll es weh tut" },
+  { time: 29.21, text: "egal wie die Leute lachen" },
+  { time: 30.25, text: "egal" },
+  { time: 31.08, text: "welche Menschen euch so unfassbare Schmerzen zufügen" },
+  { time: 34.01, text: "macht einfach weiter und irgendwann kommt der Moment" },
+  { time: 36.16, text: "lasst euch von niemanden einreden" },
+  { time: 37.24, text: "dass wir etwas nicht schaffen können niemals" },
+  { time: 39.20, text: "egal was auch passiert egal welche Tiefschläge" },
+  { time: 42.06, text: "egal welche Verletzung" },
+  { time: 43.12, text: "egal welche Niederlage wir können auf alles schaffen" },
+  { time: 45.30, text: "lasst euch niemals von" },
+  { time: 46.28, text: "wenn irgendwelche Leute euch kolpern" },
+  { time: 48.09, text: "niemals" },
+  { time: 49.11, text: "glaubt an euch selber und ihr könnt alles erreichen" },
+  { time: 51.09, text: "irgendjemand da oben sieht das was ihr macht" },
+  { time: 53.26, text: "und gibt euch das zurück was ihr verdient habt" },
+  { time: 56.07, text: "ihr schafft das" },
+  { time: 56.27, text: "ihr könnt mehr aus eurem Leben machen" },
+  { time: 58.04, text: "egal wo ihr herkommt" },
+  { time: 59.01, text: "wenn andere was nicht können" },
+  { time: 60.08, text: "wollen sie dir immer einreden" },
+  { time: 61.16, text: "dass du es auch nicht kannst" },
+  { time: 62.26, text: "wenn du was willst dann mach es" }
+];
+
+let lastLine = "";
+/* =========================
+   STORY TEXT SYNC
+========================= */
+storyMusic.addEventListener("timeupdate", () => {
+  if (!storyIsOpen || !storyTarget) return;
+
+  const t = storyMusic.currentTime;
+  for (let i = storyScript.length - 1; i >= 0; i--) {
+    if (t >= storyScript[i].time) {
+      if (storyScript[i].text !== lastLine) {
+        lastLine = storyScript[i].text;
+        storyTarget.textContent = lastLine;
+      }
+      break;
+    }
+  }
 });
-
-let startY = 0;
-
-overlayContent.addEventListener("touchstart", e => {
-  startY = e.touches[0].clientY;
-});
-
-overlayContent.addEventListener("touchmove", e => {
-  const y = e.touches[0].clientY - startY;
-  if (y > 100) closeOverlay();
 });
