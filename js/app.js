@@ -1,15 +1,25 @@
-const $ = id => document.getElementById(id);
 
 document.addEventListener("DOMContentLoaded", () => {
+
+// =========================
+// GLOBALER STORY STATUS
+// =========================
+let storyIsOpen = false;
+let storyTarget = null;
+
+
+  const $ = id => document.getElementById(id);
+
 
 let activeMusic = null;
 let activeMusicSrc = null;
 let activeMusicTime = 0;
 let activeSection = null;
-let storyTarget = null;
 let thoughtsSection = 0;
 let thoughtsSlide = 0;
-let storyIsOpen = false;
+
+
+
 
 
 
@@ -180,8 +190,7 @@ document.querySelectorAll("#menu button[data-target]").forEach(btn => {
     if (target === "story") playMusic("assets/audio/story.mp3");
     if (target === "info") playMusic("assets/audio/entferne.m4a");
     if (target === "quotes") playMusic("assets/audio/entspannt.mp3");
-    if (target === "archive") playMusic("assets/audio/archive.mp3");
-
+    
     menu.classList.remove("open");
     openOverlay(target);
   };
@@ -205,20 +214,42 @@ pauseMusic();
 overlay.onclick = e => {
   if (e.target === overlay) closeOverlay();
 };
+/* =========================
+   OVERLAY: GLOBAL CLICK = ZURÜCK
+========================= */
+overlay.addEventListener("click", (e) => {
 
+  // Diese Elemente dürfen NICHT schließen
+  const allowed = [
+    ".folder-card",
+    ".folder-card h3",
+   " .folder-card:hover",
+   ".folder-card::before",
+    ".slide",
+    ".nav",
+    ".back",
+    "button"
+  ];
+
+  // Prüfen: Klick war auf erlaubtem Element?
+  for (const selector of allowed) {
+    if (e.target.closest(selector)) {
+      return; // nichts tun → Overlay bleibt offen
+    }
+  }
+
+  // Alles andere → zurück zur Hauptseite
+  closeOverlay();
+});
 
   /* =========================
      OVERLAY DISPATCHER
   ========================= */
-  storyIsOpen = false;
-storyTarget = null;
 storyMusic.pause();
 storyMusic.currentTime = 0;
 
 
 function openOverlay(type) {
-  storyIsOpen = false;
-  storyTarget = null;
   storyMusic.pause();
   storyMusic.currentTime = 0;
 
@@ -242,14 +273,10 @@ if (type === "story") {
 }
 
 }
-storyIsOpen = false;
-storyTarget = null;
 storyMusic.pause();
 storyMusic.currentTime = 0;
 
 function closeOverlay() {
-  storyIsOpen = false;
-  storyTarget = null;
   storyMusic.pause();
   storyMusic.currentTime = 0;
 
@@ -388,6 +415,7 @@ function closeOverlay() {
    GEDANKEN – STABILES STORY MODUL
 ========================= */
 
+
 async function loadThoughts() {
   const res = await fetch("data/thoughtsSlides.json");
   const data = await res.json();
@@ -398,7 +426,6 @@ async function loadThoughts() {
   ];
 
   let storyPage = 0;
-  let storyTarget = null;
   let sectionIndex = 0;
   let slideIndex = 0;
   let storyRunning = false;
@@ -426,7 +453,9 @@ async function loadThoughts() {
     });
   }
 
+
   function openStory() {
+    storyIsOpen = true;
     storyRunning = true;
     storyPage = 0;
 
@@ -442,7 +471,7 @@ async function loadThoughts() {
         <button id="next">→</button>
       </div>
     `;
-
+    storyIsOpen = true;
     storyTarget = document.getElementById("storyText");
 
     storyMusic.src = "assets/audio/nichtseinreden .mp3";
@@ -467,12 +496,12 @@ async function loadThoughts() {
     }
   }
 
-  function stopStory() {
-    storyRunning = false;
-    storyTarget = null;
-    storyMusic.pause();
-    storyMusic.currentTime = 0;
-  }
+function stopStory() {
+  storyIsOpen = false;
+  storyTarget = null;
+  storyMusic.pause();
+  storyMusic.currentTime = 0;
+}
 
   function showThoughtSlide() {
     const slides = data.sections[sectionIndex].slides;
@@ -878,12 +907,33 @@ const storyScript = [
   { time: 62.26, text: "wenn du was willst dann mach es" }
 ];
 
+/* =========================
+   FOKUS-KARTEN = MENÜ-ORDNER
+========================= */
+document.querySelectorAll(".focus-card").forEach(card => {
+  card.onclick = () => {
+    const target = card.dataset.target;
+
+    pauseMusic();
+    activeSection = target;
+
+    if (target === "about") playMusic("assets/audio/entspannt.mp3");
+    if (target === "story") playMusic("assets/audio/story.mp3");
+    if (target === "info") playMusic("assets/audio/entferne.m4a");
+
+    openOverlay(target);
+  };
+});
+});
+
 let lastLine = "";
 /* =========================
    STORY TEXT SYNC
 ========================= */
+
 storyMusic.addEventListener("timeupdate", () => {
-  if (!storyIsOpen || !storyTarget) return;
+  if (typeof storyIsOpen === "undefined" || !storyIsOpen || !storyTarget) return;
+
 
   const t = storyMusic.currentTime;
   for (let i = storyScript.length - 1; i >= 0; i--) {
@@ -896,4 +946,29 @@ storyMusic.addEventListener("timeupdate", () => {
     }
   }
 });
+
+/* =========================
+   QUICK DOCK LOGIK
+========================= */
+document.querySelectorAll("#quickDock button").forEach(btn => {
+  btn.onclick = () => {
+    const target = btn.dataset.target;
+
+    pauseMusic();        // exakt wie im Menü
+    menu.classList.remove("open");
+    openOverlay(target);
+  };
+});
+
+/* =========================
+   FOKUS ORDNER LOGIK
+========================= */
+document.querySelectorAll(".focus-card").forEach(card => {
+  card.onclick = () => {
+    const target = card.dataset.target;
+
+    pauseMusic();          // sauberer Übergang
+    menu.classList.remove("open");
+    openOverlay(target);
+  };
 });
