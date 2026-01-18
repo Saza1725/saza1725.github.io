@@ -3,28 +3,19 @@
   "slides": [
     {
       "title": "Willkommen",
-      "content": "<p>Schön das du dir diese Seite anschaust.</p><p>Hier findest du Inspiration, persönliche Gedanken und Zitate.</p><p>Sie sollen dir irgendwo in irgendeiner Situation Rat geben.</p>"
-        },
-    { 
+      "content": "<p>Schön, dass du dir diese Seite anschaust.</p><p>Hier findest du Inspiration, persönliche Gedanken und Zitate.</p><p>Sie sollen dir in bestimmten Situationen Orientierung geben.</p>"
+    },
+    {
       "title": "Warum diese Seite entstanden ist",
-      "content":[
-       "<p>Ich habe diese Seite geschaffen, weil ich selbst nach Ruhe, Klarheit und Sinn gesucht habe.</p><p>Ich hätte niemals gedacht, das Worte so einen starken\n",
-       "</p>Stellenwert für mich werden würden, aber ich bin froh darüber, weil es mir eine andere Sichtweise auf vieles nun gibt.\n"
-      ]
-      },
+      "content": "<p>Ich habe diese Seite geschaffen, weil ich selbst nach Ruhe, Klarheit und Sinn gesucht habe.</p><p>Ich hätte nie gedacht, dass Worte für mich so viel Bedeutung bekommen würden – heute sind sie ein Anker.</p>"
+    },
     {
       "title": "Erwartung",
-      "content": [
-      "<p>Du wirst auf Momente, Situationen, Zitate treffen, die dir Gedanken und Impulse geben sollen\n\num ein Wegbegleiter für dich zu werden",
-       "</p>Sei es für dich selber und deinen Alltag oder einer Situation, oder sei es für einen anderen Zweck.",
-       "</p>Nimm dir die Zeit, lies oder hör nur zu und versuch zu akzeptieren, das du nichts an Emotionen verstecken musst."
-      ]
-       },
+      "content": "<p>Du wirst hier auf Gedanken, Situationen und Zitate treffen, die Impulse geben sollen.</p><p>Sie sind Wegbegleiter – für dich, deinen Alltag oder für stille Momente.</p><p>Nimm dir Zeit. Lies oder hör einfach zu.</p>"
+    },
     {
       "title": "Ein leiser Gedanke",
       "content": "<p>Wenn dir ein Satz bleibt, hat diese Seite ihren Zweck erfüllt.</p>"
     }
   ]
 }
-  
-

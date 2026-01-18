@@ -148,6 +148,13 @@ function pauseStoryMusic() {
       loadDailyText(btn.dataset.time);
     };
   });
+const today = new Date().toDateString();
+const shown = localStorage.getItem("quietThoughtShown");
+
+if (shown !== today && Math.random() > 0.7) {
+  document.querySelector(".quiet-thought")?.removeAttribute("hidden");
+  localStorage.setItem("quietThoughtShown", today);
+}
 
   /* =========================
      FOKUS
@@ -188,7 +195,7 @@ document.querySelectorAll("#menu button[data-target]").forEach(btn => {
     activeSection = target;
     if (target === "about") playMusic("assets/audio/entspannt.mp3");
     if (target === "story") playMusic("assets/audio/story.mp3");
-    if (target === "info") playMusic("assets/audio/entferne.m4a");
+    if (target === "info") playMusic("assets/audio/jucktnicht.mp3");
     if (target === "quotes") playMusic("assets/audio/entspannt.mp3");
     
     menu.classList.remove("open");
@@ -214,6 +221,19 @@ pauseMusic();
 overlay.onclick = e => {
   if (e.target === overlay) closeOverlay();
 };
+
+function transitionLevel(callback) {
+  document.body.classList.add("level-transition");
+
+  setTimeout(() => {
+    document.body.classList.remove("level-transition");
+    callback();
+  }, 450);
+}
+transitionLevel(() => {
+  // dein bestehender Seitenwechsel
+});
+
 /* =========================
    OVERLAY: GLOBAL CLICK = ZURÜCK
 ========================= */
@@ -464,7 +484,6 @@ async function loadThoughts() {
 
       <div class="slide story-slide">
         <div id="storyText" class="story-text"></div>
-        <div class="story-page" id="storyPage">1 / ${storyPages.length}</div>
       </div>
 
       <div class="nav">
@@ -474,7 +493,7 @@ async function loadThoughts() {
     storyIsOpen = true;
     storyTarget = document.getElementById("storyText");
 
-    storyMusic.src = "assets/audio/nichtseinreden .mp3";
+    storyMusic.src = "assets/audio/nichtseinreden.mp3";
     storyMusic.currentTime = storyPages[0].start;
     storyMusic.play();
 
@@ -540,78 +559,161 @@ function stopStory() {
 }
 
 /* =========================
-     MEINE GESCHICHTE
-  ========================= */
-  async function loadMeineGeschichte() {
-    const res = await fetch("data/meinegeschichte.json");
-    const data = await res.json();
-    const folders = Object.entries(data.folders);
-    let f = 0, i = 0;
+   MEINE GESCHICHTE – FINAL
+   TXT + MUSIC FADE + EDITOR
+========================= */
 
-    showFolders();
-
-    function showFolders() {
-      overlayContent.innerHTML = `
-        <h2>Meine Geschichte</h2>
-        <div class="folder-grid">
-          ${folders.map(([n, e], x) => `
-            <div class="folder-card" data-i="${x}">
-              <h3>${n}</h3>
-              <div class="folder-progress">${e.length} Einträge</div>
-            </div>`).join("")}
-        </div>`;
-      overlayContent.querySelectorAll(".folder-card").forEach(c =>
-        c.onclick = () => { f = +c.dataset.i; i = 0; showEntry(); }
-      );
-    }
-function setMusicVolumeForStory() {
+async function loadMeineGeschichte() {
+  const overlay = document.getElementById("overlay");
+  const overlayContent = document.getElementById("overlayContent");
   const music = document.getElementById("bgMusic");
-  if (!music) return;
-  music.volume = 0.20;
-}
 
-function setMusicVolumeNormal() {
-  const music = document.getElementById("bgMusic");
-  if (!music) return;
-  music.volume = 0.6;
-}
+  const res = await fetch("data/meinegeschichte.json");
+  const data = await res.json();
+  const folders = Object.entries(data.folders);
 
-if (activeSection === "story") {
-  setMusicVolumeForStory();
-} else {
-  setMusicVolumeNormal();
-}
+  let f = 0;
+  let i = 0;
 
-   function showEntry() {
-  const [, entries] = folders[f];
-
-  overlayContent.innerHTML = `
-    <button class="back">←Meine Geschichte</button>
-
-<div class="slide">
-  <pre class="story-text">${entries[i]}</pre>
-</div>
-
-    <div class="nav">
-      <button id="prev" ${i === 0 ? "disabled" : ""}>←</button>
-      <span>${i + 1} / ${entries.length}</span>
-      <button id="next" ${i === entries.length - 1 ? "disabled" : ""}>→</button>
-    </div>
-  `;
-document.querySelector(".back").onclick = () => {
-  
+  fadeMusic(0.2); // 🎧 Musik leiser beim Öffnen
   showFolders();
-};
 
+  /* =========================
+     ORDNERÜBERSICHT
+  ========================= */
+  function showFolders() {
+    overlayContent.innerHTML = `
+      <h2>Meine Geschichte</h2>
 
+      <div class="folder-grid">
+        ${folders.map(([name, files], index) => `
+          <div class="folder-card" data-i="${index}">
+            <h3>${name}</h3>
+            <div class="folder-progress">${files.length} Einträge</div>
+          </div>
+        `).join("")}
+      </div>
 
-  document.getElementById("prev").onclick = () => {
-    if (i > 0) { i--; showEntry(); }
+      <div style="margin-top:40px; text-align:center;">
+        <button id="openEditor">✍️ Schreiben</button>
+      </div>
+    `;
+
+    overlayContent.querySelectorAll(".folder-card").forEach(card => {
+      card.onclick = () => {
+        f = Number(card.dataset.i);
+        i = 0;
+        showEntry();
+      };
+    });
+
+    document.getElementById("openEditor").onclick = openEditor;
+  }
+
+  /* =========================
+     EINTRAG (TXT) ANZEIGEN
+  ========================= */
+  async function showEntry() {
+    const [, files] = folders[f];
+    const file = files[i];
+
+    const text = await fetch(`data/story/${file}`).then(r => r.text());
+
+    overlayContent.innerHTML = `
+      <button class="back">← Meine Geschichte</button>
+
+      <div class="slide">
+        <pre class="story-text">${text}</pre>
+      </div>
+
+      <div class="nav">
+        <button id="prev" ${i === 0 ? "disabled" : ""}>←</button>
+        <span>${i + 1} / ${files.length}</span>
+        <button id="next" ${i === files.length - 1 ? "disabled" : ""}>→</button>
+      </div>
+    `;
+
+    document.querySelector(".back").onclick = showFolders;
+
+    const prev = document.getElementById("prev");
+    const next = document.getElementById("next");
+
+    if (prev) prev.onclick = () => {
+      if (i > 0) {
+        i--;
+        showEntry();
+      }
+    };
+
+    if (next) next.onclick = () => {
+      if (i < files.length - 1) {
+        i++;
+        showEntry();
+      }
+    };
+  }
+
+  /* =========================
+     MUSIK – SANFTES FADING
+  ========================= */
+  function fadeMusic(targetVolume, duration = 1200) {
+    if (!music) return;
+
+    const startVolume = music.volume;
+    const startTime = performance.now();
+
+    function step(time) {
+      const progress = Math.min((time - startTime) / duration, 1);
+      music.volume = startVolume + (targetVolume - startVolume) * progress;
+      if (progress < 1) requestAnimationFrame(step);
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  /* =========================
+     SCHREIBMODUS
+  ========================= */
+  function openEditor() {
+    overlayContent.innerHTML = `
+      <button class="back">← Zurück</button>
+
+      <div class="slide">
+        <textarea id="storyInput" placeholder="Schreib hier frei wie in Word…
+
+Enter = neuer Absatz
+Kein Speichern drücken = nichts passiert"></textarea>
+
+        <div class="nav">
+          <button id="saveStory">Speichern</button>
+        </div>
+      </div>
+    `;
+
+    document.querySelector(".back").onclick = showFolders;
+
+    document.getElementById("saveStory").onclick = () => {
+      const text = document.getElementById("storyInput").value.trim();
+      if (!text) return;
+
+      const saved = JSON.parse(localStorage.getItem("meineGeschichte") || "[]");
+      saved.push(text);
+      localStorage.setItem("meineGeschichte", JSON.stringify(saved));
+
+      alert("Gespeichert (lokal)");
+      showFolders();
+    };
+  }
+
+  /* =========================
+     OVERLAY SCHLIESSEN
+  ========================= */
+  overlay.onclick = (e) => {
+    if (e.target === overlay) {
+      fadeMusic(0.6); // 🎧 Musik zurück
+      overlay.classList.remove("active");
+    }
   };
-  document.getElementById("next").onclick = () => {
-    if (i < entries.length - 1) { i++; showEntry(); }
-  };
-}
 }
 /* ==================================================
    INFO – FOLIEN
@@ -919,7 +1021,7 @@ document.querySelectorAll(".focus-card").forEach(card => {
 
     if (target === "about") playMusic("assets/audio/entspannt.mp3");
     if (target === "story") playMusic("assets/audio/story.mp3");
-    if (target === "info") playMusic("assets/audio/entferne.m4a");
+    if (target === "info") playMusic("assets/audio/jucktnicht.mp3");
 
     openOverlay(target);
   };
@@ -972,3 +1074,33 @@ document.querySelectorAll(".focus-card").forEach(card => {
     openOverlay(target);
   };
 });
+
+/* =========================
+   STORY TEXT → JSON HELFER
+========================= */
+function storyTextToJson(text) {
+  return text
+    .trim()
+    .replace(/\r\n/g, "\n")   // Windows → Unix
+    .replace(/\n{2,}/g, "\n\n") // saubere Absätze
+    .replace(/\n/g, "\\n\\n"); // ENTER → \n\n
+}
+function fadeMusic(targetVolume, duration = 1200) {
+  const music = document.getElementById("bgMusic");
+  if (!music) return;
+
+  const startVolume = music.volume;
+  const startTime = performance.now();
+
+  function step(time) {
+    const progress = Math.min((time - startTime) / duration, 1);
+    music.volume = startVolume + (targetVolume - startVolume) * progress;
+
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    }
+  }
+
+  requestAnimationFrame(step);
+}
+

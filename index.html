@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Motivation</title>
+  <title>Bleib-Dir-Selber-Immer-Treu-#STÖRFAKTOR</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
   <!-- Favicon -->
@@ -10,6 +10,7 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="tresor.css">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
@@ -21,34 +22,21 @@
 
 
 <!-- ================= HEADER / HERO ================= -->
-  <header class="hero">
+<header class="hero">
 
-
-<div id="introOverlay">
-
-  <picture>
-    <source 
-      srcset="
-        assets/images/640.jpg 640w,
-        assets/images/1536.jpg 1536w,
-        assets/images/1920.jpg 1920w
-      "
-      sizes="70vw">
-
+  <div id="introOverlay">
     <img
       id="introImage"
-      src="assets/images/1536.jpg"
+      src="assets/images/Saza17.webp"
       alt="Intro Bild"
-      loading="eager"
-      fetchpriority="high"
-      decoding="async"
-      style="width:100%; height:20%; object-fit:cover;">
-  </picture>
+    >
 
-  <button id="introStart">
-    ▶ Start
-  </button>
+    <div id="introText">
+      <h1></h1>
+    </div>
 
+    <button id="introStart">START</button>
+  
 </div>
 
     <!-- Uhrzeit & Datum -->
@@ -80,12 +68,13 @@
     <p>Kapitel, Gedanken, Entwicklung</p>
   </div>
 
-</div>
-
+</header>
     <!-- Tageszitat -->
     <div id="dailyQuoteBox" class="daily-quote"></div>
-
-  </header>
+<div class="quiet-thought" hidden>
+  Du bist gerade genau richtig hier.
+</div>
+  
 
 
   <!-- ================= MENU BUTTON ================= -->
@@ -93,6 +82,11 @@
 
   <!-- ================= NAVIGATION ================= -->
  <nav id="menu">
+
+<div class="menu-context">
+  Zeit für deine Geschichte
+  <strong>#SeiDeinEigenerAutor</strong>
+</div>
 
   <button id="homeBtn" class="menu-home group-a">
     ⌂ Hauptseite
@@ -119,8 +113,15 @@
       <p>Mein Fokus heute</p>
       <input id="dailyFocusInput" type="text" placeholder="Dein Fokus …">
     </section>
+<!-- ================= MEINE GESCHICHTE ================= -->
+<section class="story-card" id="storySection" hidden>
+  <h3>Meine Geschichte</h3>
 
-    <div id="dailyTextBox" class="story-text"></div>
+  <!-- HIER kommt der Text aus der JSON rein -->
+  <div class="story-text" id="storyText"></div>
+</section>
+
+    
     <div id="dailyTextBox"></div>
     
 
@@ -135,8 +136,39 @@
     <div id="personalQuoteDisplay"></div>
     
   </main>
+  <!-- TRESOR -->
+  <div id="vault" onclick="openQuiz(event)">
+    <div class="vault-door"></div>
+    <div class="vault-wheel"></div>
+    <div class="vault-label">Tresor</div>
+  </div>
 
+  <!-- QUIZ -->
+  <div id="quiz" class="modal" onclick="closeQuiz(event)">
+    <div class="modal-content">
+      <h3>🔐 Sicherheitsfrage</h3>
+      <p>Wie lautet die Antwort auf alles?</p>
+      <input id="answer" type="text">
+      <button onclick="checkAnswer()">Öffnen</button>
+      <p id="feedback"></p>
+    </div>
+  </div>
+<!-- ================= SCHREIBMODUS ================= -->
+<div id="storyEditor" hidden>
+  <h3>✍️ Schreiben</h3>
 
+  <textarea id="storyInput"
+    placeholder="Schreib hier wie in Word…
+
+Enter = neuer Absatz
+Neue Gedanken einfach beginnen"
+  ></textarea>
+
+  <div class="editor-actions">
+    <button id="saveStory">Speichern</button>
+    <button id="closeEditor">Abbrechen</button>
+  </div>
+</div>
 
   <!-- ================= OVERLAY ================= -->
   <div id="overlay">
@@ -145,10 +177,12 @@
 
   <!-- ================= SCRIPT ================= -->
   <script src="js/app.js" defer></script>
+   <script src="tresor.js"></script>
   
+
 <!-- ================= MUSIC PLAYER ================= -->
 
-<audio id="storyMusic" src="assets/audio/nichtseinreden .mp3"></audio>
+<audio id="storyMusic" src="assets/audio/nichtseinreden.mp3"></audio>
 
 </body>
 </html>
