@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b111a"><meta name="apple-mobile-web-app-capable" content="yes"><title>Backyard Crew Clock</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0b111a;color:white;font:16px -apple-system,BlinkMacSystemFont,Arial,sans-serif;padding:14px;max-width:1000px;margin:auto}h1{font-size:24px;margin:6px 0}small{color:#bac9d5}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:16px 0}.tile{border:1px solid #40546a;background:#1a293a;border-radius:12px;padding:12px;min-width:0}.tile strong{display:block;font-size:clamp(27px,7vw,68px);font-variant-numeric:tabular-nums;letter-spacing:-1px;white-space:nowrap;margin-top:7px}.tile label{color:#c6d4df;font-size:12px;font-weight:700}.green{background:#153a36;border-color:#278878}.buttons{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}button{border:0;border-radius:12px;background:#dce6ef;color:#0b1823;padding:15px;font-size:16px;font-weight:800;cursor:pointer}button:disabled{opacity:.4}button.primary{background:#3ed2b2;flex:1 1 100%;font-size:19px}button.dark{background:#2b4053;color:white}.settings{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}input{display:block;width:100%;margin-top:6px;padding:10px;background:#101c29;color:white;border:1px solid #607387;border-radius:8px;font-size:16px}.panel{background:#182635;border:1px solid #394d60;border-radius:12px;padding:14px;margin-top:12px}.status{font-size:18px;font-weight:800;color:#55e0c3;margin:12px 0}.log{max-height:160px;overflow:auto;font-size:14px}.log div{padding:5px;border-bottom:1px solid #405064}.hint{font-size:12px;color:#b5c6d5;line-height:1.5} @media(min-width:700px){.tile label{font-size:17px}.settings{grid-template-columns:repeat(3,1fr)}}
+</style></head><body>
+<h1>BACKYARD <span style="color:#3ed2b2">CREW CLOCK</span></h1><small>iPhone · Crew-Tischanzeige · funktioniert nach dem Laden auch ohne Netz</small>
+<div class="grid">
+<div class="tile"><label>UHRZEIT</label><strong id="clock">--:--:--</strong></div>
+<div class="tile green"><label>NÄCHSTER START IN</label><strong id="count">60:00</strong></div>
+<div class="tile"><label>RUNDEN FERTIG</label><strong id="laps">0</strong></div>
+<div class="tile"><label>PAUSE VERBLEIBEND</label><strong id="pause">--:--</strong></div>
+<div class="tile"><label>RENNZEIT</label><strong id="elapsed">00:00</strong></div>
+<div class="tile"><label>KILOMETER</label><strong id="kmout">0,00</strong></div>
+</div>
+<div class="status" id="status">Startzeit einstellen und Rennen starten.</div>
+<div class="buttons"><button class="primary" id="finish" disabled>✓ RUNDE BEENDET · PAUSE STARTEN</button><button id="start">▶ RENNEN STARTEN</button><button class="dark" id="sound">🔈 Ton aktivieren</button><button class="dark" id="undo">↶ Rückgängig</button><button class="dark" id="reset">↺ Zurücksetzen</button></div>
+<div class="panel"><div class="settings"><label>Renndatum<input id="date" type="date"></label><label>Erster Start<input id="time" type="time" value="08:00"></label><label>km pro Runde<input id="distance" type="number" min=".01" step=".001" value="6.706"></label></div><p class="hint">Der Stunden-Countdown läuft unabhängig vom Zieleinlauf. „Runde beendet“ zählt eine Runde und zeigt die verbleibende Pause an. Maximal eine Runde je Stundenfenster. Ansagen bei 5, 2 und 1 Minute vor dem Start (bei aktivem Ton und geöffneter App).</p><b>Rundenprotokoll</b><div class="log" id="log">Noch keine Runde.</div></div>
+<p class="hint">Keine Garmin-Kopplung. Die App speichert Daten nur in diesem Browser auf diesem iPhone. iOS kann Timer im Hintergrund anhalten oder Ton blockieren: Bildschirm eingeschaltet lassen und offizielle Startsignale zusätzlich beachten.</p>
+<script>
+(()=>{'use strict';const $=id=>document.getElementById(id),K='backyard-crew-clock-v2';let s={start:null,finish:[],km:6.706},sound=false,alerts={};try{const v=JSON.parse(localStorage.getItem(K));if(v&&typeof v==='object')s={...s,...v}}catch(e){}
+const p=n=>String(n).padStart(2,'0'),mm=x=>{x=Math.max(0,Math.ceil(x));return p(Math.floor(x/60))+':'+p(x%60)},hh=x=>{x=Math.max(0,Math.floor(x));return p(Math.floor(x/3600))+':'+p(Math.floor(x/60)%60)},save=()=>{try{localStorage.setItem(K,JSON.stringify(s))}catch(e){}},today=()=>{const d=new Date();return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())};
+$('date').value=today();$('distance').value=s.km;if(s.start){const d=new Date(s.start);$('date').value=d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());$('time').value=p(d.getHours())+':'+p(d.getMinutes())}
+function speak(t){if(!sound)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='de-DE';speechSynthesis.speak(u)}catch(e){}}
+function draw(){const now=Date.now();$('clock').textContent=new Date(now).toLocaleTimeString('de-DE');$('start').disabled=!!s.start;$('date').disabled=!!s.start;$('time').disabled=!!s.start;$('distance').disabled=!!s.start;$('undo').disabled=!s.finish.length;
+if(!s.start){$('finish').disabled=true;$('count').textContent='60:00';$('pause').textContent='--:--';$('elapsed').textContent='00:00';$('laps').textContent='0';$('kmout').textContent='0,00';return}
+const sec=Math.max(0,(now-s.start)/1000),cycle=Math.floor(sec/3600),next=s.start+(cycle+1)*3600000,remaining=(next-now)/1000,last=s.finish.at(-1),rest=last!=null&&Math.floor((last-s.start)/3600000)===cycle;
+$('count').textContent=mm(remaining);$('pause').textContent=rest?mm(remaining):'--:--';$('elapsed').textContent=hh(sec);$('laps').textContent=s.finish.length;$('kmout').textContent=(s.finish.length*s.km).toFixed(2).replace('.',',');$('finish').disabled=now<s.start||rest;$('finish').textContent=rest?'✓ RUNDE ERFASST – PAUSE LÄUFT':'✓ RUNDE BEENDET · PAUSE STARTEN';$('status').textContent=now<s.start?'WARTEN AUF START':rest?'PAUSE · NÄCHSTEN START VORBEREITEN':'RUNDE '+(cycle+1)+' · LÄUFER UNTERWEGS';
+$('log').innerHTML=s.finish.length?s.finish.slice().reverse().map((t,i)=>'<div>Runde '+(s.finish.length-i)+' · '+new Date(t).toLocaleTimeString('de-DE')+' · Pause '+mm((s.start+(Math.floor((t-s.start)/3600000)+1)*3600000-t)/1000)+'</div>').join(''):'Noch keine Runde.';
+for(const m of [5,2,1]){const k=cycle+'-'+m;if(remaining<=m*60&&remaining>m*60-2&&!alerts[k]){alerts[k]=1;speak('Noch '+m+' '+(m===1?'Minute':'Minuten')+' bis zum Start')}}}
+$('start').onclick=()=>{const d=$('date').value,t=$('time').value;if(!d||!t)return alert('Datum und Startzeit eingeben');const v=new Date(d+'T'+t+':00').getTime();if(!Number.isFinite(v))return alert('Ungültige Zeit');s={start:v,finish:[],km:Number($('distance').value)||6.706};save();draw()};
+$('finish').onclick=()=>{if(!s.start)return;const now=Date.now(),c=Math.floor((now-s.start)/3600000);if(c<0||s.finish.some(t=>Math.floor((t-s.start)/3600000)===c))return;s.finish.push(now);save();draw();speak('Runde beendet. Pause läuft')};
+$('undo').onclick=()=>{if(s.finish.length&&confirm('Letzte Runde löschen?')){s.finish.pop();save();draw()}};
+$('reset').onclick=()=>{if(confirm('Alle Renndaten wirklich löschen?')){s={start:null,finish:[],km:6.706};save();location.reload()}};
+$('sound').onclick=()=>{sound=true;$('sound').textContent='🔊 Ton aktiviert';speak('Ton aktiviert')};
+draw();setInterval(draw,500);
+})();
+</script></body></html>
