@@ -2,126 +2,187 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Motivation App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#111">
-  <link rel="apple-touch-icon" href="icon.png">
-  <link rel="stylesheet" href="style.css">
+  <title>Bleib-Dir-Selber-Immer-Treu-#STÖRFAKTOR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:,">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="tresor.css">
+
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body>
 
-<-- ================= INTRO OVERLAY ================= -->
-  
-<!-- Intro Overlay -->
-<div id="introOverlay">
-  <div id="introCard">
-    <p id="introText"></p>
-    <button id="introButton" disabled>Weiter</button>
-  </div>
-  <button id="playIntroBtn">Play</button>
-</div>
-  
+<!-- ✅ HIER ist der Body richtig -->
+<body class="intro-active ui-hidden">
+<div id="app-bg"></div>
 
-  <!-- MENU BUTTON -->
-  <div id="menuButton">☰</div>
 
-  <!-- SEITENMENÜ -->
-  <nav id="menu">
-    <a href="#" data-target="personalOverlay">🙇🏻 Über mich</a>
-    <a href="#" data-target="infoOverlay">ℹ️ Information</a>
-    <a href="#" data-target="meinezeitOverlay">🕒 Meine Zeit</a>
-    <a href="#" data-target="folderOverlay">📁 Zitate</a>
-    <a href="#" data-target="archiveOverlay">🏛️ Vergangene Tage</a>
-    <a href="#" data-target="home">🏠 Home</a>
-  </nav>
+<!-- ================= HEADER / HERO ================= -->
+<header class="hero">
 
-  <!-- HEADER -->
-  <header>
-    <div id="weekday"></div>
-    <div id="daytime"></div>
-    <div id="date"></div>
-    <div id="time"></div>
-    <div id="dailyQuoteBox"></div>
-  </header>
+  <div id="introOverlay">
+    <img
+      id="introImage"
+      src="assets/images/Saza17.webp"
+      alt="Intro Bild"
+    >
 
-  <!-- MAIN CONTENT -->
-<main>
-  <!-- TAGESFOKUS zuerst -->
-  <div id="dailyFocusContainer">
-    <p>Mein Fokus heute:</p>
-    <input type="text" id="dailyFocusInput" placeholder="Schreibe hier deinen Fokus..." maxlength="100">
-  </div>
-
-  <!-- DANN DIE BUTTONS MIT TEXT -->
-  <div id="dailyMotivationWrapper">
-    <div id="buttons">
-      <button id="morningBtn">Morgen</button>
-      <button id="noonBtn">Mittag</button>
-      <button id="eveningBtn">Abend</button>
+    <div id="introText">
+      <h1></h1>
     </div>
 
+    <button id="introStart">START</button>
   
+</div>
 
-  <!-- PERSONAL QUOTE -->
-  <div id="personalQuoteDisplay"></div>
-
-  <!-- TEILEN BUTTON -->
-  <div id="dailyQuoteActions">
-    <button id="shareQuoteBtn">📤 Teilen</button>
-  </div>
-
-  <!-- NEWS -->
-  <section id="newsContainer">
-    <h3>Neuigkeiten</h3>
-    <div id="newsList"></div>
-  </section>
-</main>
-
-  <!-- PERSONAL / ÜBER MICH -->
-  <div id="personalOverlay" class="overlay">
-    <div class="overlayContent">
-      <h2>Über mich</h2>
-      <div id="personalSlidesContainer"></div>
-      <div id="personalSlidesProgress"></div>
-      <div id="personalSlidesWrapper">
-        <button id="prevSlide">← Zurück</button>
-        <button id="nextSlide">Weiter →</button>
+    <!-- Uhrzeit & Datum -->
+    <div class="time-block">
+      <div id="time"></div>
+      <div class="date-line">
+        <span id="weekday"></span> · <span id="date"></span>
       </div>
     </div>
+
+<!-- ================= FOKUS ORDNER ================= -->
+<div id="focusFolders">
+
+  
+
+  <div class="focus-card" data-target="info">
+    <h3>Entstehung</h3>
+    <p>Worum es hier geht</p>
   </div>
 
-  <!-- ZITATE -->
-  <div id="folderOverlay" class="overlay">
-    <div class="overlayContent">
-      <h2>Zitate-Ordner</h2>
-      <div id="folderGrid"></div>
+
+  <div class="focus-card" data-target="about">
+    <h3>Über mich</h3>
+    <p>Wer ich bin & was mich geprägt hat</p>
+  </div>
+
+  <div class="focus-card" data-target="story">
+    <h3>Meine Geschichte</h3>
+    <p>Kapitel, Gedanken, Entwicklung</p>
+  </div>
+
+</header>
+    <!-- Tageszitat -->
+    <div id="dailyQuoteBox" class="daily-quote"></div>
+<div class="quiet-thought" hidden>
+  Du bist gerade genau richtig hier.
+</div>
+  
+
+
+  <!-- ================= MENU BUTTON ================= -->
+  <button id="menuButton">☰ Menü</button>
+
+  <!-- ================= NAVIGATION ================= -->
+ <nav id="menu">
+
+<div class="menu-context">
+  Zeit für deine Geschichte
+  <strong>#SeiDeinEigenerAutor</strong>
+</div>
+
+  <button id="homeBtn" class="menu-home group-a">
+    ⌂ Hauptseite
+  </button>
+  
+
+  <div class="menu-separator"></div>
+
+  <button data-target="thoughts" class="group-c">!!!Hör genau hin!!!</button>
+  <button data-target="ordnerX" class="group-c">Ordner X</button>
+
+  <div class="menu-separator"></div>
+
+  <button data-target="quotes" class="group-d">Zitate</button>
+  <button data-target="archive" class="group-d">Vergangene Tage</button>
+
+</nav>
+
+
+  <!-- ================= MAIN CONTENT ================= -->
+   <!-- MAIN -->
+  <main>
+    <section class="card">
+      <p>Mein Fokus heute</p>
+      <input id="dailyFocusInput" type="text" placeholder="Dein Fokus …">
+    </section>
+<!-- ================= MEINE GESCHICHTE ================= -->
+<section class="story-card" id="storySection" hidden>
+  <h3>Meine Geschichte</h3>
+
+  <!-- HIER kommt der Text aus der JSON rein -->
+  <div class="story-text" id="storyText"></div>
+</section>
+
+    
+    <div id="dailyTextBox"></div>
+    
+
+    <!-- Tageszeit Buttons -->
+    <div class="buttons">
+      <button data-time="morning">🌅 Morgen</button>
+      <button data-time="noon">☀️ Mittag</button>
+      <button data-time="evening">🌙 Abend</button>
+    </div>
+
+    <!-- Persönliche Zitate / Statistik -->
+    <div id="personalQuoteDisplay"></div>
+    
+  </main>
+  <!-- TRESOR -->
+  <div id="vault" onclick="openQuiz(event)">
+    <div class="vault-door"></div>
+    <div class="vault-wheel"></div>
+    <div class="vault-label">Tresor</div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz" class="modal" onclick="closeQuiz(event)">
+    <div class="modal-content">
+      <h3>🔐 Sicherheitsfrage</h3>
+      <p>Wie lautet die Antwort auf alles?</p>
+      <input id="answer" type="text">
+      <button onclick="checkAnswer()">Öffnen</button>
+      <p id="feedback"></p>
     </div>
   </div>
+<!-- ================= SCHREIBMODUS ================= -->
+<div id="storyEditor" hidden>
+  <h3>✍️ Schreiben</h3>
 
-  <!-- MEINE ZEIT -->
-  <div id="meinezeitOverlay" class="overlay">
-    <div class="overlayContent">
-      <h2>Meine Zeit</h2>
-      <div id="meinezeitGrid"></div>
-    </div>
-  </div>
+  <textarea id="storyInput"
+    placeholder="Schreib hier wie in Word…
 
-  <!-- ARCHIV OVERLAY -->
-<div id="archiveOverlay" class="overlay">
-  <div class="overlayContent">
-    <h2>Archiv</h2>
-    <div id="monthDetail"></div>
-    <button class="closeBtn" onclick="document.dispatchEvent(new CustomEvent('openSection', {detail:'home'}))">← Zurück</button>
+Enter = neuer Absatz
+Neue Gedanken einfach beginnen"
+  ></textarea>
+
+  <div class="editor-actions">
+    <button id="saveStory">Speichern</button>
+    <button id="closeEditor">Abbrechen</button>
   </div>
 </div>
 
-
-  <!-- INFO -->
-  <div id="infoOverlay" class="overlay">
-    <div class="overlayContent" id="infoContent"></div>
+  <!-- ================= OVERLAY ================= -->
+  <div id="overlay">
+    <div id="overlayContent"></div>
   </div>
 
-  <script src="app.js"></script>
+  <!-- ================= SCRIPT ================= -->
+  <script src="js/app.js" defer></script>
+   <script src="tresor.js"></script>
+  
+
+<!-- ================= MUSIC PLAYER ================= -->
+
+<audio id="storyMusic" src="assets/audio/nichtseinreden.mp3"></audio>
+
 </body>
 </html>
